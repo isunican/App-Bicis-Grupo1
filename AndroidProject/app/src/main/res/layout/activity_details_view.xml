@@ -22,22 +22,69 @@
         android:id="@+id/tvName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
         android:layout_marginTop="48dp"
         android:textSize="20sp"
         android:textStyle="bold"
-        tools:text="Network Name"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        tools:text="Network Name" />
 
     <TextView
         android:id="@+id/tvCity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        tools:text="City"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvName" />
+        app:layout_constraintStart_toStartOf="@+id/tvName"
+        app:layout_constraintTop_toBottomOf="@+id/tvName"
+        tools:text="City (Country)" />
+
+    <TextView
+        android:id="@+id/tvNombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="102dp"
+        tools:layout_editor_absoluteY="255dp"
+        tools:text="Name" />
+
+    <TextView
+        android:id="@+id/tvEBikes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="104dp"
+        tools:layout_editor_absoluteY="304dp"
+        tools:text="88" />
+
+    <TextView
+        android:id="@+id/tvCompanias"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="234dp"
+        tools:layout_editor_absoluteY="323dp"
+        tools:text="Compañia" />
+
+    <TextView
+        android:id="@+id/tvNombreTexto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre:"
+        tools:layout_editor_absoluteX="173dp"
+        tools:layout_editor_absoluteY="419dp" />
+
+    <TextView
+        android:id="@+id/tvEBikesTexto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="EBikes:"
+        tools:layout_editor_absoluteX="164dp"
+        tools:layout_editor_absoluteY="459dp" />
+
+    <TextView
+        android:id="@+id/tvCompaniasTexto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Compañias:"
+        tools:layout_editor_absoluteX="140dp"
+        tools:layout_editor_absoluteY="372dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
