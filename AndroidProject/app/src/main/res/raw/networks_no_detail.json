@@ -1,0 +1,39 @@
+{
+    "networks": [
+        {
+            "id": "bicing",
+            "location": {
+                "latitude": 41.3850639,
+                "longitude": 2.1734035
+            },
+            "href": "/v2/networks/bicing"
+        },
+        {
+            "id": "bicimad",
+            "name": "BiciMAD",
+            "location": {
+                "latitude": 40.4168,
+                "longitude": -3.7038,
+                "country": "ES"
+            },
+            "href": "/v2/networks/bicimad",
+            "system": "bicimad",
+            "source": "https://mobilitylabs.emtmadrid.es/"
+        },
+        {
+            "id": "tuebici",
+            "name": "TUeBICI",
+            "location": {
+                "latitude": 43.46230569999999,
+                "longitude": -3.8099803,
+                "city": "Santander",
+                "country": "ES"
+            },
+            "href": "/v2/networks/tuebici",
+            "company": [
+                "UTE BICIS SANTANDER"
+            ],
+            "system": "Nextbike"
+        }
+    ]
+}

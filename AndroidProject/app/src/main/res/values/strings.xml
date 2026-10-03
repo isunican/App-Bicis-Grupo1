@@ -5,4 +5,8 @@
     <string name="loadCorrect">Se han cargado %d redes</string>
     <string name="loadError">Ha habido un error cargando las redes</string>
     <string name="info_text">Aplicación creada para el Proyecto Integrado Curso 2026-2027</string>
+    <string name="noData">-</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+    <string name="noDetailInfo">No hay información detallada disponible para esta red.</string>
 </resources>
