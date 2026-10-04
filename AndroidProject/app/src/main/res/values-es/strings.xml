@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Bicis</string>
+    <string name="refresh">Recargar</string>
+    <string name="info">Info</string>
+    <string name="loadCorrect">Se han cargado %d redes</string>
+    <string name="loadError">Ha habido un error cargando las redes</string>
+    <string name="info_text">Aplicación creada para el Proyecto Integrado Curso 2026-2027</string>
+    <string name="name">Nombre:</string>
+    <string name="Companies">Compañías:</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+</resources>
