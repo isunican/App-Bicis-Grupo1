@@ -1,4 +1,4 @@
-package es.unican.bicis;
+package es.unican.bicis.activities.details;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -9,12 +9,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.matcher.ViewMatchers;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,10 +25,9 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowToast;
 
-import es.unican.bicis.activities.details.DetailsView;
+import es.unican.bicis.R;
 import es.unican.bicis.model.Location;
 import es.unican.bicis.model.Network;
-import es.unican.bicis.model.NetworksResponse;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 35)
@@ -65,9 +64,9 @@ public class DetailsViewTest {
 
             try (ActivityScenario<DetailsView> scenario = ActivityScenario.launch(createFakeIntent())) {
                 //comprobar interfaz
-                onView(withId(R.id.tvName)).check(matches(withText("Bicing")));
+                onView(ViewMatchers.withId(R.id.tvName)).check(matches(withText("Bicing")));
                 onView(withId(R.id.tvCity)).check(matches(withText("Barcelona (ES)")));
-                onView(withId(R.id.tvEbikes)).check(matches(withText("true")));
+                onView(withId(R.id.tvEbikes)).check(matches(withText("Yes")));
                 onView(withId(R.id.tvCompanysNum)).check(matches(withText("3")));
             }
         }
@@ -80,7 +79,7 @@ public class DetailsViewTest {
         Network mockNetwork = mock(Network.class);
         Location mockLocation = mock (Location.class);
         when(mockNetwork.getName()).thenReturn("TUeBICI");
-        when(mockNetwork.isEbikes()).thenReturn(null);
+        when(mockNetwork.isEbikes()).thenReturn(false);
         when(mockNetwork.getCompany()).thenReturn(null);
         when(mockNetwork.getLocation()).thenReturn(mockLocation);
 
@@ -96,7 +95,7 @@ public class DetailsViewTest {
                 //comprobar la interfaz con los datos corretos
                 onView(withId(R.id.tvName)).check(matches(withText("TUeBICI")));
                 onView(withId(R.id.tvCity)).check(matches(withText("Santander (ES)")));
-                onView(withId(R.id.tvEbikes)).check(matches(withText(noData)));
+                onView(withId(R.id.tvEbikes)).check(matches(withText("No")));
                 onView(withId(R.id.tvCompanysNum)).check(matches(withText(noData)));
 
                 //comprobar que se lanza el toast
@@ -128,7 +127,7 @@ public class DetailsViewTest {
 
         when(mockNetwork.getName()).thenReturn("BiciMAD");
         when(mockNetwork.getCompany()).thenReturn(new String[]{"EMTMadrid"});
-        when(mockNetwork.isEbikes()).thenReturn(null);
+        when(mockNetwork.isEbikes()).thenReturn(false);
         String noData = ApplicationProvider.getApplicationContext().getString(R.string.noData);
         try (MockedStatic<Parcels> mockedParcels = Mockito.mockStatic(Parcels.class)) {
             mockedParcels.when(() -> Parcels.unwrap(any())).thenReturn(mockNetwork);
@@ -137,7 +136,7 @@ public class DetailsViewTest {
                 onView(withId(R.id.tvName)).check(matches(withText("BiciMAD")));
 
                 //Verificamos que el dato inconsistente pone el texto por defecto
-                onView(withId(R.id.tvEbikes)).check(matches(withText(noData)));
+                onView(withId(R.id.tvEbikes)).check(matches(withText("No")));
             }
         }
     }
