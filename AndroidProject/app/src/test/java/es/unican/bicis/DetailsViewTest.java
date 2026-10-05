@@ -112,7 +112,7 @@ public class DetailsViewTest {
             mockedParcels.when(() -> Parcels.unwrap(any())).thenReturn(null);
 
             try (ActivityScenario<DetailsView> scenario = ActivityScenario.launch(createFakeIntent())) {
-                // Comprobamos que al ser null, la UI no crashea y carga un string vacío
+                //comprobar que al ser null, la UI no crashea y carga un string vacío
                 onView(withId(R.id.tvName)).check(matches(withText("")));
                 //comprobar que se lanza el toast de error de red
                 String toastMsgExpected = ApplicationProvider.getApplicationContext().getString(R.string.loadError);
@@ -136,7 +136,7 @@ public class DetailsViewTest {
             try (ActivityScenario<DetailsView> scenario = ActivityScenario.launch(createFakeIntent())) {
                 onView(withId(R.id.tvName)).check(matches(withText("BiciMAD")));
 
-                // Verificamos que el dato inconsistente pone el texto por defecto
+                //Verificamos que el dato inconsistente pone el texto por defecto
                 onView(withId(R.id.tvEbikes)).check(matches(withText(noData)));
             }
         }
