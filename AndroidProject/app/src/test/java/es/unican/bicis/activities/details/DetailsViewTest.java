@@ -66,7 +66,7 @@ public class DetailsViewTest {
                 //comprobar interfaz
                 onView(ViewMatchers.withId(R.id.tvName)).check(matches(withText("Bicing")));
                 onView(withId(R.id.tvCity)).check(matches(withText("Barcelona (ES)")));
-                onView(withId(R.id.tvEbikes)).check(matches(withText("true")));
+                onView(withId(R.id.tvEbikes)).check(matches(withText("Yes")));
                 onView(withId(R.id.tvCompanysNum)).check(matches(withText("3")));
             }
         }
@@ -79,7 +79,7 @@ public class DetailsViewTest {
         Network mockNetwork = mock(Network.class);
         Location mockLocation = mock (Location.class);
         when(mockNetwork.getName()).thenReturn("TUeBICI");
-        when(mockNetwork.isEbikes()).thenReturn(null);
+        when(mockNetwork.isEbikes()).thenReturn(false);
         when(mockNetwork.getCompany()).thenReturn(null);
         when(mockNetwork.getLocation()).thenReturn(mockLocation);
 
@@ -95,7 +95,7 @@ public class DetailsViewTest {
                 //comprobar la interfaz con los datos corretos
                 onView(withId(R.id.tvName)).check(matches(withText("TUeBICI")));
                 onView(withId(R.id.tvCity)).check(matches(withText("Santander (ES)")));
-                onView(withId(R.id.tvEbikes)).check(matches(withText(noData)));
+                onView(withId(R.id.tvEbikes)).check(matches(withText("No")));
                 onView(withId(R.id.tvCompanysNum)).check(matches(withText(noData)));
 
                 //comprobar que se lanza el toast
@@ -127,7 +127,7 @@ public class DetailsViewTest {
 
         when(mockNetwork.getName()).thenReturn("BiciMAD");
         when(mockNetwork.getCompany()).thenReturn(new String[]{"EMTMadrid"});
-        when(mockNetwork.isEbikes()).thenReturn(null);
+        when(mockNetwork.isEbikes()).thenReturn(false);
         String noData = ApplicationProvider.getApplicationContext().getString(R.string.noData);
         try (MockedStatic<Parcels> mockedParcels = Mockito.mockStatic(Parcels.class)) {
             mockedParcels.when(() -> Parcels.unwrap(any())).thenReturn(mockNetwork);
@@ -136,7 +136,7 @@ public class DetailsViewTest {
                 onView(withId(R.id.tvName)).check(matches(withText("BiciMAD")));
 
                 //Verificamos que el dato inconsistente pone el texto por defecto
-                onView(withId(R.id.tvEbikes)).check(matches(withText(noData)));
+                onView(withId(R.id.tvEbikes)).check(matches(withText("No")));
             }
         }
     }
