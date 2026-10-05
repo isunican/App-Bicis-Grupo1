@@ -47,6 +47,7 @@ public class DetailsViewTest {
 
     @Test
     public void testPU01RedValidaConDatos(){
+        //preparar mocks
         Network mockNetwork = mock(Network.class);
         Location mockLocation = mock (Location.class);
         when(mockNetwork.getName()).thenReturn("Bicing");
@@ -63,6 +64,7 @@ public class DetailsViewTest {
             mockedParcels.when(() -> Parcels.unwrap(any())).thenReturn(mockNetwork);
 
             try (ActivityScenario<DetailsView> scenario = ActivityScenario.launch(createFakeIntent())) {
+                //comprobar interfaz
                 onView(withId(R.id.tvName)).check(matches(withText("Bicing")));
                 onView(withId(R.id.tvCity)).check(matches(withText("Barcelona (ES)")));
                 onView(withId(R.id.tvEbikes)).check(matches(withText("true")));
@@ -74,6 +76,7 @@ public class DetailsViewTest {
 
     @Test
     public void testPU02RedSinInfoDetallada(){
+        //preparar mocks
         Network mockNetwork = mock(Network.class);
         Location mockLocation = mock (Location.class);
         when(mockNetwork.getName()).thenReturn("TUeBICI");
@@ -110,6 +113,8 @@ public class DetailsViewTest {
 
             try (ActivityScenario<DetailsView> scenario = ActivityScenario.launch(createFakeIntent())) {
                 // Comprobamos que al ser null, la UI no crashea y carga un string vacío
+                onView(withId(R.id.tvName)).check(matches(withText("")));
+                //comprobar que se lanza el toast de error de red
                 String toastMsgExpected = ApplicationProvider.getApplicationContext().getString(R.string.loadError);
                 String lastToastMsg = ShadowToast.getTextOfLatestToast();
                 assertEquals(toastMsgExpected, lastToastMsg);
@@ -119,6 +124,21 @@ public class DetailsViewTest {
 
     @Test
     public void testPU04DatosInconsistentes(){
+        Network mockNetwork = mock(Network.class);
 
+        when(mockNetwork.getName()).thenReturn("BiciMAD");
+        when(mockNetwork.getCompany()).thenReturn(new String[]{"EMTMadrid"});
+        when(mockNetwork.isEbikes()).thenReturn(null);
+        String noData = ApplicationProvider.getApplicationContext().getString(R.string.noData);
+        try (MockedStatic<Parcels> mockedParcels = Mockito.mockStatic(Parcels.class)) {
+            mockedParcels.when(() -> Parcels.unwrap(any())).thenReturn(mockNetwork);
+
+            try (ActivityScenario<DetailsView> scenario = ActivityScenario.launch(createFakeIntent())) {
+                onView(withId(R.id.tvName)).check(matches(withText("BiciMAD")));
+
+                // Verificamos que el dato inconsistente pone el texto por defecto
+                onView(withId(R.id.tvEbikes)).check(matches(withText(noData)));
+            }
+        }
     }
 }
