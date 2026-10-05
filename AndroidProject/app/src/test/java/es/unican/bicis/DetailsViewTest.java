@@ -105,7 +105,16 @@ public class DetailsViewTest {
 
     @Test
     public void testPU03BBDDNoAccesible(){
+        try (MockedStatic<Parcels> mockedParcels = Mockito.mockStatic(Parcels.class)) {
+            mockedParcels.when(() -> Parcels.unwrap(any())).thenReturn(null);
 
+            try (ActivityScenario<DetailsView> scenario = ActivityScenario.launch(createFakeIntent())) {
+                // Comprobamos que al ser null, la UI no crashea y carga un string vacío
+                String toastMsgExpected = ApplicationProvider.getApplicationContext().getString(R.string.loadError);
+                String lastToastMsg = ShadowToast.getTextOfLatestToast();
+                assertEquals(toastMsgExpected, lastToastMsg);
+            }
+        }
     }
 
     @Test
