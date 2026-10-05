@@ -83,7 +83,8 @@ public class DetailsViewTest {
 
         when(mockLocation.getCity()).thenReturn("Santander");
         when(mockLocation.getCountry()).thenReturn("ES");
-
+        String noData = ApplicationProvider.getApplicationContext().getString(R.string.noData);
+        String toastStr = ApplicationProvider.getApplicationContext().getString(R.string.noDetailInfo);
         //Interceptar el onCreate en el unwrap para que pase la red mockeada
         try (MockedStatic<Parcels> mockedParcels = Mockito.mockStatic(Parcels.class)) {
             mockedParcels.when(() -> Parcels.unwrap(any())).thenReturn(mockNetwork);
@@ -92,12 +93,12 @@ public class DetailsViewTest {
                 //comprobar la interfaz con los datos corretos
                 onView(withId(R.id.tvName)).check(matches(withText("TUeBICI")));
                 onView(withId(R.id.tvCity)).check(matches(withText("Santander (ES)")));
-                onView(withId(R.id.tvEbikes)).check(matches(withText(R.string.noData)));
-                onView(withId(R.id.tvCompanysNum)).check(matches(withText(R.string.noData)));
+                onView(withId(R.id.tvEbikes)).check(matches(withText(noData)));
+                onView(withId(R.id.tvCompanysNum)).check(matches(withText(noData)));
 
                 //comprobar que se lanza el toast
                 String lastToastMsg = ShadowToast.getTextOfLatestToast();
-                assertEquals(R.string.noDetailInfo, lastToastMsg);
+                assertEquals(toastStr, lastToastMsg);
             }
         }
     }
