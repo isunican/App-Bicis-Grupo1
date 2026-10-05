@@ -1,4 +1,4 @@
-package es.unican.bicis;
+package es.unican.bicis.activities.details;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -9,12 +9,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.matcher.ViewMatchers;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,10 +25,9 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowToast;
 
-import es.unican.bicis.activities.details.DetailsView;
+import es.unican.bicis.R;
 import es.unican.bicis.model.Location;
 import es.unican.bicis.model.Network;
-import es.unican.bicis.model.NetworksResponse;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 35)
@@ -65,7 +64,7 @@ public class DetailsViewTest {
 
             try (ActivityScenario<DetailsView> scenario = ActivityScenario.launch(createFakeIntent())) {
                 //comprobar interfaz
-                onView(withId(R.id.tvName)).check(matches(withText("Bicing")));
+                onView(ViewMatchers.withId(R.id.tvName)).check(matches(withText("Bicing")));
                 onView(withId(R.id.tvCity)).check(matches(withText("Barcelona (ES)")));
                 onView(withId(R.id.tvEbikes)).check(matches(withText("true")));
                 onView(withId(R.id.tvCompanysNum)).check(matches(withText("3")));
