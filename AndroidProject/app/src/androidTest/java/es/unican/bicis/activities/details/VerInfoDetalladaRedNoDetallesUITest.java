@@ -43,6 +43,7 @@ public class VerInfoDetalladaRedNoDetallesUITest {
      Tenemos que sobreescribir la inyeccion para que se lea sirectamente el .json
      que tiene las redes sin detalles
      */
+
     @BindValue
     INetworksRepository repository = new INetworksRepository() {
         @Override
@@ -54,7 +55,15 @@ public class VerInfoDetalladaRedNoDetallesUITest {
 
         @Override
         public void requestNetwork(NetworkDetailsCallback cb, String networkId) {
-            /* Dejar vacio ya que no es necesario*/
+            Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+            List<Network> networks = Utils.parseNetworks(context, R.raw.networks_no_detail);
+            for (Network network : networks) {
+                if (network.getId().equals(networkId)) {
+                    cb.onSuccess(network);
+                    return;
+                }
+            }
+            cb.onFailure(new Exception("Network not found"));
         }
     };
 
@@ -63,7 +72,7 @@ public class VerInfoDetalladaRedNoDetallesUITest {
 
     @Before
     public void setup() {
-        hiltRule.inject();
+       hiltRule.inject();
     }
 
     @Test
@@ -73,8 +82,8 @@ public class VerInfoDetalladaRedNoDetallesUITest {
 
         // Comprueba que se muestren los datos correctamente según el JSON
         onView(withId(R.id.tvName)).check(matches(withText("BiciMAD")));
-        onView(withId(R.id.tvCity)).check(matches(withText("- (-)")));
-        onView(withId(R.id.tvEbikes)).check(matches(withText("-")));
+        onView(withId(R.id.tvCity)).check(matches(withText("- (ES)")));
+        onView(withId(R.id.tvEbikes)).check(matches(withText("No")));
         onView(withId(R.id.tvCompanysNum)).check(matches(withText("-")));
     }
 }
