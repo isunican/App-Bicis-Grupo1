@@ -111,6 +111,8 @@ public class DetailsView extends AppCompatActivity {
             if (!hasCompanys) {
                 Toast.makeText(this, R.string.noDetailInfo, Toast.LENGTH_LONG).show();
             }
+        } else {
+            Toast.makeText(this, R.string.loadError, Toast.LENGTH_LONG).show();
         }
     }
 }
