@@ -32,7 +32,7 @@ public class VerInfoDetalladaRedExitoUITest {
     @Test
     public void verInfoDetalladaRedExitoTest() {
         //Hace click en el primer elemento de la lista
-        onData(anything()).inAdapterView(ViewMatchers.withId(R.id.lvNetworks)).atPosition(1).perform(click());
+        onData(anything()).inAdapterView(ViewMatchers.withId(R.id.lvNetworks)).atPosition(0).perform(click());
 
         /* Suponemos que el elemento 0 es Bicing segun el .json de ejemplo en el directorio raw */
 
