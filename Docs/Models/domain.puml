@@ -13,6 +13,7 @@ class Network {
 
 class Location {
     - city : String
+    - country : Strings
 }
 
 class NetworksResponse {

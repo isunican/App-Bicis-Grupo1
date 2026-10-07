@@ -37,7 +37,7 @@ public class JsonNetworksRepository implements INetworksRepository {
      */
     @Override
     public void requestNetworks(NetworksCallback cb) {
-        List<Network> networks = Utils.parseNetworks(context, R.raw.networks);
+        List<Network> networks = Utils.parseNetworks(context, R.raw.networks); //Cambiar el R.raw.networks por netwoeks_no_detail.json
         cb.onSuccess(networks);
     }
 
