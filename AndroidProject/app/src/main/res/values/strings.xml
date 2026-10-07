@@ -1,8 +1,15 @@
 <resources>
-    <string name="app_name">Bicis</string>
-    <string name="refresh">Recargar</string>
-    <string name="info">Info</string>
-    <string name="loadCorrect">Se han cargado %d redes</string>
-    <string name="loadError">Ha habido un error cargando las redes</string>
-    <string name="info_text">Aplicación creada para el Proyecto Integrado Curso 2026-2027</string>
+    <string name="app_name">Bikes</string>
+    <string name="refresh">Reload</string>
+    <string name="info">About</string>
+    <string name="loadCorrect">Loaded %d networks</string>
+    <string name="loadError">Failed to load networks</string>
+    <string name="info_text">App created for the 2026–2027 Integrated Project</string>
+    <string name="name">Name:</string>
+    <string name="eBikes" translatable="false">eBikes:</string>
+    <string name="Companies">Companies:</string>
+    <string name="noData" translatable="false">-</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="noDetailInfo">No detailed information is available for this network.</string>
 </resources>

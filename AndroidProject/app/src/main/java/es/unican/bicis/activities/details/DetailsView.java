@@ -2,7 +2,10 @@ package es.unican.bicis.activities.details;
 
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,6 +48,9 @@ public class DetailsView extends AppCompatActivity {
         // Link to view elements
         TextView tvName = findViewById(R.id.tvName);
         TextView tvCity = findViewById(R.id.tvCity);
+        TextView tvEbikes = findViewById(R.id.tvEbikes);
+        TextView tvCompanysNum = findViewById(R.id.tvCompanysNum);
+        ListView lvCompanys = findViewById(R.id.lvCompanys);
 
         // Get Network from the intent that triggered this activity
         Parcelable wrapped = IntentCompat.getParcelableExtra(getIntent(), INTENT_NETWORK, Parcelable.class);
@@ -55,11 +61,58 @@ public class DetailsView extends AppCompatActivity {
 
         // Set Texts
         if (network != null) {
-            tvName.setText(network.getName());
+            String name = network.getName();
+            if (name != null) {
+                tvName.setText(name);
+            } else {
+                tvName.setText(R.string.noData);
+            }
+
+            Boolean ebikes = network.isEbikes();
+            if (ebikes != null) {
+                if (ebikes) {
+                    tvEbikes.setText(R.string.yes);
+                } else {
+                    tvEbikes.setText(R.string.no);
+                }
+            } else {
+                tvEbikes.setText(R.string.noData);
+            }
+
+            String[] companys = network.getCompany();
+            if (companys != null) {
+                tvCompanysNum.setText(String.valueOf(companys.length));
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                        this,
+                        android.R.layout.simple_list_item_1,
+                        companys
+                );
+                lvCompanys.setAdapter(adapter);
+            } else {
+                tvCompanysNum.setText(R.string.noData);
+            }
+
             Location location = network.getLocation();
             if (location != null) {
-                tvCity.setText(location.getCity());
+                String city = location.getCity();
+                String country = location.getCountry();
+                if (city == null) {
+                    city = getString(R.string.noData);
+                }
+                if (country == null) {
+                    country = getString(R.string.noData);
+                }
+                tvCity.setText(String.format("%s (%s)", city, country));
+            } else {
+                tvCity.setText(R.string.noData);
             }
+
+            boolean hasCompanys = companys != null && companys.length > 0;
+            if (!hasCompanys) {
+                Toast.makeText(this, R.string.noDetailInfo, Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(this, R.string.loadError, Toast.LENGTH_LONG).show();
         }
     }
 }
