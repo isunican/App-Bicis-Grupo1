@@ -53,6 +53,7 @@ public class StationDetailsView extends AppCompatActivity {
         TextView tvId = findViewById(R.id.tvIdDisplay);
         TextView tvTime = findViewById(R.id.tvTimeDisplay);
         TextView tvUid = findViewById(R.id.tvUidDisplay);
+        
         // Get Station from the intent that triggered this activity
         Parcelable wrapped = IntentCompat.getParcelableExtra(getIntent(), INTENT_STATION, Parcelable.class);
         Station station = null;
@@ -60,6 +61,7 @@ public class StationDetailsView extends AppCompatActivity {
             station = Parcels.unwrap(wrapped);
         }
 
+        //Set texts on interface
         if (station != null) {
             String name = station.getName();
             if (name != null) {
