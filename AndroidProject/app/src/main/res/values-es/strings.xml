@@ -16,4 +16,5 @@
     <string name="free_bikes">Slots ocupados:</string>
     <string name="empty_slots">Slots libres:</string>
     <string name="timestamp">Marca de tiempo:</string>
+    <string name="loadErrorStation">Ha habido un error cargando la estación</string>
 </resources>
