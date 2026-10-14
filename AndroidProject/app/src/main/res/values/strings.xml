@@ -12,4 +12,8 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="noDetailInfo">No detailed information is available for this network.</string>
+    <string name="latitude">Latitude:</string>
+    <string name="longitude">Longitude:</string>
+    <string name="free_bikes">Used slots:</string>
+    <string name="empty_slots">Free slots:</string>
 </resources>

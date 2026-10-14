@@ -11,4 +11,8 @@
     <string name="yes">Sí</string>
     <string name="no">No</string>
     <string name="noDetailInfo">No hay información detallada para esta red.</string>
+    <string name="latitude">Latitud:</string>
+    <string name="longitude">Longitud:</string>
+    <string name="free_bikes">Slots ocupados:</string>
+    <string name="empty_slots">Slots libres:</string>
 </resources>

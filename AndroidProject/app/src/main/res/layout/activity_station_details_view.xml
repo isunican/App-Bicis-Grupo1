@@ -7,6 +7,24 @@
     android:layout_height="match_parent"
     tools:context=".activities.details.StationDetailsView">
 
+    <TextView
+        android:id="@+id/tvFreeSlots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/empty_slots"
+        app:layout_constraintStart_toStartOf="@+id/tvUsedSlots"
+        app:layout_constraintTop_toBottomOf="@+id/tvUsedSlots" />
+
+    <TextView
+        android:id="@+id/tvLogintude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/longitude"
+        app:layout_constraintStart_toStartOf="@+id/tvLatitude"
+        app:layout_constraintTop_toBottomOf="@+id/tvLatitude" />
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -19,4 +37,70 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    <TextView
+        android:id="@+id/tvStName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="48dp"
+        android:text="Station Name"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <TextView
+        android:id="@+id/tvLatitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/latitude"
+        app:layout_constraintStart_toStartOf="@+id/tvStName"
+        app:layout_constraintTop_toBottomOf="@+id/tvStName" />
+
+    <TextView
+        android:id="@+id/tvLatDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="88.88"
+        app:layout_constraintStart_toEndOf="@+id/tvLatitude"
+        app:layout_constraintTop_toTopOf="@+id/tvLatitude" />
+
+    <TextView
+        android:id="@+id/tvLongDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="88.88"
+        app:layout_constraintStart_toEndOf="@+id/tvLogintude"
+        app:layout_constraintTop_toTopOf="@+id/tvLogintude" />
+
+    <TextView
+        android:id="@+id/tvUsedSlots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/free_bikes"
+        app:layout_constraintStart_toStartOf="@+id/tvLogintude"
+        app:layout_constraintTop_toBottomOf="@+id/tvLogintude" />
+
+    <TextView
+        android:id="@+id/tvUsedSlotsDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="88"
+        app:layout_constraintStart_toEndOf="@+id/tvUsedSlots"
+        app:layout_constraintTop_toTopOf="@+id/tvUsedSlots" />
+
+    <TextView
+        android:id="@+id/tvFreeSlotsDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="88"
+        app:layout_constraintStart_toEndOf="@+id/tvFreeSlots"
+        app:layout_constraintTop_toTopOf="@+id/tvFreeSlots" />
 </androidx.constraintlayout.widget.ConstraintLayout>
