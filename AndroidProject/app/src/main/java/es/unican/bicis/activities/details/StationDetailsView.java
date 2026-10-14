@@ -68,14 +68,30 @@ public class StationDetailsView extends AppCompatActivity {
             } else {
                 tvStationName.setText(R.string.noData);
             }
-            double latitude = station.getLatitude();
-            double longitude = station.getLongitude();
-            tvLatitude.setText(String.valueOf(latitude));
-            tvLongitude.setText(String.valueOf(longitude));
-            int usedSlots = station.getFreeBikes();
-            int freeSlots = station.getEmptySlots();
-            tvUsedSlots.setText(String.valueOf(usedSlots));
-            tvFreeSlots.setText(String.valueOf(freeSlots));
+            Double latitude = station.getLatitude();
+            if (latitude > 90 || latitude < -90 || latitude == null) {
+                tvLatitude.setText(R.string.noData);
+            } else {
+                tvLatitude.setText(String.valueOf(latitude));
+            }
+            Double longitude = station.getLongitude();
+            if (longitude > 180 || longitude < -180 || longitude == null) {
+                tvLongitude.setText(R.string.noData);
+            } else {
+                tvLongitude.setText(String.valueOf(longitude));
+            }
+            Integer usedSlots = station.getFreeBikes();
+            if (usedSlots < 0 || usedSlots == null) {
+                tvUsedSlots.setText(R.string.noData);
+            } else {
+                tvUsedSlots.setText(String.valueOf(usedSlots));
+            }
+            Integer freeSlots = station.getEmptySlots();
+            if (freeSlots < 0 || freeSlots == null) {
+                tvFreeSlots.setText(R.string.noData);
+            } else {
+                tvFreeSlots.setText(String.valueOf(freeSlots));
+            }
             String id = station.getId();
             if (id != null) {
                 tvId.setText(id);

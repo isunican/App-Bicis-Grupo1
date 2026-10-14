@@ -22,9 +22,9 @@ import lombok.Setter;
 public class Station {
     @SerializedName("id")   protected String id;
     @SerializedName("name")    protected String name;
-    @SerializedName("latitude")    protected double latitude;
-    @SerializedName("longitude")    protected double longitude;
-    @SerializedName("free_bikes")    protected int freeBikes;
-    @SerializedName("empty_slots")   protected int emptySlots;
+    @SerializedName("latitude")    protected Double latitude;
+    @SerializedName("longitude")    protected Double longitude;
+    @SerializedName("free_bikes")    protected Integer freeBikes;
+    @SerializedName("empty_slots")   protected Integer emptySlots;
     @SerializedName("timestamp")    protected String timestamp;
 }
