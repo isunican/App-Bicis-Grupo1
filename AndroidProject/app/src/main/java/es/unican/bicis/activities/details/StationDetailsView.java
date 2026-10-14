@@ -52,7 +52,6 @@ public class StationDetailsView extends AppCompatActivity {
         TextView tvFreeSlots = findViewById(R.id.tvFreeSlotsDisplay);
         TextView tvId = findViewById(R.id.tvIdDisplay);
         TextView tvTime = findViewById(R.id.tvTimeDisplay);
-        TextView tvUid = findViewById(R.id.tvUidDisplay);
 
         // Get Station from the intent that triggered this activity
         Parcelable wrapped = IntentCompat.getParcelableExtra(getIntent(), INTENT_STATION, Parcelable.class);
@@ -89,8 +88,6 @@ public class StationDetailsView extends AppCompatActivity {
             } else {
                 tvTime.setText(R.string.noData);
             }
-            int uid = station.getUid();
-            tvUid.setText(String.valueOf(uid));
         } else {
             Toast.makeText(this, R.string.loadErrorStation, Toast.LENGTH_LONG).show();
         }
