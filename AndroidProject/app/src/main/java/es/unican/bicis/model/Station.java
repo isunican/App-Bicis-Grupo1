@@ -26,5 +26,6 @@ public class Station {
     @SerializedName("longitude")    protected double longitude;
     @SerializedName("free_bikes")    protected int freeBikes;
     @SerializedName("empty_slots")   protected int emptySlots;
-
+    @SerializedName("timestamp")    protected String timestamp;
+    @SerializedName("uid")   protected int uid;
 }

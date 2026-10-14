@@ -15,4 +15,5 @@
     <string name="longitude">Longitud:</string>
     <string name="free_bikes">Slots ocupados:</string>
     <string name="empty_slots">Slots libres:</string>
+    <string name="timestamp">Marca de tiempo:</string>
 </resources>

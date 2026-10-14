@@ -16,4 +16,5 @@
     <string name="longitude">Longitude:</string>
     <string name="free_bikes">Used slots:</string>
     <string name="empty_slots">Free slots:</string>
+    <string name="timestamp">Timestamp:</string>
 </resources>
