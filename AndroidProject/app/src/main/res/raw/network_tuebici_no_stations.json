@@ -1,0 +1,20 @@
+{
+    "network": {
+        "id": "tuebici",
+        "name": "TUeBICI",
+        "location": {
+            "latitude": 43.46230569999999,
+            "longitude": -3.8099803,
+            "city": "Santander",
+            "country": "ES"
+        },
+        "href": "/v2/networks/tuebici",
+        "company": [
+            "UTE BICIS SANTANDER"
+        ],
+        "system": "Nextbike",
+        "stations": [
+
+        ]
+    }
+}

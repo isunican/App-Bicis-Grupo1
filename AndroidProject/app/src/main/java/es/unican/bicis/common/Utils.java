@@ -17,6 +17,11 @@ import es.unican.bicis.model.Network;
 import es.unican.bicis.model.NetworkResponse;
 import es.unican.bicis.model.NetworksResponse;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
+
+import android.location.LocationManager;
+
 /**
  * Utility methods that may be used by several classes
  */
@@ -59,5 +64,58 @@ public class Utils {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    /**
+     * Checks if the device is connected to a network
+     * @param context the application context
+     * @return true if the device is connected to a network, false otherwise
+     */
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (connectivityManager != null) {
+            android.net.Network network = connectivityManager.getActiveNetwork();
+            if (network == null) {
+                return false;
+            }
+
+            NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(network);
+            return capabilities != null && (
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+            );
+        }
+        return false;
+    }
+
+    /**
+     * Checks if the device has a location provider enabled
+     * @param context the application context
+     * @return true if the device has a location provider enabled, false otherwise
+     */
+    public static boolean isLocationEnabled(Context context) {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager != null) {
+            boolean gpsEnabled = false;
+            boolean networkEnabled = false;
+
+            try {
+                gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            } catch (Exception e) {
+                // Excepción por si el proveedor no está disponible en algún dispositivo
+            }
+
+            try {
+                networkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            } catch (Exception e) {
+                // Excepción por si el proveedor no está disponible
+            }
+
+            return gpsEnabled || networkEnabled;
+        }
+        return false;
     }
 }
