@@ -2,6 +2,7 @@ package es.unican.bicis.activities.main;
 
 import java.util.List;
 
+import es.unican.bicis.common.Utils;
 import es.unican.bicis.model.Network;
 import es.unican.bicis.repository.INetworksRepository;
 import es.unican.bicis.repository.NetworksCallback;
@@ -22,7 +23,11 @@ public class MainPresenter implements IMainContract.Presenter {
     public void init(IMainContract.View view) {
         this.view = view;
         this.view.init();
-        load();
+        if (Utils.isNetworkAvailable(view.getContext())) {
+            load();
+        } else {
+            view.showRedError();
+        }
     }
 
     /**

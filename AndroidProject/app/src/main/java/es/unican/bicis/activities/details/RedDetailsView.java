@@ -1,8 +1,8 @@
 package es.unican.bicis.activities.details;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,18 +14,37 @@ import androidx.core.content.IntentCompat;
 
 import org.parceler.Parcels;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import es.unican.bicis.R;
+import es.unican.bicis.common.LocationUtils;
 import es.unican.bicis.model.Location;
 import es.unican.bicis.model.Network;
+import es.unican.bicis.model.Station;
+import es.unican.bicis.repository.INetworksRepository;
 
 /**
  * View that shows the details of one bike sharing network. Since this view does not have business logic,
  * it can be implemented as an activity directly, without the MVP pattern.
  */
-public class DetailsView extends AppCompatActivity {
+@AndroidEntryPoint
+public class RedDetailsView extends AppCompatActivity implements IRedDetailsContract.View {
+
+    /** The presenter of this view */
+    private IRedDetailsContract.Presenter presenter;
 
     /** Key for the intent that contains the network */
     public static final String INTENT_NETWORK = "INTENT_NETWORK";
+
+    /** The repository to access the data. This is automatically injected by Hilt in this class */
+    @Inject
+    INetworksRepository repository;
+
+    /** Network of the view */
+    Network network = null;
 
     /**
      * @see AppCompatActivity#onCreate(Bundle)
@@ -45,19 +64,35 @@ public class DetailsView extends AppCompatActivity {
         assert bar != null;  // to avoid warning in the line below
         bar.setDisplayHomeAsUpEnabled(true);  // show back button in action bar
 
+        // Get Network from the intent that triggered this activity
+        Parcelable wrapped = IntentCompat.getParcelableExtra(getIntent(), INTENT_NETWORK, Parcelable.class);
+        if (wrapped != null) {
+            network = Parcels.unwrap(wrapped);
+        }
+
+        LocationUtils.updateLocation();
+
+        presenter = new RedDetailsPresenter();
+        presenter.init(this, network);
+    }
+
+    /**
+     * @see IRedDetailsContract.View#init()
+     */
+    @Override
+    public void init() {
+        // initialize on click listeners (when clicking on a station in the list)
+        ListView list = findViewById(R.id.lvStations);
+        list.setOnItemClickListener((parent, view, position, id) -> {
+            Station station = (Station) parent.getItemAtPosition(position);
+            //presenter.onNetworkClicked(network);
+        });
+
         // Link to view elements
         TextView tvName = findViewById(R.id.tvName);
         TextView tvCity = findViewById(R.id.tvCity);
         TextView tvEbikes = findViewById(R.id.tvEbikes);
         TextView tvCompanysNum = findViewById(R.id.tvCompanysNum);
-        ListView lvCompanys = findViewById(R.id.lvCompanys);
-
-        // Get Network from the intent that triggered this activity
-        Parcelable wrapped = IntentCompat.getParcelableExtra(getIntent(), INTENT_NETWORK, Parcelable.class);
-        Network network = null;
-        if (wrapped != null) {
-            network = Parcels.unwrap(wrapped);
-        }
 
         // Set Texts
         if (network != null) {
@@ -82,12 +117,6 @@ public class DetailsView extends AppCompatActivity {
             String[] companys = network.getCompany();
             if (companys != null) {
                 tvCompanysNum.setText(String.valueOf(companys.length));
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                        this,
-                        android.R.layout.simple_list_item_1,
-                        companys
-                );
-                lvCompanys.setAdapter(adapter);
             } else {
                 tvCompanysNum.setText(R.string.noData);
             }
@@ -114,5 +143,72 @@ public class DetailsView extends AppCompatActivity {
         } else {
             Toast.makeText(this, R.string.loadError, Toast.LENGTH_LONG).show();
         }
+    }
+
+    /**
+     * @see IRedDetailsContract.View#getNetworksRepository()
+     * @return the repository to access the data
+     */
+    @Override
+    public INetworksRepository getNetworksRepository() {
+        return repository;
+    }
+
+    /**
+     * @see IRedDetailsContract.View#showStations(List)
+     */
+    @Override
+    public void showStations(List<Station> stations) {
+        ListView list = findViewById(R.id.lvStations);
+        StationsArrayAdapter adapter = new StationsArrayAdapter(this, stations);
+        list.setAdapter(adapter);
+    }
+
+    /**
+     * @see IRedDetailsContract.View#showNoStations()
+     */
+    @Override
+    public void showNoStations() {
+        Toast.makeText(this, R.string.noStations, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @see IRedDetailsContract.View#showLoadCorrect(int)
+     */
+    @Override
+    public void showLoadCorrect(int stations) {
+        Toast.makeText(this, getString(R.string.loadCorrectStations, stations), Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @see IRedDetailsContract.View#showLoadError()
+     */
+    @Override
+    public void showLoadError() {
+        Toast.makeText(this, R.string.loadErrorStations, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @see IRedDetailsContract.View#showRedError()
+     */
+    @Override
+    public void showRedError() {
+        Toast.makeText(this, R.string.redError, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @see IRedDetailsContract.View#showLocationError()
+     */
+    @Override
+    public void showLocationError() {
+        Toast.makeText(this, R.string.locationError, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @see IRedDetailsContract.View#getContext()
+     */
+    @Override
+    public Context getContext() {
+        return this;
     }
 }

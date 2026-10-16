@@ -1,6 +1,9 @@
 package es.unican.bicis.activities.main;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import org.parceler.Parcels;
 
@@ -21,8 +26,10 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import es.unican.bicis.R;
+import es.unican.bicis.activities.details.IRedDetailsContract;
 import es.unican.bicis.activities.info.InfoView;
-import es.unican.bicis.activities.details.DetailsView;
+import es.unican.bicis.activities.details.RedDetailsView;
+import es.unican.bicis.common.LocationUtils;
 import es.unican.bicis.model.Network;
 import es.unican.bicis.repository.INetworksRepository;
 
@@ -49,6 +56,18 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         // Set this toolbar as the activity ActionBar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Obtener permisos de ubicacion
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            // Si ya los dio antes, iniciamos directamente
+            LocationUtils.init(this);
+        } else {
+            // Si no los tiene, abrimos la ventanita para pedirlos (código 100)
+            ActivityCompat.requestPermissions(this, new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+            }, 100);
+        }
 
         // instantiate presenter and launch initial business logic
         presenter = new MainPresenter();
@@ -135,13 +154,29 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     }
 
     /**
+     * @see IRedDetailsContract.View#showRedError()
+     */
+    @Override
+    public void showRedError() {
+        Toast.makeText(this, R.string.redError, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @see IRedDetailsContract.View#getContext()
+     */
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    /**
      * @see IMainContract.View#showNetworkDetails(Network)
      * @param network the network
      */
     @Override
     public void showNetworkDetails(Network network) {
-        Intent intent = new Intent(this, DetailsView.class);
-        intent.putExtra(DetailsView.INTENT_NETWORK, Parcels.wrap(network));
+        Intent intent = new Intent(this, RedDetailsView.class);
+        intent.putExtra(RedDetailsView.INTENT_NETWORK, Parcels.wrap(network));
         startActivity(intent);
     }
 
