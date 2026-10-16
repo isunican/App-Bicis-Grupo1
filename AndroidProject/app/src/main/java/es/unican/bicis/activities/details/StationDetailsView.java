@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 import org.parceler.Parcels;
 
 import es.unican.bicis.R;
+import es.unican.bicis.common.TimestampUtils;
 import es.unican.bicis.model.Network;
 import es.unican.bicis.model.Station;
 
@@ -108,6 +109,7 @@ public class StationDetailsView extends AppCompatActivity {
             }
             String timestamp = station.getTimestamp();
             if (timestamp != null) {
+                timestamp = TimestampUtils.formatearTimestamp(timestamp);
                 tvTime.setText(timestamp);
             } else {
                 tvTime.setText(R.string.noData);
