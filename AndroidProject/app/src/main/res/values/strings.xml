@@ -18,4 +18,10 @@
     <string name="empty_slots">Free slots:</string>
     <string name="timestamp">Last updated:</string>
     <string name="loadErrorStation">Failed to load station</string>
+    <string name="stations">Stations:</string>
+    <string name="loadCorrectStations">Loaded %d stations</string>
+    <string name="loadErrorStations">Failed to load stations</string>
+    <string name="redError">There is not Network conexion</string>
+    <string name="locationError">Location is not enabled</string>
+    <string name="noStations">There are no stations for the Network</string>
 </resources>

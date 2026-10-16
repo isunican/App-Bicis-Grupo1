@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * A station from a bike sharing network (a city-level bike rental system), as defined in the
  * <a href="https://api.citybik.es/v2/">CityBikes API</a>.
  *
  * The #SerializedName annotation is a GSON annotation that defines the name of the property
@@ -20,11 +19,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Station {
-    @SerializedName("id")   protected String id;
-    @SerializedName("name")    protected String name;
-    @SerializedName("latitude")    protected Double latitude;
-    @SerializedName("longitude")    protected Double longitude;
-    @SerializedName("free_bikes")    protected Integer freeBikes;
-    @SerializedName("empty_slots")   protected Integer emptySlots;
-    @SerializedName("timestamp")    protected String timestamp;
+
+    @SerializedName("id")                   protected String id;
+    @SerializedName("name")                 protected String name;
+    @SerializedName("latitude")             protected double latitude;
+    @SerializedName("longitude")            protected double longitude;
+    @SerializedName("timestamp")            protected String timestamp;
+    @SerializedName("free_bikes")           protected int freeBikes;
+    @SerializedName("empty_slots")          protected int emptySlots;
+
 }
