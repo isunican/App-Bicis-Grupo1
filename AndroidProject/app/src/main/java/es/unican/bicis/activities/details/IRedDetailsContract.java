@@ -35,7 +35,7 @@ public interface IRedDetailsContract {
          *
          * @param station the station that has been clicked
          */
-        //public void onStationClicked(Station station);
+        public void onStationClicked(Station station);
     }
 
 
@@ -110,11 +110,11 @@ public interface IRedDetailsContract {
         public Context getContext();
 
         /**
-         * The view is requested to display the detailed view of the given network.
+         * The view is requested to display the detailed view of the given station.
          * Only the Presenter should call this method
-         * @param network the network
+         * @param station the station
          */
-        //public void showNetworkDetails(Network network);
+        public void showStationDetails(Station station);
 
     }
 }

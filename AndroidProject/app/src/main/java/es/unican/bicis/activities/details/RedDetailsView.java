@@ -1,6 +1,7 @@
 package es.unican.bicis.activities.details;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.widget.ListView;
@@ -85,7 +86,7 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
         ListView list = findViewById(R.id.lvStations);
         list.setOnItemClickListener((parent, view, position, id) -> {
             Station station = (Station) parent.getItemAtPosition(position);
-            //presenter.onNetworkClicked(network);
+            presenter.onStationClicked(station);
         });
 
         // Link to view elements
@@ -202,6 +203,15 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
     @Override
     public void showLocationError() {
         Toast.makeText(this, R.string.locationError, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @see IRedDetailsContract.View#showStationDetails(Station)
+     */
+    public void showStationDetails(Station station) {
+        Intent intent = new Intent(this, StationDetailsView.class);
+        intent.putExtra(StationDetailsView.INTENT_STATION, Parcels.wrap(station));
+        startActivity(intent);
     }
 
     /**
