@@ -44,10 +44,10 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
      * @see IRedDetailsContract.Presenter#onStationClicked(Station)
      * @param station the station that has been clicked
      */
-    //@Override
-    //public void onNetworkClicked(Network network) {
-        //view.showNetworkDetails(network);
-    //}
+    @Override
+    public void onStationClicked(Station station) {
+        view.showStationDetails(station);
+    }
 
     /**
      * Loads the bike stations from the repository, and sends them to the view

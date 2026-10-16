@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 import org.parceler.Parcels;
 
 import es.unican.bicis.R;
+import es.unican.bicis.common.TimestampUtils;
 import es.unican.bicis.model.Network;
 import es.unican.bicis.model.Station;
 
@@ -36,6 +37,14 @@ public class StationDetailsView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_station_details_view);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         // The default theme does not include a toolbar.
         // In this app the toolbar is explicitly declared in the layout
@@ -100,6 +109,7 @@ public class StationDetailsView extends AppCompatActivity {
             }
             String timestamp = station.getTimestamp();
             if (timestamp != null) {
+                timestamp = TimestampUtils.formatearTimestamp(timestamp);
                 tvTime.setText(timestamp);
             } else {
                 tvTime.setText(R.string.noData);
@@ -107,13 +117,11 @@ public class StationDetailsView extends AppCompatActivity {
         } else {
             Toast.makeText(this, R.string.loadErrorStation, Toast.LENGTH_LONG).show();
         }
+    }
 
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_station_details_view);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 }
