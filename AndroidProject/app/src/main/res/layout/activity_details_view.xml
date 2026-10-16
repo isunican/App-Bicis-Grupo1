@@ -85,12 +85,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:text="@string/stations"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCity" />
+        app:layout_constraintTop_toBottomOf="@+id/etKmFilter" />
 
     <ListView
         android:id="@+id/lvStations"
@@ -118,11 +118,57 @@
         android:layout_width="0dp"
         android:layout_height="2dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toTopOf="@+id/tvStations"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvCity" />
+
+    <EditText
+        android:id="@+id/etKmFilter"
+        android:layout_width="94dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="16dp"
+        android:autofillHints="10"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        tools:ignore="LabelFor" />
+
+    <TextView
+        android:id="@+id/tvKmFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/km"
+        app:layout_constraintBaseline_toBaselineOf="@+id/etKmFilter"
+        app:layout_constraintStart_toEndOf="@+id/etKmFilter" />
+
+    <ImageButton
+        android:id="@+id/btnFilterAboveKm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/filter_above_kms"
+        android:src="@drawable/arrow_upward_48"
+        app:layout_constraintStart_toEndOf="@+id/tvKmFilter"
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+    <ImageButton
+        android:id="@+id/btnFilterBelowKm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="64dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/filter_below_kms"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/divider"
+        app:srcCompat="@drawable/arrow_downward_48" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
