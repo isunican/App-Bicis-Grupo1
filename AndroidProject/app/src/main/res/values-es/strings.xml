@@ -8,6 +8,20 @@
     <string name="info_text">Aplicación creada para el Proyecto Integrado Curso 2026-2027</string>
     <string name="name">Nombre:</string>
     <string name="Companies">Compañías:</string>
+
     <string name="yes">Sí</string>
     <string name="no">No</string>
+    <string name="noDetailInfo">No hay información detallada para la red.</string>
+    <string name="stations">Estaciones:</string>
+    <string name="loadCorrectStations">Se han cargado %d estaciones</string>
+    <string name="loadErrorStations">Ha habido un error cargando las estaciones</string>
+    <string name="redError">No hay conexión a la red</string>
+    <string name="locationError">La localización no está activada</string>
+    <string name="noStations">No hay estaciones para la red</string>
+    <string name="latitude">Latitud:</string>
+    <string name="longitude">Longitud:</string>
+    <string name="free_bikes">Slots ocupados:</string>
+    <string name="empty_slots">Slots libres:</string>
+    <string name="timestamp">Última actualización:</string>
+    <string name="loadErrorStation">Ha habido un error cargando la estación</string>
 </resources>
