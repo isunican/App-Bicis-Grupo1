@@ -24,4 +24,7 @@
     <string name="redError">There is not Network conexion</string>
     <string name="locationError">Location is not enabled</string>
     <string name="noStations">There are no stations for the Network</string>
+    <string name="km">Km</string>
+    <string name="filter_above_kms">Filter above kms</string>
+    <string name="filter_below_kms">Filter below kms</string>
 </resources>
