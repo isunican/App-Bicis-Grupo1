@@ -10,4 +10,11 @@
     <string name="Companies">Compañías:</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
+    <string name="noDetailInfo">No hay información detallada para esta red.</string>
+    <string name="latitude">Latitud:</string>
+    <string name="longitude">Longitud:</string>
+    <string name="free_bikes">Slots ocupados:</string>
+    <string name="empty_slots">Slots libres:</string>
+    <string name="timestamp">Última actualización:</string>
+    <string name="loadErrorStation">Ha habido un error cargando la estación</string>
 </resources>
