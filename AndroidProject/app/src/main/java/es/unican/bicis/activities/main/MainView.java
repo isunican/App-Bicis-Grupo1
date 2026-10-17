@@ -75,6 +75,15 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     }
 
     /**
+     * @see AppCompatActivity#onResume()
+     */
+    @Override
+    protected void onResume() {
+        LocationUtils.updateLocation();
+        super.onResume();
+    }
+
+    /**
      * This creates the menu that is shown in the action bar (the upper toolbar)
      * @param menu The options menu in which you place your items.
      *
