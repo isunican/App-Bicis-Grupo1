@@ -43,7 +43,7 @@ public interface IRedDetailsContract {
          * @param distance distance introduced by the user
          * @param filter filter introduced by the user (less than distance or more than distance).
          */
-        public List<Station> onFilterClicked(String distance, DistanceFilter filter);
+        public void onFilterClicked(String distance, DistanceFilter filter);
     }
 
 
