@@ -27,4 +27,5 @@
     <string name="km">Km</string>
     <string name="filter_above_kms">Filter above kms</string>
     <string name="filter_below_kms">Filter below kms</string>
+    <string name="id" translatable="false">ID:</string>
 </resources>
