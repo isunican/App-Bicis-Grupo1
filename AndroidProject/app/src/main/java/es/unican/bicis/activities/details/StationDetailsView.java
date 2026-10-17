@@ -54,6 +54,7 @@ public class StationDetailsView extends AppCompatActivity {
         ActionBar bar = getSupportActionBar();
         assert bar != null;  // to avoid warning in the line below
         bar.setDisplayHomeAsUpEnabled(true);  // show back button in action bar
+
         TextView tvStationName = findViewById(R.id.tvStName);
         TextView tvLatitude = findViewById(R.id.tvLatDisplay);
         TextView tvLongitude = findViewById(R.id.tvLongDisplay);
@@ -117,11 +118,5 @@ public class StationDetailsView extends AppCompatActivity {
         } else {
             Toast.makeText(this, R.string.loadErrorStation, Toast.LENGTH_LONG).show();
         }
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        finish();
-        return true;
     }
 }

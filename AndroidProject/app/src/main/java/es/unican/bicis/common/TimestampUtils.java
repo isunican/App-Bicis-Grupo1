@@ -6,7 +6,16 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
 
+/**
+ * Clase de apoyo para la visualizacion de los timestamps de las bicis
+ */
 public class TimestampUtils {
+
+    /**
+     * Formatea un timestamp para su visualizacion en la interfaz
+     * @param rawTimestamp el timestamp en bruto a formatear
+     * @return el timestamp formateado
+     */
     public static String formatearTimestamp(String rawTimestamp) {
         //Clean redundant time 'Z' offset if already included (+00:00Z -> +00:00)
         String cleanTimestamp = rawTimestamp.replaceAll("([+-]\\d{2}:\\d{2})Z$",
