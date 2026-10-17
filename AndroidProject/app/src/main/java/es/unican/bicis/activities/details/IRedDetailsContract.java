@@ -36,6 +36,14 @@ public interface IRedDetailsContract {
          * @param station the station that has been clicked
          */
         //public void onStationClicked(Station station);
+
+        /**
+         * The presenter is informed that the user wants to filter the stations by distance.
+         *
+         * @param distance distance introduced by the user
+         * @param filter filter introduced by the user (less than distance or more than distance).
+         */
+        public List<Station> onFilterClicked(String distance, DistanceFilter filter);
     }
 
 
@@ -102,6 +110,12 @@ public interface IRedDetailsContract {
          * Only the Presenter should call this method
          */
         public void showLocationError();
+
+        /**
+         * The view is requested to display a notification indicating that there are no stations
+         * in the given distance.
+         */
+        public void showNoStationsInRangeError();
 
         /**
          * The view is requested to return the context of the application.
