@@ -24,7 +24,18 @@ class NetworkResponse {
     
 }
 
+class Station {
+    - id : String
+    - name : String
+    - latitude : double
+    - longitude : double
+    - timestamp : String
+    - freeBikes : int
+    - emptySlots : int
+}
+
 Network *--> "1" Location : location
+Network *--> "0..*" Station : stations
 NetworksResponse *--> "*" Network : networks
 NetworkResponse *--> "1" Network : network
 

@@ -1,5 +1,7 @@
 package es.unican.bicis.activities.main;
 
+import android.content.Context;
+
 import java.util.List;
 
 import es.unican.bicis.model.Network;
@@ -84,6 +86,18 @@ public interface IMainContract {
          * Only the Presenter should call this method
          */
         public void showLoadError();
+
+        /**
+         * The view is requested to display a notificacion indicating that there is not conexion
+         * Only the Presenter should call this method
+         */
+        public void showRedError();
+
+        /**
+         * The view is requested to return the context of the application.
+         * Only the Presenter should call this method
+         */
+        public Context getContext();
 
         /**
          * The view is requested to display the detailed view of the given network.
