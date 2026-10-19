@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import static es.unican.bicis.common.TimestampUtils.formatearTimestamp;
+import static es.unican.bicis.common.TimestampUtils.formatTimestamp;
 
 import es.unican.bicis.R;
 import es.unican.bicis.model.Station;
@@ -67,7 +67,7 @@ public class StationDetailsViewITest {
                 assertEquals("377 - Metro Abrantes", tvName.getText().toString());
                 assertEquals("40.38091762", tvLat.getText().toString());
                 assertEquals("-3.72783615", tvLong.getText().toString());
-                assertEquals(formatearTimestamp("2026-09-24T11:11:40.490774+00:00Z"), tvTime.getText());
+                assertEquals(formatTimestamp("2026-09-24T11:11:40.490774+00:00Z"), tvTime.getText());
                 assertEquals("0", tvFreeBikes.getText().toString());
                 assertEquals("18", tvEmptySlots.getText().toString());
             });
