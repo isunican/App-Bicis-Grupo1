@@ -24,4 +24,5 @@
     <string name="redError">There is not Network conexion</string>
     <string name="locationError">Location is not enabled</string>
     <string name="noStations">There are no stations for the Network</string>
+    <string name="id" translatable="false">ID:</string>
 </resources>
