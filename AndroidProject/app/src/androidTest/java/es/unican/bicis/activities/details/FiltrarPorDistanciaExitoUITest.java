@@ -39,8 +39,7 @@ public class FiltrarPorDistanciaExitoUITest {
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
     // ESTA ES LA REGLA QUE OTORGA EL PERMISO DE UBICACIÓN AUTOMÁTICAMENTE
     @Rule(order = 1)
-    public GrantPermissionRule permissionRule =
-            GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION);
+    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION);
 
     @Rule(order = 2)
     public ActivityScenarioRule<MainView> activityRule =
@@ -73,11 +72,7 @@ public class FiltrarPorDistanciaExitoUITest {
 
         // 4 y 5. El técnico selecciona la opción de ver a una distancia superior
         onView(withId(R.id.btnFilterMoreThanKm)).perform(click());
-        try {
-            Thread.sleep(500); // 500 milisegundos para asegurar que el adaptador pinta la lista completa
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
         // 8. Se verifica que se muestran todas las estaciones que cumplen el requisito
         // (Ajusta el número y los textos inferiores según la ubicación fija de tu emulador/LocationUtils)
         onView(withId(R.id.lvStations)).check(matches(withListSize(5)));
