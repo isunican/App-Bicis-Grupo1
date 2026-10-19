@@ -112,6 +112,20 @@ public interface IRedDetailsContract {
         public void showLocationError();
 
         /**
+         * The view is requested to display a notification indicating that there are no stations
+         * in the range specified by the user.
+         * Only the Presenter should call this method
+         */
+        public void showNoStationsInRangeError();
+
+        /**
+         * The view is requested to display the details of the given station.
+         * Only the Presenter should call this method
+         * @param station the station
+         */
+        public void showStationDetails(Station station);
+
+        /**
          * The view is requested to return the context of the application.
          * Only the Presenter should call this method
          */

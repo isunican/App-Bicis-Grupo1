@@ -248,6 +248,7 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
     /**
      * @see IRedDetailsContract.View#showStationDetails(Station)
      */
+    @Override
     public void showStationDetails(Station station) {
         Intent intent = new Intent(this, StationDetailsView.class);
         intent.putExtra(StationDetailsView.INTENT_STATION, Parcels.wrap(station));
