@@ -57,8 +57,12 @@ interface IRedDetailsContract.View {
     + init()
     + getNetworksRepository() : INetworksRepository
     + showStations(stations : List<Station>)
+    + showNoStations()
     + showLoadCorrect(stations : int)
     + showLoadError()
+    + showRedError()
+    + showLocationError()
+    + getContext() : Context
 }
 
 interface IRedDetailsContract.Presenter {

@@ -50,7 +50,11 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
     //}
 
     /**
-     * Loads the bike stations from the repository, and sends them to the view
+     * Carga las estaciones de la red seleccionada e invoca a la vista para que las muestre.
+     * Si se produce un error al recuperar las estaciones de la red, se invoca a la vista para que
+     * muestre un mensaje de error en la carga.
+     * Si no hay estaciones, invoca a la vista para que muestre un mensaje de que no hay estaciones.
+     * .
      */
     private void load() {
         INetworksRepository repository = view.getNetworksRepository();
