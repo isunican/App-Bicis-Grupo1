@@ -78,6 +78,15 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
     }
 
     /**
+     * @see AppCompatActivity#onResume()
+     */
+    @Override
+    protected void onResume() {
+        LocationUtils.updateLocation();
+        super.onResume();
+    }
+
+    /**
      * @see IRedDetailsContract.View#init()
      */
     @Override
