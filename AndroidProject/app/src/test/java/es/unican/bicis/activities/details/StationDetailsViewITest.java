@@ -42,7 +42,7 @@ public class StationDetailsViewITest {
         when(mockStation.getName()).thenReturn("377 - Metro Abrantes");
         when(mockStation.getLatitude()).thenReturn(40.38091762);
         when(mockStation.getLongitude()).thenReturn(-3.72783615);
-        when(mockStation.getTimestamp()).thenReturn(formatearTimestamp("2026-09-24T11:11:40.490774+00:00Z"));
+        when(mockStation.getTimestamp()).thenReturn("2026-09-24T11:11:40.490774+00:00Z");
         when(mockStation.getFreeBikes()).thenReturn(0);
         when(mockStation.getEmptySlots()).thenReturn(18);
 
