@@ -24,4 +24,7 @@
     <string name="empty_slots">Slots libres:</string>
     <string name="timestamp">Última actualización:</string>
     <string name="loadErrorStation">Ha habido un error cargando la estación</string>
+    <string name="noStationsInRange">No hay estaciones en el rango deseado</string>
+    <string name="filter_above_kms">Filtra a distancia mayor a la introducida</string>
+    <string name="filter_below_kms">Filtra a distancia menor a la introducida</string>
 </resources>

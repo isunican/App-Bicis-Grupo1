@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -153,6 +154,31 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
         } else {
             Toast.makeText(this, R.string.loadError, Toast.LENGTH_LONG).show();
         }
+
+        // Define buttons and set listeners
+        ImageButton btnFilterMoreThanKm = findViewById(R.id.btnFilterMoreThanKm);
+        ImageButton btnFilterLessThanKm = findViewById(R.id.btnFilterLessThanKm);
+
+        btnFilterMoreThanKm.setOnClickListener(v -> onClickFilterMoreThanDistance());
+        btnFilterLessThanKm.setOnClickListener(v -> onClickFilterLessThanDistance());
+    }
+
+    /**
+     * Called when the user clicks on the button to filter by a distance more
+     * than the one entered
+     */
+    public void onClickFilterMoreThanDistance() {
+        String distance = ((TextView) findViewById(R.id.etKmFilter)).getText().toString();
+        presenter.onFilterClicked(distance, DistanceFilter.MORE_THAN);
+    }
+
+    /**
+     * Called when the user clicks on the button to filter by a distance less
+     * than the one entered
+     */
+    public void onClickFilterLessThanDistance() {
+        String distance = ((TextView) findViewById(R.id.etKmFilter)).getText().toString();
+        presenter.onFilterClicked(distance, DistanceFilter.LESS_THAN);
     }
 
     /**
@@ -212,6 +238,11 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
     @Override
     public void showLocationError() {
         Toast.makeText(this, R.string.locationError, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showNoStationsInRangeError() {
+        Toast.makeText(this, R.string.noStationsInRange, Toast.LENGTH_SHORT).show();
     }
 
     /**

@@ -36,6 +36,14 @@ public interface IRedDetailsContract {
          * @param station the station that has been clicked
          */
         public void onStationClicked(Station station);
+
+        /**
+         * The presenter is informed that the user wants to filter the stations by distance.
+         *
+         * @param distance distance introduced by the user
+         * @param filter filter introduced by the user (less than distance or more than distance).
+         */
+        public void onFilterClicked(String distance, DistanceFilter filter);
     }
 
 
@@ -110,11 +118,11 @@ public interface IRedDetailsContract {
         public Context getContext();
 
         /**
-         * The view is requested to display the detailed view of the given station.
+         * The view is requested to display the detailed view of the given network.
          * Only the Presenter should call this method
-         * @param station the station
+         * @param network the network
          */
-        public void showStationDetails(Station station);
+        //public void showNetworkDetails(Network network);
 
     }
 }
