@@ -11,6 +11,7 @@ MainView --> MainPresenter : presenter
 MainPresenter --> MainView : view
 MainView ..> InfoView : <<use>>
 MainView ..> RedDetailsView : <<use>>
+RedDetailsView ..> StationDetailsView : <<use>>
 
 RedDetailsView ..|> IRedDetailsContract.View
 RedDetailsPresenter ..|> IRedDetailsContract.Presenter
@@ -26,6 +27,8 @@ class MainPresenter {
 }
 
 class InfoView
+
+class StationDetailsView
 
 class RedDetailsView {
     
@@ -59,10 +62,12 @@ interface IRedDetailsContract.View {
     + showStations(stations : List<Station>)
     + showLoadCorrect(stations : int)
     + showLoadError()
+    + showStationDetails(station: Station)
 }
 
 interface IRedDetailsContract.Presenter {
     + init(View view)
+    + onStationClicked(Station station)
 }
 
 interface INetworksRepository {

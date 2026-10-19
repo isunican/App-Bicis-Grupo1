@@ -79,25 +79,33 @@ public class StationDetailsView extends AppCompatActivity {
                 tvStationName.setText(R.string.noData);
             }
             Double latitude = station.getLatitude();
-            if (latitude > 90 || latitude < -90 || latitude == null) {
+            if (latitude == null) {
+                tvLatitude.setText(R.string.noData);
+            } else if (latitude > 90 || latitude < -90) {
                 tvLatitude.setText(R.string.noData);
             } else {
                 tvLatitude.setText(String.valueOf(latitude));
             }
             Double longitude = station.getLongitude();
-            if (longitude > 180 || longitude < -180 || longitude == null) {
+            if (longitude == null) {
+                tvLongitude.setText(R.string.noData);
+            } else if (longitude > 180 || longitude < -180) {
                 tvLongitude.setText(R.string.noData);
             } else {
                 tvLongitude.setText(String.valueOf(longitude));
             }
             Integer usedSlots = station.getFreeBikes();
-            if (usedSlots < 0 || usedSlots == null) {
+            if (usedSlots == null) {
+                tvUsedSlots.setText(R.string.noData);
+            } else if (usedSlots < 0) {
                 tvUsedSlots.setText(R.string.noData);
             } else {
                 tvUsedSlots.setText(String.valueOf(usedSlots));
             }
             Integer freeSlots = station.getEmptySlots();
-            if (freeSlots < 0 || freeSlots == null) {
+            if (freeSlots == null) {
+                tvFreeSlots.setText(R.string.noData);
+            } else if (freeSlots < 0) {
                 tvFreeSlots.setText(R.string.noData);
             } else {
                 tvFreeSlots.setText(String.valueOf(freeSlots));
