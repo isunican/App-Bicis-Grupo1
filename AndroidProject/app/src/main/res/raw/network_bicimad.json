@@ -17,6 +17,20 @@
         "stations": [
             {
                 "id": "01f5011f76069b1e81a11d4d51dd9d1d",
+                "name": "390 - Estacion datos ausentes",
+                "latitude": 40.38091762,
+                "longitude": -3.72783615,
+                "extra": {
+                    "number": "377",
+                    "uid": 2153,
+                    "address": "Avenida De Abrantes, 55 ",
+                    "online": true,
+                    "slots": 23,
+                    "light": "green"
+                }
+            },
+            {
+                "id": "01f5011f76069b1e81a11d4d51dd9d1d",
                 "name": "377 - Metro Abrantes",
                 "latitude": 40.38091762,
                 "longitude": -3.72783615,

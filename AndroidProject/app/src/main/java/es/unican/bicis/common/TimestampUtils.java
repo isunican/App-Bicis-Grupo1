@@ -12,11 +12,11 @@ import java.util.Locale;
 public class TimestampUtils {
 
     /**
-     * Formatea un timestamp para su visualizacion en la interfaz
-     * @param rawTimestamp el timestamp en bruto a formatear
-     * @return el timestamp formateado
+     * Formats a timestamp for the user display
+     * @param rawTimestamp raw timestamp string
+     * @return formatted timestamp string
      */
-    public static String formatearTimestamp(String rawTimestamp) {
+    public static String formatTimestamp(String rawTimestamp) {
         //Clean redundant time 'Z' offset if already included (+00:00Z -> +00:00)
         String cleanTimestamp = rawTimestamp.replaceAll("([+-]\\d{2}:\\d{2})Z$",
                 "$1");
