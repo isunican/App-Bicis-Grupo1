@@ -8,7 +8,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.anything;
 
-import static es.unican.bicis.common.TimestampUtils.formatearTimestamp;
+import static es.unican.bicis.common.TimestampUtils.formatTimestamp;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -60,6 +60,6 @@ public class VerDetalleEstacionExito00UITest {
         onView(withId(R.id.tvUsedSlotsDisplay)).check(matches(withText("0")));
         onView(withId(R.id.tvFreeSlotsDisplay)).check(matches(withText("18")));
 
-        onView(withId(R.id.tvTimeDisplay)).check(matches(withText(formatearTimestamp("2026-09-24T11:11:40.490774+00:00Z"))));
+        onView(withId(R.id.tvTimeDisplay)).check(matches(withText(formatTimestamp("2026-09-24T11:11:40.490774+00:00Z"))));
     }
 }
