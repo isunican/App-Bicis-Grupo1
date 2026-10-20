@@ -48,8 +48,7 @@ public class LocationUtils {
      */
     public static void init(Context context) {
         if (instance == null) {
-            instance = new LocationUtils(context);
-            updateLocation();
+            instance = new LocationUtils(context.getApplicationContext());
         }
     }
 
@@ -57,11 +56,14 @@ public class LocationUtils {
      * Obtiene la ubicación actual del dispositivo y la guarda.
      */
     @SuppressLint("MissingPermission")// Hacemos esto ya que previamente se comprobará que tenemos permisos de ubicación
-    public static void updateLocation() {
+    public static void updateLocation(Runnable onLocationReady) {
         if (instance != null) {
             instance.fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
                     .addOnSuccessListener(location -> {
                         instance.currentLocation = location;
+                        if (location != null && onLocationReady != null) {
+                            onLocationReady.run();
+                        }
                     });
         }
     }

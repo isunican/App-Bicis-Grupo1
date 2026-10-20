@@ -79,7 +79,11 @@ public class StationsArrayAdapter extends BaseAdapter {
             String distanceString = context.getString(R.string.noData);
             if (Utils.isLocationEnabled(context)) {
                 float distance = LocationUtils.calcularDistanciaA(station.getLatitude(), station.getLongitude());
-                distanceString = String.format(java.util.Locale.US, "%.1f Km", distance);
+                if (distance == -1){
+                    distanceString = context.getString(R.string.noData);
+                } else {
+                    distanceString = String.format(java.util.Locale.US, "%.1f Km", distance);
+                }
             }
             TextView tvDistance = convertView.findViewById(R.id.tvDistance);
             tvDistance.setText(distanceString);
