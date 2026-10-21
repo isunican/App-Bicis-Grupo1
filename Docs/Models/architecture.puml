@@ -31,7 +31,8 @@ class InfoView
 class StationDetailsView
 
 class RedDetailsView {
-    
+    +onClickFilterMoreThanDistance()
+    +onClickFilterLessThanDistance()
 }
 class RedDetailsPresenter {
     -load()
@@ -63,6 +64,10 @@ interface IRedDetailsContract.View {
     + showNoStations()
     + showLoadCorrect(stations : int)
     + showLoadError()
+    + showRedError()
+    + showLocationError()
+    + showNoStationsInRangeError()
+    + getContext() : Context
 <<<<<<< HEAD
     + showStationDetails(station: Station)
 =======
@@ -75,6 +80,7 @@ interface IRedDetailsContract.View {
 interface IRedDetailsContract.Presenter {
     + init(View view)
     + onStationClicked(Station station)
+    + onFilterClick(distance : String, filter : DistanceFilter)
 }
 
 interface INetworksRepository {
@@ -92,5 +98,9 @@ interface NetworkDetailsCallback {
     + onFailure(e : Throwable)
 }
 
+enum DistanceFilter {
+    LESS_THAN
+    MORE_THAN
+}
 
 @enduml
