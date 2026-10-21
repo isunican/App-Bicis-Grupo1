@@ -51,6 +51,8 @@ public class FiltrarPorDistanciaExitoUITest {
     @Rule(order = 0) // the Hilt rule must execute first
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
+    @Rule(order = 1)
+    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION);
     private MockLocationManager mockLocationManager;
 
     @Rule(order = 2)
@@ -66,12 +68,12 @@ public class FiltrarPorDistanciaExitoUITest {
         assertNotNull("The application did not receive any GPS update",
                 mockLocationManager.awaitMockedLocation(LOCATION_TIMEOUT_MS));
     }
-
+/*
     @After
     public void tearDown() {
         mockLocationManager.tearDown();
     }
-
+*/
 
     /**
      * Matcher personalizado para comprobar el número de estaciones mostradas en el ListView.

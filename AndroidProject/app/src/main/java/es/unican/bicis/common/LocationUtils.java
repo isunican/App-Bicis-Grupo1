@@ -3,24 +3,19 @@ package es.unican.bicis.common;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
-
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.Priority;
-
+import android.location.LocationManager;
 
 import lombok.Getter;
 
 /**
- * Maneja la obtencion de la ubicacion del dispositivo.
+ * Maneja la obtención de la ubicación del dispositivo.
  */
 public class LocationUtils {
 
     @Getter
     private static LocationUtils instance;
 
-    private final FusedLocationProviderClient fusedLocationClient;
-
+    private final Context context;
     private Location currentLocation;
 
     /**
@@ -37,10 +32,10 @@ public class LocationUtils {
 
     /**
      * Constructor privado para evitar instanciar la clase (singleton).
-     * @param context el contexto de la aplicacion
+     * @param context el contexto de la aplicación
      */
     private LocationUtils(Context context) {
-        this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
+        this.context = context;
     }
 
     /**
@@ -55,24 +50,31 @@ public class LocationUtils {
     /**
      * Obtiene la ubicación actual del dispositivo y la guarda.
      */
-    @SuppressLint("MissingPermission")// Hacemos esto ya que previamente se comprobará que tenemos permisos de ubicación
+    @SuppressLint("MissingPermission") // Comprobado previamente en la app
     public static void updateLocation(Runnable onLocationReady) {
         if (instance != null) {
-            instance.fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
-                    .addOnSuccessListener(location -> {
-                        instance.currentLocation = location;
-                        if (location != null && onLocationReady != null) {
-                            onLocationReady.run();
-                        }
-                    });
+            LocationManager locationManager = (LocationManager) instance.context.getSystemService(Context.LOCATION_SERVICE);
+            if (locationManager != null) {
+                // Leemos del GPS_PROVIDER que es el que modifica MockLocationManager
+                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+                if (location == null) {
+                    location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                }
+
+                instance.currentLocation = location;
+                if (location != null && onLocationReady != null) {
+                    onLocationReady.run();
+                }
+            }
         }
     }
 
     /**
-     * Calcula la distancia entre la localizacion actual y una de destino dada.
+     * Calcula la distancia entre la localización actual y una de destino dada.
      * @param latitud la latitud de la coordenada destino
      * @param longitud la longitud de la coordenada destino
-     * @return la distancia en Km entre la localizacion actual y la destino
+     * @return la distancia en Km entre la localización actual y la destino
      */
     public static float calcularDistanciaA(double latitud, double longitud) {
         if (instance == null || instance.currentLocation == null) {
