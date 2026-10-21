@@ -83,7 +83,7 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
         }
 
         //Updates current location
-        LocationUtils.updateLocation();
+        LocationUtils.updateLocation(() -> {});
 
         // Obtains stations and applies the filter
         List<Station> stations = network.getStations();
