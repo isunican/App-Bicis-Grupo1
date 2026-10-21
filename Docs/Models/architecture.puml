@@ -28,7 +28,8 @@ class MainPresenter {
 class InfoView
 
 class RedDetailsView {
-    
+    +onClickFilterMoreThanDistance()
+    +onClickFilterLessThanDistance()
 }
 class RedDetailsPresenter {
     -load()
@@ -57,12 +58,18 @@ interface IRedDetailsContract.View {
     + init()
     + getNetworksRepository() : INetworksRepository
     + showStations(stations : List<Station>)
+    + showNoStations()
     + showLoadCorrect(stations : int)
     + showLoadError()
+    + showRedError()
+    + showLocationError()
+    + showNoStationsInRangeError()
+    + getContext() : Context
 }
 
 interface IRedDetailsContract.Presenter {
     + init(View view)
+    + onFilterClick(distance : String, filter : DistanceFilter)
 }
 
 interface INetworksRepository {
@@ -80,5 +87,9 @@ interface NetworkDetailsCallback {
     + onFailure(e : Throwable)
 }
 
+enum DistanceFilter {
+    LESS_THAN
+    MORE_THAN
+}
 
 @enduml
