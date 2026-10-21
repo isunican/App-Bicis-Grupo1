@@ -238,4 +238,8 @@ public class MockLocationManager {
             throw new IllegalStateException("Cannot execute shell command: " + command, e);
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> feature/532226-VerEstacionesDeRed
