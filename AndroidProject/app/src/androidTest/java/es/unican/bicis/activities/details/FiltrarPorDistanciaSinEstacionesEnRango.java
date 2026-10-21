@@ -107,7 +107,7 @@ public class FiltrarPorDistanciaSinEstacionesEnRango {
         onView(withId(R.id.etKmFilter)).perform(clearText(), typeText("0"), closeSoftKeyboard());
 
         try {
-            Thread.sleep(5S000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
