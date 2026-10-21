@@ -50,8 +50,15 @@ public class RedDetailsPresenterTest {
         mockedUtils = mockStatic(Utils.class);
         mockedLocationUtils = mockStatic(LocationUtils.class);
 
-        // Anulamos la llamada real a updateLocation para evitar dependencias del SDK
-        mockedLocationUtils.when(LocationUtils::updateLocation).thenAnswer(invocation -> null);
+        // ACTUALIZADO: Anulamos la llamada real a updateLocation aceptando el nuevo parámetro Runnable
+        mockedLocationUtils.when(() -> LocationUtils.updateLocation(any())).thenAnswer(invocation -> {
+            // Ejecutamos el runnable (callback) si se pasa alguno, tal y como haría el LocationUtils real
+            Runnable callback = invocation.getArgument(0);
+            if (callback != null) {
+                callback.run();
+            }
+            return null;
+        });
 
         // Instanciamos el presenter y lo inicializamos
         presenter = new RedDetailsPresenter();
@@ -83,7 +90,6 @@ public class RedDetailsPresenterTest {
 
         when(network.getStations()).thenReturn(Arrays.asList(stLejos2, stCerca, stLejos1));
 
-        // AÑADIDA LA 'f' PARA QUE SEAN FLOAT
         mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(10.0, 10.0)).thenReturn(0.5f); // Descarta (< 1)
         mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(20.0, 20.0)).thenReturn(2.5f); // Guarda
         mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(30.0, 30.0)).thenReturn(1.5f); // Guarda
@@ -115,7 +121,6 @@ public class RedDetailsPresenterTest {
 
         when(network.getStations()).thenReturn(Arrays.asList(stMedia, stLejos, stCerca));
 
-        // AÑADIDA LA 'f' PARA QUE SEAN FLOAT
         mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(40.0, 40.0)).thenReturn(2.0f); // Guarda
         mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(50.0, 50.0)).thenReturn(4.5f); // Guarda
         mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(60.0, 60.0)).thenReturn(6.0f); // Descarta (> 5)
@@ -174,7 +179,6 @@ public class RedDetailsPresenterTest {
         Station stLejos = crearEstacionMock("Estacion Lejana", 10.0, 10.0);
         when(network.getStations()).thenReturn(Collections.singletonList(stLejos));
 
-        // AÑADIDA LA 'f' PARA QUE SEA FLOAT
         mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(anyDouble(), anyDouble())).thenReturn(5.0f);
 
         presenter.onFilterClicked("1", DistanceFilter.LESS_THAN);
