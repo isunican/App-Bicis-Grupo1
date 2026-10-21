@@ -102,15 +102,18 @@ public class FiltrarPorDistanciaSinEstacionesEnRango {
     public void testPrueba01_SinEstacionesEnRango() {
         // Abrimos los detalles de la red TUeBICI desde la pantalla principal
         onView(withText("TUeBICI")).perform(click());
-
-        // 1 y 2. El técnico introduce 5Km en la aplicación
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        // 1 y 2. El técnico introduce 0Km en la aplicación
         onView(withId(R.id.etKmFilter)).perform(clearText(), typeText("0"), closeSoftKeyboard());
 
-        // 4 y 5. El técnico selecciona la opción de ver a una distancia superior
+        // 4 y 5. El técnico selecciona la opción de ver a una distancia inferior
         onView(withId(R.id.btnFilterLessThanKm)).perform(click());
 
-        // 8. Se verifica que se muestran todas las estaciones que cumplen el requisito
-        // (Ajusta el número y los textos inferiores según la ubicación fija de tu emulador/LocationUtils)
+        // 8. Se verifica que no muestran estaciones y se muestra el mensaje de error correspondiente
         onView(withId(R.id.lvStations)).check(matches(withListSize(0)));
         onView(withText(R.string.noStationsInRange)).inRoot(RootMatchers.withDecorView(not(decorView))).check(matches(isDisplayed()));
     }
