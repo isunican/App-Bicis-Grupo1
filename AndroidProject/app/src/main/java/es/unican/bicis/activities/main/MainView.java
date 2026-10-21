@@ -61,10 +61,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         LocationUtils.init(getApplicationContext());
 
         // Obtener permisos de ubicacion
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            // Si ya los dio antes, iniciamos directamente
-            LocationUtils.init(this);
-        } else {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // Si no los tiene, abrimos la ventanita para pedirlos (código 100)
             ActivityCompat.requestPermissions(this, new String[]{
                     Manifest.permission.ACCESS_FINE_LOCATION,

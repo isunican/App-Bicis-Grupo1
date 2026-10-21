@@ -88,7 +88,12 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
      */
     @Override
     protected void onResume() {
-        LocationUtils.updateLocation();
+        LocationUtils.updateLocation(() -> {
+            ListView list = findViewById(R.id.lvStations);
+            if (list != null && list.getAdapter() != null) {
+                ((StationsArrayAdapter) list.getAdapter()).notifyDataSetChanged();
+            }
+        });
         super.onResume();
     }
 
