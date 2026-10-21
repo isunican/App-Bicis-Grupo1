@@ -18,7 +18,7 @@ import es.unican.bicis.model.Network;
 import es.unican.bicis.repository.INetworksRepository;
 import es.unican.bicis.repository.NetworkDetailsCallback;
 
-public class RedDetailsPresenterInitTest {
+public class RedDetailsPresenterTest {
 
     @Mock
     private IRedDetailsContract.View mockView;
