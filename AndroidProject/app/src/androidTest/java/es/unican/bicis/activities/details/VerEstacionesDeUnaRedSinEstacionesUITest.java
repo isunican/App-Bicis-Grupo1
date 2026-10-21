@@ -11,8 +11,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.core.IsNot.not;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -20,7 +19,6 @@ import android.content.Context;
 import android.view.View;
 import android.widget.ListView;
 
-import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -38,14 +36,20 @@ import es.unican.bicis.activities.main.MainView;
 import es.unican.bicis.utils.MockLocationManager;
 
 @HiltAndroidTest
-public class VerEstacionesDeUnaRedRedSinEstacionesUITest {
+public class VerEstacionesDeUnaRedSinEstacionesUITest {
     private static final double SANTANDER_LATITUDE = 43.471167;
     private static final double SANTANDER_LONGITUDE = -3.801385;
 
     private static final long LOCATION_TIMEOUT_MS = 5_000;
 
-    @Rule(order = 0) // the Hilt rule must execute first
+    @Rule(order = 0)
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
+
+    @Rule(order = 1)
+    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(
+            android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.ACCESS_COARSE_LOCATION
+    );
 
     private MockLocationManager mockLocationManager;
 
@@ -59,8 +63,8 @@ public class VerEstacionesDeUnaRedRedSinEstacionesUITest {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         mockLocationManager = new MockLocationManager(context);
         mockLocationManager.setUp();
-        mockLocationManager.setLocation(SANTANDER_LATITUDE, SANTANDER_LONGITUDE);
         activityRule.getScenario().onActivity(activity -> decorView = activity.getWindow().getDecorView());
+        mockLocationManager.setLocation(SANTANDER_LATITUDE, SANTANDER_LONGITUDE);
         assertNotNull("The application did not receive any GPS update",
                 mockLocationManager.awaitMockedLocation(LOCATION_TIMEOUT_MS));
     }
@@ -75,6 +79,14 @@ public class VerEstacionesDeUnaRedRedSinEstacionesUITest {
 
         onView(withText("Loaded 4 networks")).inRoot(RootMatchers.withDecorView(not(decorView))).check(matches(isDisplayed()));
         //elegimos TUeBICI
+
+        try {
+            // Esperamos 10 segundos para que el toast anterior se cierre
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
         onData(anything()).inAdapterView(withId(R.id.lvNetworks)).atPosition(3).perform(click());
 
         onView(allOf(withId(R.id.tvName), withParent(withId(R.id.main)))).check(matches(withText("BiciSinEstaciones")));
