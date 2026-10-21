@@ -56,7 +56,7 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
      * Si no hay estaciones, invoca a la vista para que muestre un mensaje de que no hay estaciones.
      * .
      */
-    private void load() {
+    protected void load() {
         INetworksRepository repository = view.getNetworksRepository();
 
         NetworkDetailsCallback callBack = new NetworkDetailsCallback() {

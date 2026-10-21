@@ -47,11 +47,13 @@ public class VerEstacionesDeUnaRedRedSinEstacionesUITest {
     View decorView;
     @Before
     public void init() {
-
+        activityRule.getScenario().onActivity(activity -> decorView = activity.getWindow().getDecorView());
     }
 
     @Test
     public void verEstacionesDeUnaRedRedSinEstacionesTest() throws InterruptedException {
+
+        onView(withText("Loaded 4 networks")).inRoot(RootMatchers.withDecorView(not(decorView))).check(matches(isDisplayed()));
         //elegimos TUeBICI
         onData(anything()).inAdapterView(withId(R.id.lvNetworks)).atPosition(3).perform(click());
 
@@ -70,7 +72,7 @@ public class VerEstacionesDeUnaRedRedSinEstacionesUITest {
             assertEquals(0, count);
         });
 
-        
+        onView(withText(R.string.noStations)).inRoot(RootMatchers.withDecorView(not(decorView))).check(matches(isDisplayed()));
 
     }
 
