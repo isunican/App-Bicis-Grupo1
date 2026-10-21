@@ -148,7 +148,7 @@ public class RedDetailsPresenterTest {
         verify(view, never()).showStations(any());
         verify(view, never()).showLocationError();
 
-        presenter.onFilterClicked("5.5", DistanceFilter.MORE_THAN);
+        presenter.onFilterClicked("5.5", DistanceFilter.LESS_THAN);
         verify(view, never()).showStations(any());
     }
 
