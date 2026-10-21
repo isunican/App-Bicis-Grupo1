@@ -106,6 +106,11 @@ public class FiltrarPorDistanciaSinEstacionesEnRango {
         // 1 y 2. El técnico introduce 5Km en la aplicación
         onView(withId(R.id.etKmFilter)).perform(clearText(), typeText("0"), closeSoftKeyboard());
 
+        try {
+            Thread.sleep(5S000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         // 4 y 5. El técnico selecciona la opción de ver a una distancia superior
         onView(withId(R.id.btnFilterLessThanKm)).perform(click());
 
