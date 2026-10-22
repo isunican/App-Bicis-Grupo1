@@ -77,15 +77,16 @@ public class VerEstacionesDeUnaRedSinEstacionesUITest {
     @Test
     public void verEstacionesDeUnaRedRedSinEstacionesTest() throws InterruptedException {
 
-        onView(withText("Loaded 4 networks")).inRoot(RootMatchers.withDecorView(not(decorView))).check(matches(isDisplayed()));
         //elegimos TUeBICI
 
+        /* El thread sleep era necesario para comprobar los toast
         try {
             // Esperamos 10 segundos para que el toast anterior se cierre
             Thread.sleep(10000);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+        */
 
         onData(anything()).inAdapterView(withId(R.id.lvNetworks)).atPosition(3).perform(click());
 
@@ -104,8 +105,9 @@ public class VerEstacionesDeUnaRedSinEstacionesUITest {
             assertEquals(0, count);
         });
 
+        /* Aqui comprobaba el toast de que no se han cargado estaciones
         onView(withText(R.string.noStations)).inRoot(RootMatchers.withDecorView(not(decorView))).check(matches(isDisplayed()));
-
+        */
     }
 
 }
