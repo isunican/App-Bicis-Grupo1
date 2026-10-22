@@ -10,7 +10,14 @@ JsonNetworksRepository ..|> INetworksRepository
 MainView --> MainPresenter : presenter
 MainPresenter --> MainView : view
 MainView ..> InfoView : <<use>>
-MainView ..> DetailsView : <<use>>
+MainView ..> RedDetailsView : <<use>>
+RedDetailsView ..> StationDetailsView : <<use>>
+
+RedDetailsView ..|> IRedDetailsContract.View
+RedDetailsPresenter ..|> IRedDetailsContract.Presenter
+RedDetailsView --> INetworksRepository : repository
+RedDetailsView --> RedDetailsPresenter : presenter
+RedDetailsPresenter --> RedDetailsView : view
 
 class MainView {
 }
@@ -20,7 +27,17 @@ class MainPresenter {
 }
 
 class InfoView
-class DetailsView
+
+class StationDetailsView
+
+class RedDetailsView {
+    +onClickFilterMoreThanDistance()
+    +onClickFilterLessThanDistance()
+}
+class RedDetailsPresenter {
+    -load()
+}
+
 class ApiNetworksRepository
 class JsonNetworksRepository
 
@@ -40,6 +57,25 @@ interface IMainContract.Presenter {
     + onMenuInfoClicked()
 }
 
+interface IRedDetailsContract.View {
+    + init()
+    + getNetworksRepository() : INetworksRepository
+    + showStations(stations : List<Station>)
+    + showLoadCorrect(stations : int)
+    + showLoadError()
+    + showRedError()
+    + showLocationError()
+    + showNoStationsInRangeError()
+    + getContext() : Context
+    + showStationDetails(station: Station)
+}
+
+interface IRedDetailsContract.Presenter {
+    + init(View view)
+    + onStationClicked(Station station)
+    + onFilterClick(distance : String, filter : DistanceFilter)
+}
+
 interface INetworksRepository {
     + requestNetworks(cb : NetworksCallback )
     + requestNetwork(cb: NetworkDetailsCallback , networkId : String)
@@ -55,5 +91,9 @@ interface NetworkDetailsCallback {
     + onFailure(e : Throwable)
 }
 
+enum DistanceFilter {
+    LESS_THAN
+    MORE_THAN
+}
 
 @enduml

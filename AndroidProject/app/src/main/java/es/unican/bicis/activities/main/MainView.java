@@ -1,6 +1,9 @@
 package es.unican.bicis.activities.main;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import org.parceler.Parcels;
 
@@ -21,8 +26,11 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import es.unican.bicis.R;
+import es.unican.bicis.activities.details.IRedDetailsContract;
+import es.unican.bicis.activities.details.StationsArrayAdapter;
 import es.unican.bicis.activities.info.InfoView;
-import es.unican.bicis.activities.details.DetailsView;
+import es.unican.bicis.activities.details.RedDetailsView;
+import es.unican.bicis.common.LocationUtils;
 import es.unican.bicis.model.Network;
 import es.unican.bicis.repository.INetworksRepository;
 
@@ -50,9 +58,41 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        LocationUtils.init(getApplicationContext());
+
+        // Obtener permisos de ubicacion
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Si no los tiene, abrimos la ventanita para pedirlos (código 100)
+            ActivityCompat.requestPermissions(this, new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+            }, 100);
+        } else {
+            LocationUtils.updateLocation(() -> {
+                ListView list = findViewById(R.id.lvStations);
+                if (list != null && list.getAdapter() != null) {
+                    ((StationsArrayAdapter) list.getAdapter()).notifyDataSetChanged();
+                }
+            });
+        }
+
         // instantiate presenter and launch initial business logic
         presenter = new MainPresenter();
         presenter.init(this);
+    }
+
+    /**
+     * @see AppCompatActivity#onResume()
+     */
+    @Override
+    protected void onResume() {
+        LocationUtils.updateLocation(() -> {
+            ListView list = findViewById(R.id.lvStations);
+            if (list != null && list.getAdapter() != null) {
+                ((StationsArrayAdapter) list.getAdapter()).notifyDataSetChanged();
+            }
+        });
+        super.onResume();
     }
 
     /**
@@ -135,13 +175,29 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     }
 
     /**
+     * @see IRedDetailsContract.View#showRedError()
+     */
+    @Override
+    public void showRedError() {
+        Toast.makeText(this, R.string.redError, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @see IRedDetailsContract.View#getContext()
+     */
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    /**
      * @see IMainContract.View#showNetworkDetails(Network)
      * @param network the network
      */
     @Override
     public void showNetworkDetails(Network network) {
-        Intent intent = new Intent(this, DetailsView.class);
-        intent.putExtra(DetailsView.INTENT_NETWORK, Parcels.wrap(network));
+        Intent intent = new Intent(this, RedDetailsView.class);
+        intent.putExtra(RedDetailsView.INTENT_NETWORK, Parcels.wrap(network));
         startActivity(intent);
     }
 
@@ -152,5 +208,24 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     public void showInfoActivity() {
         Intent intent = new Intent(this, InfoView.class);
         startActivity(intent);
+    }
+
+    /**
+     * Este metodo se ejecuta automáticamente cuando el usuario responde al cuadro de diálogo de permisos
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // Comprobamos que sea nuestra petición de permisos (código 100) y que el usuario haya aceptado
+        if (requestCode == 100 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // El usuario acaba de aceptar, actualizamos la ubicación ahora mismo
+            LocationUtils.updateLocation(() -> {
+                ListView list = findViewById(R.id.lvStations);
+                if (list != null && list.getAdapter() != null) {
+                    ((StationsArrayAdapter) list.getAdapter()).notifyDataSetChanged();
+                }
+            });
+        }
     }
 }
