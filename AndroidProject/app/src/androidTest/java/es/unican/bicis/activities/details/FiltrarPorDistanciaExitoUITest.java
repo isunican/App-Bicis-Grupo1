@@ -13,6 +13,8 @@ import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.Matchers.anything;
 import static org.junit.Assert.assertNotNull;
 
+import static es.unican.bicis.utils.Matchers.withListSize;
+
 import android.Manifest;
 import android.content.Context;
 import android.view.View;
@@ -74,23 +76,6 @@ public class FiltrarPorDistanciaExitoUITest {
         mockLocationManager.tearDown();
     }
 */
-
-    /**
-     * Matcher personalizado para comprobar el número de estaciones mostradas en el ListView.
-     */
-    public static Matcher<View> withListSize(final int expectedSize) {
-        return new TypeSafeMatcher<View>() {
-            @Override
-            public boolean matchesSafely(final View view) {
-                return ((ListView) view).getCount() == expectedSize;
-            }
-
-            @Override
-            public void describeTo(final Description description) {
-                description.appendText("ListView debería tener " + expectedSize + " elementos");
-            }
-        };
-    }
 
     @Test
     public void testPrueba00_FiltradoExito() {
