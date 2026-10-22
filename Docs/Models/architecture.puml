@@ -11,6 +11,7 @@ MainView --> MainPresenter : presenter
 MainPresenter --> MainView : view
 MainView ..> InfoView : <<use>>
 MainView ..> RedDetailsView : <<use>>
+RedDetailsView ..> StationDetailsView : <<use>>
 
 RedDetailsView ..|> IRedDetailsContract.View
 RedDetailsPresenter ..|> IRedDetailsContract.Presenter
@@ -26,6 +27,8 @@ class MainPresenter {
 }
 
 class InfoView
+
+class StationDetailsView
 
 class RedDetailsView {
     +onClickFilterMoreThanDistance()
@@ -58,17 +61,18 @@ interface IRedDetailsContract.View {
     + init()
     + getNetworksRepository() : INetworksRepository
     + showStations(stations : List<Station>)
-    + showNoStations()
     + showLoadCorrect(stations : int)
     + showLoadError()
     + showRedError()
     + showLocationError()
     + showNoStationsInRangeError()
     + getContext() : Context
+    + showStationDetails(station: Station)
 }
 
 interface IRedDetailsContract.Presenter {
     + init(View view)
+    + onStationClicked(Station station)
     + onFilterClick(distance : String, filter : DistanceFilter)
 }
 

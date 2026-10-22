@@ -25,6 +25,7 @@
         <activity
             android:name=".activities.details.RedDetailsView"
             android:exported="false"
+            android:launchMode="singleTop"
             android:parentActivityName=".activities.main.MainView" />
         <activity
             android:name=".activities.main.MainView"
@@ -38,7 +39,7 @@
         <activity
             android:name=".activities.details.StationDetailsView"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:parentActivityName=".activities.details.RedDetailsView" />
     </application>
 
 </manifest>

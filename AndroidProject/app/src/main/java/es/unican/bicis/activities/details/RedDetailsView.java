@@ -1,6 +1,7 @@
 package es.unican.bicis.activities.details;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.widget.ImageButton;
@@ -83,6 +84,20 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
     }
 
     /**
+     * @see AppCompatActivity#onResume()
+     */
+    @Override
+    protected void onResume() {
+        LocationUtils.updateLocation(() -> {
+            ListView list = findViewById(R.id.lvStations);
+            if (list != null && list.getAdapter() != null) {
+                ((StationsArrayAdapter) list.getAdapter()).notifyDataSetChanged();
+            }
+        });
+        super.onResume();
+    }
+
+    /**
      * @see IRedDetailsContract.View#init()
      */
     @Override
@@ -91,7 +106,7 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
         ListView list = findViewById(R.id.lvStations);
         list.setOnItemClickListener((parent, view, position, id) -> {
             Station station = (Station) parent.getItemAtPosition(position);
-            //presenter.onNetworkClicked(network);
+            presenter.onStationClicked(station);
         });
 
         // Link to view elements
@@ -238,6 +253,16 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
     @Override
     public void showNoStationsInRangeError() {
         Toast.makeText(this, R.string.noStationsInRange, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @see IRedDetailsContract.View#showStationDetails(Station)
+     */
+    @Override
+    public void showStationDetails(Station station) {
+        Intent intent = new Intent(this, StationDetailsView.class);
+        intent.putExtra(StationDetailsView.INTENT_STATION, Parcels.wrap(station));
+        startActivity(intent);
     }
 
     /**

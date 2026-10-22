@@ -122,15 +122,19 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
      * @see IRedDetailsContract.Presenter#onStationClicked(Station)
      * @param station the station that has been clicked
      */
-    //@Override
-    //public void onNetworkClicked(Network network) {
-        //view.showNetworkDetails(network);
-    //}
+    @Override
+    public void onStationClicked(Station station) {
+        view.showStationDetails(station);
+    }
 
     /**
-     * Loads the bike stations from the repository, and sends them to the view
+     * Carga las estaciones de la red seleccionada e invoca a la vista para que las muestre.
+     * Si se produce un error al recuperar las estaciones de la red, se invoca a la vista para que
+     * muestre un mensaje de error en la carga.
+     * Si no hay estaciones, invoca a la vista para que muestre un mensaje de que no hay estaciones.
+     * .
      */
-    private void load() {
+    protected void load() {
         INetworksRepository repository = view.getNetworksRepository();
 
         NetworkDetailsCallback callBack = new NetworkDetailsCallback() {

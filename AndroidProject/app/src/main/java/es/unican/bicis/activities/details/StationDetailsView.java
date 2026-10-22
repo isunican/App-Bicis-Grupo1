@@ -17,7 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 import org.parceler.Parcels;
 
 import es.unican.bicis.R;
-import es.unican.bicis.model.Network;
+import es.unican.bicis.common.TimestampUtils;
 import es.unican.bicis.model.Station;
 
 /**
@@ -36,6 +36,7 @@ public class StationDetailsView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_station_details_view);
 
         // The default theme does not include a toolbar.
         // In this app the toolbar is explicitly declared in the layout
@@ -45,6 +46,7 @@ public class StationDetailsView extends AppCompatActivity {
         ActionBar bar = getSupportActionBar();
         assert bar != null;  // to avoid warning in the line below
         bar.setDisplayHomeAsUpEnabled(true);  // show back button in action bar
+
         TextView tvStationName = findViewById(R.id.tvStName);
         TextView tvLatitude = findViewById(R.id.tvLatDisplay);
         TextView tvLongitude = findViewById(R.id.tvLongDisplay);
@@ -69,25 +71,33 @@ public class StationDetailsView extends AppCompatActivity {
                 tvStationName.setText(R.string.noData);
             }
             Double latitude = station.getLatitude();
-            if (latitude > 90 || latitude < -90 || latitude == null) {
+            if (latitude == null) {
+                tvLatitude.setText(R.string.noData);
+            } else if (latitude > 90 || latitude < -90) {
                 tvLatitude.setText(R.string.noData);
             } else {
                 tvLatitude.setText(String.valueOf(latitude));
             }
             Double longitude = station.getLongitude();
-            if (longitude > 180 || longitude < -180 || longitude == null) {
+            if (longitude == null) {
+                tvLongitude.setText(R.string.noData);
+            } else if (longitude > 180 || longitude < -180) {
                 tvLongitude.setText(R.string.noData);
             } else {
                 tvLongitude.setText(String.valueOf(longitude));
             }
             Integer usedSlots = station.getFreeBikes();
-            if (usedSlots < 0 || usedSlots == null) {
+            if (usedSlots == null) {
+                tvUsedSlots.setText(R.string.noData);
+            } else if (usedSlots < 0) {
                 tvUsedSlots.setText(R.string.noData);
             } else {
                 tvUsedSlots.setText(String.valueOf(usedSlots));
             }
             Integer freeSlots = station.getEmptySlots();
-            if (freeSlots < 0 || freeSlots == null) {
+            if (freeSlots == null) {
+                tvFreeSlots.setText(R.string.noData);
+            } else if (freeSlots < 0) {
                 tvFreeSlots.setText(R.string.noData);
             } else {
                 tvFreeSlots.setText(String.valueOf(freeSlots));
@@ -100,6 +110,7 @@ public class StationDetailsView extends AppCompatActivity {
             }
             String timestamp = station.getTimestamp();
             if (timestamp != null) {
+                timestamp = TimestampUtils.formatTimestamp(timestamp);
                 tvTime.setText(timestamp);
             } else {
                 tvTime.setText(R.string.noData);
@@ -107,13 +118,5 @@ public class StationDetailsView extends AppCompatActivity {
         } else {
             Toast.makeText(this, R.string.loadErrorStation, Toast.LENGTH_LONG).show();
         }
-
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_station_details_view);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
     }
 }

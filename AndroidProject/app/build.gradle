@@ -141,6 +141,4 @@ dependencies {
     // Roboelectric (to get a proper Context object in unit tests)
     testImplementation libs.roboelectric
 
-    // Dependecia de google play services para obtener la ubicacion
-    implementation libs.play.services.location
 }

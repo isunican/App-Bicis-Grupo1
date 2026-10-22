@@ -47,6 +47,21 @@
                 "UTE BICIS SANTANDER"
             ],
             "system": "Nextbike"
+        },
+        {
+            "id": "bicisinestaciones",
+            "name": "BiciSinEstaciones",
+            "location": {
+                "latitude": 43.46230569999999,
+                "longitude": -3.8099803,
+                "city": "Santander",
+                "country": "ES"
+            },
+            "href": "/v2/networks/bicisinestaciones",
+            "company": [
+                "UTE BICIS SANTANDER"
+            ],
+            "system": "Nextbike"
         }
     ]
 }
