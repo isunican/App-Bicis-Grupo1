@@ -14,8 +14,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import org.parceler.Parcels;
 
@@ -57,6 +62,25 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         // Set this toolbar as the activity ActionBar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Evitar solape con el notch
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        ConstraintLayout mainLayout = findViewById(R.id.main);
+
+        ViewCompat.setOnApplyWindowInsetsListener(mainLayout, (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+
+            toolbar.setPadding(toolbar.getPaddingLeft(), insets.top, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
+
+            android.view.ViewGroup.LayoutParams params = toolbar.getLayoutParams();
+            int baseHeight = getResources().getDimensionPixelSize(androidx.appcompat.R.dimen.abc_action_bar_default_height_material);
+            params.height = baseHeight + insets.top;
+            toolbar.setLayoutParams(params);
+
+            v.setPadding(insets.left, 0, insets.right, insets.bottom);
+
+            return WindowInsetsCompat.CONSUMED;
+        });
 
         LocationUtils.init(getApplicationContext());
 
