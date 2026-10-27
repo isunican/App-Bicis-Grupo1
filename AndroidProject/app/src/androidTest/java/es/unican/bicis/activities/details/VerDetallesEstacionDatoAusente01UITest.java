@@ -24,7 +24,7 @@ import es.unican.bicis.activities.main.MainView;
 @HiltAndroidTest // Anotación obligatoria para pruebas con Hilt
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class VerDetalleEstacionDatoAusente01UITest {
+public class VerDetallesEstacionDatoAusente01UITest {
 
     // Regla de Hilt con orden 0 para que se ejecute primero
     @Rule(order = 0)

@@ -27,7 +27,7 @@ import es.unican.bicis.common.Utils;
 import es.unican.bicis.model.Network;
 import es.unican.bicis.model.Station;
 
-public class RedDetailsPresenterTest {
+public class RedDetailsPresenterInitTest {
 
     private RedDetailsPresenter presenter;
     private IRedDetailsContract.View view;
