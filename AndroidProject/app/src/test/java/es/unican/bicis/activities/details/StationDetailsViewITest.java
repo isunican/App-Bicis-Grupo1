@@ -81,11 +81,11 @@ public class StationDetailsViewITest {
     public void testOnCreate_WithAbsentDataMock_ShowsHyphens() {
         Station mockStation = mock(Station.class);
         when(mockStation.getId()).thenReturn("01f5011f76069b1e81a11d4d51dd9d1d");
-        when(mockStation.getName()).thenReturn("377 - Metro Abrantes");
+        when(mockStation.getName()).thenReturn("390 - Estacion datos ausentes");
+        when(mockStation.getLatitude()).thenReturn(40.38091762);
+        when(mockStation.getLongitude()).thenReturn(-3.72783615);
 
         // Simulamos la ausencia de datos (null)
-        when(mockStation.getLatitude()).thenReturn(null);
-        when(mockStation.getLongitude()).thenReturn(null);
         when(mockStation.getTimestamp()).thenReturn(null);
         when(mockStation.getFreeBikes()).thenReturn(null);
         when(mockStation.getEmptySlots()).thenReturn(null);
@@ -99,11 +99,13 @@ public class StationDetailsViewITest {
                 String noDataString = activity.getString(R.string.noData); // Extrae "-" de strings.xml
 
                 assertEquals("01f5011f76069b1e81a11d4d51dd9d1d", ((TextView) activity.findViewById(R.id.tvIdDisplay)).getText().toString());
-                assertEquals("377 - Metro Abrantes", ((TextView) activity.findViewById(R.id.tvStName)).getText().toString());
+                assertEquals("390 - Estacion datos ausentes", ((TextView) activity.findViewById(R.id.tvStName)).getText().toString());
+
+                // Comprobamos que latitud y longitud se muestran correctamente como texto
+                assertEquals("40.38091762", ((TextView) activity.findViewById(R.id.tvLatDisplay)).getText().toString());
+                assertEquals("-3.72783615", ((TextView) activity.findViewById(R.id.tvLongDisplay)).getText().toString());
 
                 // Comprobamos que el onCreate asigna el guion a los datos ausentes del Mock
-                assertEquals(noDataString, ((TextView) activity.findViewById(R.id.tvLatDisplay)).getText().toString());
-                assertEquals(noDataString, ((TextView) activity.findViewById(R.id.tvLongDisplay)).getText().toString());
                 assertEquals(noDataString, ((TextView) activity.findViewById(R.id.tvTimeDisplay)).getText().toString());
                 assertEquals(noDataString, ((TextView) activity.findViewById(R.id.tvUsedSlotsDisplay)).getText().toString());
                 assertEquals(noDataString, ((TextView) activity.findViewById(R.id.tvFreeSlotsDisplay)).getText().toString());
@@ -140,6 +142,22 @@ public class StationDetailsViewITest {
                 assertEquals(noDataString, ((TextView) activity.findViewById(R.id.tvLongDisplay)).getText().toString());
                 assertEquals(noDataString, ((TextView) activity.findViewById(R.id.tvUsedSlotsDisplay)).getText().toString());
                 assertEquals(noDataString, ((TextView) activity.findViewById(R.id.tvFreeSlotsDisplay)).getText().toString());
+            });
+        }
+    }
+
+    @Test
+    public void testOnCreate_WithoutStationExtra_ShowsError() {
+        Context context = ApplicationProvider.getApplicationContext();
+        Intent intent = new Intent(context, StationDetailsView.class);
+        // Lanzamos el Intent vacío sin INTENT_STATION
+        try (ActivityScenario<StationDetailsView> scenario = ActivityScenario.launch(intent)) {
+            scenario.onActivity(activity -> {
+                // Verificar que se muestra el Toast con R.string.loadErrorStation
+                assertEquals(
+                        activity.getString(R.string.loadErrorStation),
+                        org.robolectric.shadows.ShadowToast.getTextOfLatestToast()
+                );
             });
         }
     }
