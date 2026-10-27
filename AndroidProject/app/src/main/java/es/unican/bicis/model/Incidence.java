@@ -13,6 +13,7 @@ import lombok.Setter;
 public class Incidence {
 
     @SerializedName("id")                   protected String id;
+    @SerializedName("typeId")                 protected IncidenceType typeId;
     @SerializedName("type")                 protected String type;
     @SerializedName("amount")             protected int amount;
 }

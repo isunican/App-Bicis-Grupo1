@@ -2,6 +2,7 @@ package es.unican.bicis.activities.details;
 
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,6 +75,7 @@ public class StationDetailsView extends AppCompatActivity {
         TextView tvFreeSlots = findViewById(R.id.tvFreeSlotsDisplay);
         TextView tvId = findViewById(R.id.tvIdDisplay);
         TextView tvTime = findViewById(R.id.tvTimeDisplay);
+        ListView lvIncidences = findViewById(R.id.lvIncidences);
 
         // Get Station from the intent that triggered this activity
         Parcelable wrapped = IntentCompat.getParcelableExtra(getIntent(), INTENT_STATION, Parcelable.class);

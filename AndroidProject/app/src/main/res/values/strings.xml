@@ -29,4 +29,8 @@
     <string name="filter_above_kms">Filters at a distance greater than the one entered</string>
     <string name="filter_below_kms">Filters at a distance less than the one entered</string>
     <string name="id" translatable="false">ID:</string>
+    <string name="Incidences">Incidences:</string>
+    <string name="IncidenciaBicis">Broken bicycle</string>
+    <string name="IncidenciaEstacion">Broken station</string>
+    <string name="IncidenciaOtro">Other problem:</string>
 </resources>
