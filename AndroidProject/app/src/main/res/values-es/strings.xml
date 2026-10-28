@@ -27,4 +27,5 @@
     <string name="noStationsInRange">No hay estaciones en el rango deseado</string>
     <string name="filter_above_kms">Filtra a distancia mayor a la introducida</string>
     <string name="filter_below_kms">Filtra a distancia menor a la introducida</string>
+    <string name="mark_as_favorite">Marcar como favorita</string>
 </resources>

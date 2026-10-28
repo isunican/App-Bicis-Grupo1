@@ -29,4 +29,5 @@
     <string name="filter_above_kms">Filters at a distance greater than the one entered</string>
     <string name="filter_below_kms">Filters at a distance less than the one entered</string>
     <string name="id" translatable="false">ID:</string>
+    <string name="mark_as_favorite">Mark as favorite</string>
 </resources>
