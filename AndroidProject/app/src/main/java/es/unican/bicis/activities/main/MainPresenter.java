@@ -1,8 +1,12 @@
 package es.unican.bicis.activities.main;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import es.unican.bicis.common.Utils;
+import es.unican.bicis.databaseAcces.IFavouriteDAO;
+import es.unican.bicis.model.Favourite;
 import es.unican.bicis.model.Network;
 import es.unican.bicis.repository.INetworksRepository;
 import es.unican.bicis.repository.NetworksCallback;
@@ -49,12 +53,20 @@ public class MainPresenter implements IMainContract.Presenter {
 
     /**
      * @see IMainContract.Presenter#onFavoriteClicked(Network)
-     * @param network the network that was marked as favorite
+     * @param network the network that was clicked for marking as favorite
      */
     @Override
     public void onFavoriteClicked(Network network) {
-        if (network != null) {
-            view.showMarkedAsFavorite(network);
+        if (network != null && network.getId() != null) {
+            IFavouriteDAO dao = view.getFavouriteDAO();
+            if (dao != null) {
+                dao.insertarFavorito(new Favourite(network));
+                view.showMarkedAsFavorite(network);
+                Set<String> favoriteIds = new HashSet<>(dao.obtenerNetworkIdsFavoritos());
+                view.updateFavorites(favoriteIds);
+            } else {
+                view.showMarkedAsFavorite(network);
+            }
         }
     }
 

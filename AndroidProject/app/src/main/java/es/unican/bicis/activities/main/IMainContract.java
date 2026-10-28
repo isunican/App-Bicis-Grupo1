@@ -3,7 +3,9 @@ package es.unican.bicis.activities.main;
 import android.content.Context;
 
 import java.util.List;
+import java.util.Set;
 
+import es.unican.bicis.databaseAcces.IFavouriteDAO;
 import es.unican.bicis.model.Network;
 import es.unican.bicis.repository.INetworksRepository;
 
@@ -73,6 +75,13 @@ public interface IMainContract {
         public INetworksRepository getNetworksRepository();
 
         /**
+         * Returns the DAO to access favorite networks in Room.
+         * Only the Presenter should call this method
+         * @return the IFavouriteDAO
+         */
+        public IFavouriteDAO getFavouriteDAO();
+
+        /**
          * The view is requested to display the given list of bike networks.
          * Only the Presenter should call this method
          * @param networks the list of networks
@@ -126,6 +135,14 @@ public interface IMainContract {
          * @param network the network
          */
         public void showMarkedAsFavorite(Network network);
+
+
+        /**
+         * The view is requested to update the list of favorite network IDs and refresh the list UI.
+         * Only the Presenter should call this method
+         * @param favoriteNetworkIds set of favorite network IDs
+         */
+        public void updateFavorites(Set<String> favoriteNetworkIds);
 
     }
 }
