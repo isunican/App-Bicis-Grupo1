@@ -27,4 +27,17 @@
     <string name="noStationsInRange">No hay estaciones en el rango deseado</string>
     <string name="filter_above_kms">Filtra a distancia mayor a la introducida</string>
     <string name="filter_below_kms">Filtra a distancia menor a la introducida</string>
+    <string name="Incidences">Incidencias:</string>
+    <string name="IncidenciaBicis">Bicicleta estropeada</string>
+    <string name="IncidenciaEstacion">Estación estropeada</string>
+    <string name="IncidenciaOtro">Otro problema:</string>
+    <string name="loadErrorIncidences">Ha habido un error cargando las incidencias</string>
+    <string name="incidencia">Incidencia</string>
+    <string name="incidencia_registrada">Incidencia registrada</string>
+
+    <string-array name="incidencias_options">
+        <item>Estación dañada</item>
+        <item>Bicicleta defectuosa</item>
+        <item>Otro problema</item>
+    </string-array>
 </resources>
