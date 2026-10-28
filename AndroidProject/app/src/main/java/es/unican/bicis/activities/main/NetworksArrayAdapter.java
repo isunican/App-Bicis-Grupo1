@@ -77,6 +77,8 @@ public class NetworksArrayAdapter extends BaseAdapter {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         Network network = (Network) getItem(position);
 
+        
+
         if (convertView == null) {
             convertView = LayoutInflater.from(context)
                     .inflate(R.layout.activity_main_list_item, parent, false);
