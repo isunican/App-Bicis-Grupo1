@@ -178,20 +178,24 @@ public class StationDetailsView extends AppCompatActivity {
                         return;
                     }
 
+                    if (position == 0) {
+                        return;
+                    }
+
                     String option = parent.getItemAtPosition(position).toString();
 
                     if (currentStation != null && currentStation.getId() != null) {
                         String estacionId = currentStation.getId();
 
                         // Llamamos al método del presenter según la opción elegida
-                        if (position == 0) {
-                            // Suponiendo que la posición 0 es "Estación Rota"
+                        if (position == 1) {
+                            // Suponiendo que la posición 1 es "Estación Rota"
                             presenter.registrarIncidenciaEstacionRota(estacionId);
-                        } else if (position == 1) {
-                            // Suponiendo que la posición 1 es "Bici Rota"
+                        } else if (position == 2) {
+                            // Suponiendo que la posición 2 es "Bici Rota"
                             presenter.registrarIncidenciaBiciRota(estacionId);
                         } else {
-                            // Cualquier otra posición es "Otro"
+                            // Cualquier otra posición (3) es "Otro"
                             presenter.registrarIncidenciaOtro(option, estacionId);
 
                             // Nota: En un futuro, si es "Otro", podrías abrir un AlertDialog
@@ -203,6 +207,8 @@ public class StationDetailsView extends AppCompatActivity {
                     Toast.makeText(StationDetailsView.this,
                             getString(R.string.incidencia_registrada) + ": " + option,
                             Toast.LENGTH_SHORT).show();
+
+                    spIncidencias.setSelection(0);
                 }
 
                 @Override

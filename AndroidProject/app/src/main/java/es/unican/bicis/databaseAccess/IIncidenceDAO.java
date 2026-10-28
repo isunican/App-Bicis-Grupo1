@@ -9,5 +9,5 @@ import es.unican.bicis.model.Incidence;
 @Dao
 public interface IIncidenceDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertarIncidencia(Incidence incidencia);
+    long insertarIncidencia(Incidence incidencia);
 }

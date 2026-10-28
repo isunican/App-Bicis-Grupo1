@@ -31,6 +31,7 @@
     <string name="incidencia_registrada">Incidencia registrada</string>
 
     <string-array name="incidencias_options">
+        <item>Selecciona una incidencia...</item>
         <item>Estación dañada</item>
         <item>Bicicleta defectuosa</item>
         <item>Otro problema</item>

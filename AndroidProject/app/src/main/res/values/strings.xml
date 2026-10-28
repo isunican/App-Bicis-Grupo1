@@ -33,6 +33,7 @@
     <string name="incidencia_registrada">Incident reported</string>
 
     <string-array name="incidencias_options">
+        <item>Select an incidence...</item>
         <item>Damaged station</item>
         <item>Defective bike</item>
         <item>Other issue</item>
