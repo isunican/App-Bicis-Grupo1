@@ -9,12 +9,14 @@
 
     <TextView
         android:id="@+id/tvName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:textSize="20sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/tvEBikesText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         tools:text="Network Name" />
@@ -32,9 +34,10 @@
 
     <TextView
         android:id="@+id/tvCity"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/tvName"
         app:layout_constraintStart_toStartOf="@+id/tvName"
         app:layout_constraintTop_toBottomOf="@+id/tvName"
         tools:text="City (Country)" />
@@ -129,7 +132,7 @@
         android:id="@+id/etKmFilter"
         android:layout_width="94dp"
         android:layout_height="48dp"
-        android:layout_marginStart="64dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:autofillHints="10"
         android:ems="10"
@@ -151,12 +154,12 @@
         android:id="@+id/btnFilterMoreThanKm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/filter_above_kms"
         android:src="@drawable/arrow_upward_48"
-        app:layout_constraintStart_toEndOf="@+id/tvKmFilter"
+        app:layout_constraintEnd_toStartOf="@+id/btnFilterLessThanKm"
         app:layout_constraintTop_toBottomOf="@+id/divider" />
 
     <ImageButton
@@ -164,7 +167,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
-        android:layout_marginEnd="64dp"
+        android:layout_marginEnd="32dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/filter_below_kms"
         app:layout_constraintEnd_toEndOf="parent"

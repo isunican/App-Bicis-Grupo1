@@ -2,16 +2,18 @@ package es.unican.bicis.activities.details;
 
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.IntentCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import org.parceler.Parcels;
@@ -47,6 +49,25 @@ public class StationDetailsView extends AppCompatActivity {
         assert bar != null;  // to avoid warning in the line below
         bar.setDisplayHomeAsUpEnabled(true);  // show back button in action bar
 
+        // Evitar solape con el notch
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        ConstraintLayout mainLayout = findViewById(R.id.main);
+
+        ViewCompat.setOnApplyWindowInsetsListener(mainLayout, (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+
+            toolbar.setPadding(toolbar.getPaddingLeft(), insets.top, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
+
+            android.view.ViewGroup.LayoutParams params = toolbar.getLayoutParams();
+            int baseHeight = getResources().getDimensionPixelSize(androidx.appcompat.R.dimen.abc_action_bar_default_height_material);
+            params.height = baseHeight + insets.top;
+            toolbar.setLayoutParams(params);
+
+            v.setPadding(insets.left, 0, insets.right, insets.bottom);
+
+            return WindowInsetsCompat.CONSUMED;
+        });
+
         TextView tvStationName = findViewById(R.id.tvStName);
         TextView tvLatitude = findViewById(R.id.tvLatDisplay);
         TextView tvLongitude = findViewById(R.id.tvLongDisplay);
@@ -54,6 +75,7 @@ public class StationDetailsView extends AppCompatActivity {
         TextView tvFreeSlots = findViewById(R.id.tvFreeSlotsDisplay);
         TextView tvId = findViewById(R.id.tvIdDisplay);
         TextView tvTime = findViewById(R.id.tvTimeDisplay);
+        ListView lvIncidences = findViewById(R.id.lvIncidences);
 
         // Get Station from the intent that triggered this activity
         Parcelable wrapped = IntentCompat.getParcelableExtra(getIntent(), INTENT_STATION, Parcelable.class);

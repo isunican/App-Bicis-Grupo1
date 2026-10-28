@@ -27,4 +27,8 @@
     <string name="noStationsInRange">No hay estaciones en el rango deseado</string>
     <string name="filter_above_kms">Filtra a distancia mayor a la introducida</string>
     <string name="filter_below_kms">Filtra a distancia menor a la introducida</string>
+    <string name="Incidences">Incidencias:</string>
+    <string name="IncidenciaBicis">Bicicleta estropeada</string>
+    <string name="IncidenciaEstacion">Estación estropeada</string>
+    <string name="IncidenciaOtro">Otro problema:</string>
 </resources>
