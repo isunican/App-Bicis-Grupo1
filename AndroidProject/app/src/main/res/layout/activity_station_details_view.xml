@@ -169,11 +169,35 @@
         android:id="@+id/tvIncidences"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:text="@string/Incidences"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/tvTimeDisplay"
-        app:layout_constraintTop_toBottomOf="@+id/tvTimeDisplay" />
+        app:layout_constraintTop_toBottomOf="@+id/btBotonIncidencia" />
+
+    <ImageButton
+        android:id="@+id/btBotonIncidencia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/incidencia"
+        android:src="@drawable/boton_incidencia"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.882"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTimeDisplay"
+        app:layout_constraintVertical_bias="0.06"
+        app:srcCompat="@drawable/boton_incidencia" />
+
+    <Spinner
+        android:id="@+id/spIncidencias"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/btBotonIncidencia"
+        app:layout_constraintEnd_toEndOf="@+id/btBotonIncidencia"
+        app:layout_constraintStart_toStartOf="@+id/btBotonIncidencia"
+        app:layout_constraintTop_toTopOf="@+id/btBotonIncidencia" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
