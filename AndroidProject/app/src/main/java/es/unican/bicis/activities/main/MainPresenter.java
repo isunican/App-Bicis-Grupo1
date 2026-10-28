@@ -1,5 +1,6 @@
 package es.unican.bicis.activities.main;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -80,6 +81,23 @@ public class MainPresenter implements IMainContract.Presenter {
 
             @Override
             public void onSuccess(List<Network> networks) {
+                IFavouriteDAO favouriteDAO = view.getFavouriteDAO();
+                if (favouriteDAO != null) {
+                    Set<String> redesFavId = new HashSet<String>(favouriteDAO.obtenerNetworkIdsFavoritos());
+
+                    List<Network> favoritas = new ArrayList<Network>();
+                    List<Network> resto = new ArrayList<>();
+
+                    for (Network net : networks) {
+                        if (redesFavId.contains(net.getId())) {
+                            favoritas.add(net);
+                        } else {
+                            resto.add(net);
+                        }
+                    }
+                    favoritas.addAll(resto);
+                    networks = favoritas;
+                }
                 view.showNetworks(networks);
                 view.showLoadCorrect(networks.size());
             }
