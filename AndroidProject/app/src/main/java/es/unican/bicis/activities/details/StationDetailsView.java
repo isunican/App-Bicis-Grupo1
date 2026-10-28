@@ -2,6 +2,12 @@ package es.unican.bicis.activities.details;
 
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +25,7 @@ import org.parceler.Parcels;
 
 import es.unican.bicis.R;
 import es.unican.bicis.common.TimestampUtils;
+import es.unican.bicis.databaseAccess.AppDatabase;
 import es.unican.bicis.model.Station;
 
 /**
@@ -30,14 +37,17 @@ public class StationDetailsView extends AppCompatActivity {
     /** Key for the intent that contains the station */
     public static final String INTENT_STATION = "INTENT_STATION";
 
-    /**
-     * @see AppCompatActivity#onCreate(Bundle)
-     * @param savedInstanceState
-     */
+    // 1. Declarar el presentador
+    private StationDetailsPresenter presenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_station_details_view);
+
+        // 2. Inicializar la base de datos y el presentador
+        AppDatabase db = AppDatabase.getDatabase(this);
+        presenter = new StationDetailsPresenter(db);
 
         // The default theme does not include a toolbar.
         // In this app the toolbar is explicitly declared in the layout
@@ -57,7 +67,7 @@ public class StationDetailsView extends AppCompatActivity {
 
             toolbar.setPadding(toolbar.getPaddingLeft(), insets.top, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
 
-            android.view.ViewGroup.LayoutParams params = toolbar.getLayoutParams();
+            ViewGroup.LayoutParams params = toolbar.getLayoutParams();
             int baseHeight = getResources().getDimensionPixelSize(androidx.appcompat.R.dimen.abc_action_bar_default_height_material);
             params.height = baseHeight + insets.top;
             toolbar.setLayoutParams(params);
@@ -137,6 +147,79 @@ public class StationDetailsView extends AppCompatActivity {
             }
         } else {
             Toast.makeText(this, R.string.loadErrorStation, Toast.LENGTH_LONG).show();
+        }
+
+        ImageButton btBotonIncidencia = findViewById(R.id.btBotonIncidencia);
+        Spinner spIncidencias = findViewById(R.id.spIncidencias);
+
+        // Hacemos que la variable station sea "final" para poder usarla dentro del listener del Spinner
+        final Station currentStation = station;
+
+        if (spIncidencias != null) {
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                    this,
+                    R.array.incidencias_options,
+                    android.R.layout.simple_spinner_item
+            );
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spIncidencias.setAdapter(adapter);
+
+            if (btBotonIncidencia != null) {
+                btBotonIncidencia.setOnClickListener(v -> spIncidencias.performClick());
+            }
+
+            spIncidencias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                private boolean isInitial = true;
+
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (isInitial) {
+                        isInitial = false;
+                        return;
+                    }
+
+                    String option = parent.getItemAtPosition(position).toString();
+
+                    if (currentStation != null && currentStation.getId() != null) {
+                        String estacionId = currentStation.getId();
+
+                        // Llamamos al método del presenter según la opción elegida
+                        if (position == 0) {
+                            // Suponiendo que la posición 0 es "Estación Rota"
+                            presenter.registrarIncidenciaEstacionRota(estacionId);
+                        } else if (position == 1) {
+                            // Suponiendo que la posición 1 es "Bici Rota"
+                            presenter.registrarIncidenciaBiciRota(estacionId);
+                        } else {
+                            // Cualquier otra posición es "Otro"
+                            presenter.registrarIncidenciaOtro(option, estacionId);
+
+                            // Nota: En un futuro, si es "Otro", podrías abrir un AlertDialog
+                            // con un EditText para que el usuario escriba el 'textoPersonalizado' real.
+                        }
+                    }
+
+                    // La vista solo se encarga de avisar al usuario de que la acción se ha procesado
+                    Toast.makeText(StationDetailsView.this,
+                            getString(R.string.incidencia_registrada) + ": " + option,
+                            Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    // Do nothing
+                }
+            });
+
+        }
+    }
+
+    // 4. Limpiar el presentador al salir de la activity para evitar fugas de memoria
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (presenter != null) {
+            presenter.onDestroy();
         }
     }
 }

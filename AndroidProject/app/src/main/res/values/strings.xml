@@ -29,4 +29,12 @@
     <string name="filter_above_kms">Filters at a distance greater than the one entered</string>
     <string name="filter_below_kms">Filters at a distance less than the one entered</string>
     <string name="id" translatable="false">ID:</string>
+    <string name="incidencia">Incident</string>
+    <string name="incidencia_registrada">Incident reported</string>
+
+    <string-array name="incidencias_options">
+        <item>Damaged station</item>
+        <item>Defective bike</item>
+        <item>Other issue</item>
+    </string-array>
 </resources>

@@ -103,11 +103,20 @@ dependencies {
     implementation libs.activity
     implementation libs.constraintlayout
     implementation libs.play.services.location
-    androidTestImplementation libs.rules
+    implementation libs.room.common
+    implementation libs.room3.runtime
+
     testImplementation libs.junit
-    testImplementation libs.espresso.core
+
+    debugImplementation libs.core
+    debugImplementation libs.runner
+    debugImplementation libs.rules
+
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+    androidTestImplementation libs.core
+    androidTestImplementation libs.runner
+    androidTestImplementation libs.rules
 
     // Parceler (automatically implements methods to create parcels)
     implementation libs.parceler.api
