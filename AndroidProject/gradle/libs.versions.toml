@@ -19,6 +19,8 @@ playServicesLocation = "21.4.0"
 rules = "1.7.0"
 roomCommon = "2.8.5"
 room3Runtime = "3.0.3"
+roomRuntime = "2.8.5"
+roomCompiler = "2.8.5"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -46,6 +48,8 @@ runner = { group = "androidx.test", name = "runner", version.ref = "rules" }
 rules = { group = "androidx.test", name = "rules", version.ref = "rules" }
 room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
 room3-runtime = { group = "androidx.room3", name = "room3-runtime", version.ref = "room3Runtime" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

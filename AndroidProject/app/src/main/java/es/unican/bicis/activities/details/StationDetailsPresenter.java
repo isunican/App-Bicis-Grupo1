@@ -33,7 +33,7 @@ public class StationDetailsPresenter {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                db.IIncidenceDAO().insertarIncidencia(nuevaIncidencia);
+                db.incidenciaDao().insertarIncidencia(nuevaIncidencia);
             }
         });
     }
@@ -47,7 +47,7 @@ public class StationDetailsPresenter {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                db.IIncidenceDAO().insertarIncidencia(nuevaIncidencia);
+                db.incidenciaDao().insertarIncidencia(nuevaIncidencia);
             }
         });
     }
@@ -61,7 +61,7 @@ public class StationDetailsPresenter {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                db.IIncidenceDAO().insertarIncidencia(nuevaIncidencia);
+                db.incidenciaDao().insertarIncidencia(nuevaIncidencia);
             }
         });
     }

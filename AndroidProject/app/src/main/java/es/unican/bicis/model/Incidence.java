@@ -14,15 +14,17 @@ import lombok.Setter;
 @Setter
 public class Incidence {
     @PrimaryKey (autoGenerate = true)
-    @SerializedName("id")                 protected int id;
-    @SerializedName("idEstacion")         protected String idEstacion;
-    @SerializedName("typeId")             protected IncidenceType typeId;
-    @SerializedName("type")               protected String type;
-    @SerializedName("amount")             protected int amount;
+    @SerializedName("id")                 public int id;
+    @SerializedName("idEstacion")         public String idEstacion;
+    @SerializedName("typeId")             public IncidenceType typeId;
+    @SerializedName("type")               public String type;
+    @SerializedName("amount")             public int amount;
 
     public Incidence(String estacionId, IncidenceType typeId, String type) {
         this.idEstacion = estacionId;
         this.typeId = typeId;
         this.type = type;
     }
+
+    public Incidence(){}
 }

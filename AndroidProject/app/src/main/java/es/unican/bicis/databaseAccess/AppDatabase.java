@@ -5,7 +5,6 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.room3.RoomDatabase;
 
 import es.unican.bicis.model.Incidence;
 

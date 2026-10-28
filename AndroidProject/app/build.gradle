@@ -104,9 +104,11 @@ dependencies {
     implementation libs.constraintlayout
     implementation libs.play.services.location
     implementation libs.room.common
+    implementation libs.room.runtime
     implementation libs.room3.runtime
 
     testImplementation libs.junit
+    annotationProcessor libs.room.compiler
 
     debugImplementation libs.core
     debugImplementation libs.runner
