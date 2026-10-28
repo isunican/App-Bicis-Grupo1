@@ -39,6 +39,13 @@ public interface IMainContract {
          */
         public void onMenuInfoClicked();
 
+        /**
+         * The presenter is informed that the favorite option for a network has been clicked
+         * Only the View should call this method
+         * @param network the network
+         */
+        public void onFavoriteClicked(Network network);
+
     }
 
     /**
@@ -111,6 +118,14 @@ public interface IMainContract {
          * Only the Presenter should call this method
          */
         public void showInfoActivity();
+
+        /**
+         * The view is requested to display a notification indicating that the network
+         * was marked as favorite.
+         * Only the Presenter should call this method
+         * @param network the network
+         */
+        public void showMarkedAsFavorite(Network network);
 
     }
 }

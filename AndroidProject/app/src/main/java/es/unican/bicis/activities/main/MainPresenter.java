@@ -48,6 +48,17 @@ public class MainPresenter implements IMainContract.Presenter {
     }
 
     /**
+     * @see IMainContract.Presenter#onFavoriteClicked(Network)
+     * @param network the network that was marked as favorite
+     */
+    @Override
+    public void onFavoriteClicked(Network network) {
+        if (network != null) {
+            view.showMarkedAsFavorite(network);
+        }
+    }
+
+    /**
      * Loads the bike networks from the repository, and sends them to the view
      */
     private void load() {

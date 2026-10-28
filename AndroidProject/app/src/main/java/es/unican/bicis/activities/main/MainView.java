@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -72,7 +73,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
             toolbar.setPadding(toolbar.getPaddingLeft(), insets.top, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
 
-            android.view.ViewGroup.LayoutParams params = toolbar.getLayoutParams();
+            ViewGroup.LayoutParams params = toolbar.getLayoutParams();
             int baseHeight = getResources().getDimensionPixelSize(androidx.appcompat.R.dimen.abc_action_bar_default_height_material);
             params.height = baseHeight + insets.top;
             toolbar.setLayoutParams(params);
@@ -177,7 +178,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     @Override
     public void showNetworks(List<Network> networks) {
         ListView list = findViewById(R.id.lvNetworks);
-        NetworksArrayAdapter adapter = new NetworksArrayAdapter(this, networks);
+        NetworksArrayAdapter adapter = new NetworksArrayAdapter(this, networks, presenter::onFavoriteClicked);
         list.setAdapter(adapter);
     }
 
@@ -232,6 +233,16 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     public void showInfoActivity() {
         Intent intent = new Intent(this, InfoView.class);
         startActivity(intent);
+    }
+
+    /**
+     * @see IMainContract.View#showMarkedAsFavorite(Network)
+     * @param network the network
+     */
+    @Override
+    public void showMarkedAsFavorite(Network network) {
+        String name = network != null ? network.getName() : "";
+        Toast.makeText(this, getString(R.string.marked_as_favorite, name), Toast.LENGTH_SHORT).show();
     }
 
     /**
