@@ -1,5 +1,6 @@
 package es.unican.bicis.model;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -16,25 +17,26 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Favourite {
-    @PrimaryKey (autoGenerate = true)
 
-    @ColumnInfo(name = "id")
-    @SerializedName("id")                 public int id;
-
+    @PrimaryKey
+    @NonNull
     @ColumnInfo(name = "network_id")
-    @SerializedName("network_id")          public String networkId;
-
-
+    @SerializedName("network_id")
+    public String networkId;
 
     public Favourite(Network network) {
-        if (network != null) {
+        if (network != null && network.getId() != null) {
             this.networkId = network.getId();
+        } else {
+            this.networkId = "";
         }
     }
 
-    public Favourite(String networkId) {
+    public Favourite(@NonNull String networkId) {
         this.networkId = networkId;
     }
 
-    public Favourite() {}
+    public Favourite() {
+        this.networkId = "";
+    }
 }

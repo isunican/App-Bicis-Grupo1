@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase;
 
 import es.unican.bicis.model.Favourite;
 
-@Database(entities = {Favourite.class}, version = 1, exportSchema = false)
+@Database(entities = {Favourite.class}, version = 2, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract IFavouriteDAO favouriteDAO();
@@ -22,6 +22,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     AppDatabase.class, "bicis_database")
                             .allowMainThreadQueries()
+                            .fallbackToDestructiveMigration()
                             .build();
                 }
             }
