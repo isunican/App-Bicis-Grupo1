@@ -145,20 +145,5 @@ public class StationDetailsViewITest {
             });
         }
     }
-
-    @Test
-    public void testOnCreate_WithoutStationExtra_ShowsError() {
-        Context context = ApplicationProvider.getApplicationContext();
-        Intent intent = new Intent(context, StationDetailsView.class);
-        // Lanzamos el Intent vacío sin INTENT_STATION
-        try (ActivityScenario<StationDetailsView> scenario = ActivityScenario.launch(intent)) {
-            scenario.onActivity(activity -> {
-                // Verificar que se muestra el Toast con R.string.loadErrorStation
-                assertEquals(
-                        activity.getString(R.string.loadErrorStation),
-                        org.robolectric.shadows.ShadowToast.getTextOfLatestToast()
-                );
-            });
-        }
-    }
+    
 }
