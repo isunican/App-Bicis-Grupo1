@@ -31,4 +31,5 @@
     <string name="IncidenciaBicis">Bicicleta estropeada</string>
     <string name="IncidenciaEstacion">Estación estropeada</string>
     <string name="IncidenciaOtro">Otro problema:</string>
+    <string name="loadErrorIncidences">Ha habido un error cargando las incidencias</string>
 </resources>

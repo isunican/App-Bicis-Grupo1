@@ -1,5 +1,6 @@
 package es.unican.bicis.activities.details;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.widget.ListView;
@@ -18,18 +19,36 @@ import androidx.core.view.WindowInsetsCompat;
 
 import org.parceler.Parcels;
 
+import java.util.List;
+
 import es.unican.bicis.R;
 import es.unican.bicis.common.TimestampUtils;
+import es.unican.bicis.model.Incidence;
 import es.unican.bicis.model.Station;
 
+// TODO: Uncomment when Hilt and repository injection are ready
+// import javax.inject.Inject;
+// import dagger.hilt.android.AndroidEntryPoint;
+// import es.unican.bicis.repository.IIncidencesRepository;
+
 /**
- * View that shows the details of a bike station from a selected network.
- * Since this view does not have business logic, it can be implemented as an activity directly
+ * View that shows the details of a bike station from a selected network and its incidences.
  */
-public class StationDetailsView extends AppCompatActivity {
+// @AndroidEntryPoint // Uncomment when repository injection is configured
+public class StationDetailsView extends AppCompatActivity implements IStationDetailsContract.View {
 
     /** Key for the intent that contains the station */
     public static final String INTENT_STATION = "INTENT_STATION";
+
+    /** The presenter of this view */
+    private IStationDetailsContract.Presenter presenter;
+
+    /** Station of the view */
+    private Station station;
+
+    // TODO: Uncomment when repository injection is configured
+    // @Inject
+    // IIncidencesRepository repository;
 
     /**
      * @see AppCompatActivity#onCreate(Bundle)
@@ -40,16 +59,14 @@ public class StationDetailsView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_station_details_view);
 
-        // The default theme does not include a toolbar.
-        // In this app the toolbar is explicitly declared in the layout
-        // Set this toolbar as the activity ActionBar
+        // Set up the toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();
-        assert bar != null;  // to avoid warning in the line below
-        bar.setDisplayHomeAsUpEnabled(true);  // show back button in action bar
+        assert bar != null;
+        bar.setDisplayHomeAsUpEnabled(true);
 
-        // Evitar solape con el notch
+        // Avoid overlap with system notches/bars
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         ConstraintLayout mainLayout = findViewById(R.id.main);
 
@@ -68,6 +85,21 @@ public class StationDetailsView extends AppCompatActivity {
             return WindowInsetsCompat.CONSUMED;
         });
 
+        // Get Station from the intent that triggered this activity
+        Parcelable wrapped = IntentCompat.getParcelableExtra(getIntent(), INTENT_STATION, Parcelable.class);
+        if (wrapped != null) {
+            station = Parcels.unwrap(wrapped);
+        }
+
+        presenter = new StationDetailsPresenter();
+        presenter.init(this, station);
+    }
+
+    /**
+     * @see IStationDetailsContract.View#init()
+     */
+    @Override
+    public void init() {
         TextView tvStationName = findViewById(R.id.tvStName);
         TextView tvLatitude = findViewById(R.id.tvLatDisplay);
         TextView tvLongitude = findViewById(R.id.tvLongDisplay);
@@ -75,16 +107,7 @@ public class StationDetailsView extends AppCompatActivity {
         TextView tvFreeSlots = findViewById(R.id.tvFreeSlotsDisplay);
         TextView tvId = findViewById(R.id.tvIdDisplay);
         TextView tvTime = findViewById(R.id.tvTimeDisplay);
-        ListView lvIncidences = findViewById(R.id.lvIncidences);
 
-        // Get Station from the intent that triggered this activity
-        Parcelable wrapped = IntentCompat.getParcelableExtra(getIntent(), INTENT_STATION, Parcelable.class);
-        Station station = null;
-        if (wrapped != null) {
-            station = Parcels.unwrap(wrapped);
-        }
-
-        //Set texts on interface
         if (station != null) {
             String name = station.getName();
             if (name != null) {
@@ -92,53 +115,91 @@ public class StationDetailsView extends AppCompatActivity {
             } else {
                 tvStationName.setText(R.string.noData);
             }
+
             Double latitude = station.getLatitude();
-            if (latitude == null) {
-                tvLatitude.setText(R.string.noData);
-            } else if (latitude > 90 || latitude < -90) {
+            if (latitude == null || latitude > 90 || latitude < -90) {
                 tvLatitude.setText(R.string.noData);
             } else {
                 tvLatitude.setText(String.valueOf(latitude));
             }
+
             Double longitude = station.getLongitude();
-            if (longitude == null) {
-                tvLongitude.setText(R.string.noData);
-            } else if (longitude > 180 || longitude < -180) {
+            if (longitude == null || longitude > 180 || longitude < -180) {
                 tvLongitude.setText(R.string.noData);
             } else {
                 tvLongitude.setText(String.valueOf(longitude));
             }
+
             Integer usedSlots = station.getFreeBikes();
-            if (usedSlots == null) {
-                tvUsedSlots.setText(R.string.noData);
-            } else if (usedSlots < 0) {
+            if (usedSlots == null || usedSlots < 0) {
                 tvUsedSlots.setText(R.string.noData);
             } else {
                 tvUsedSlots.setText(String.valueOf(usedSlots));
             }
+
             Integer freeSlots = station.getEmptySlots();
-            if (freeSlots == null) {
-                tvFreeSlots.setText(R.string.noData);
-            } else if (freeSlots < 0) {
+            if (freeSlots == null || freeSlots < 0) {
                 tvFreeSlots.setText(R.string.noData);
             } else {
                 tvFreeSlots.setText(String.valueOf(freeSlots));
             }
+
             String id = station.getId();
             if (id != null) {
                 tvId.setText(id);
             } else {
                 tvId.setText(R.string.noData);
             }
+
             String timestamp = station.getTimestamp();
             if (timestamp != null) {
-                timestamp = TimestampUtils.formatTimestamp(timestamp);
-                tvTime.setText(timestamp);
+                tvTime.setText(TimestampUtils.formatTimestamp(timestamp));
             } else {
                 tvTime.setText(R.string.noData);
             }
         } else {
             Toast.makeText(this, R.string.loadErrorStation, Toast.LENGTH_LONG).show();
         }
+    }
+
+    /*
+    @Override
+    public IIncidencesRepository getIncidencesRepository() {
+        return repository;
+    }
+    */
+
+    /**
+     * @see IStationDetailsContract.View#showIncidences(List)
+     */
+    @Override
+    public void showIncidences(List<Incidence> incidences) {
+        ListView list = findViewById(R.id.lvIncidences);
+        IncidenceArrayAdapter adapter = new IncidenceArrayAdapter(this, incidences);
+        list.setAdapter(adapter);
+    }
+
+    /**
+     * @see IStationDetailsContract.View#showLoadError()
+     */
+    @Override
+    public void showLoadError() {
+        Toast.makeText(this, R.string.loadErrorIncidences, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @see IStationDetailsContract.View#showRedError()
+     */
+    @Override
+    public void showRedError() {
+        Toast.makeText(this, R.string.redError, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @see IStationDetailsContract.View#getContext()
+     */
+    @Override
+    public Context getContext() {
+        return this;
     }
 }

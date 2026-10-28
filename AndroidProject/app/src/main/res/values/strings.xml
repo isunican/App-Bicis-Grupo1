@@ -33,4 +33,5 @@
     <string name="IncidenciaBicis">Broken bicycle</string>
     <string name="IncidenciaEstacion">Broken station</string>
     <string name="IncidenciaOtro">Other problem:</string>
+    <string name="loadErrorIncidences">Failed to load incidences</string>
 </resources>
