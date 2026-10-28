@@ -34,4 +34,12 @@
     <string name="IncidenciaEstacion">Broken station</string>
     <string name="IncidenciaOtro">Other problem:</string>
     <string name="loadErrorIncidences">Failed to load incidences</string>
+    <string name="incidencia">Incident</string>
+    <string name="incidencia_registrada">Incident reported</string>
+
+    <string-array name="incidencias_options">
+        <item>Damaged station</item>
+        <item>Defective bike</item>
+        <item>Other issue</item>
+    </string-array>
 </resources>

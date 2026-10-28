@@ -70,11 +70,6 @@ public interface IStationDetailsContract {
          */
         void showLoadError();
 
-        /**
-         * The view is requested to display a notification indicating that there is no network connection.
-         * Only the Presenter should call this method.
-         */
-        void showRedError();
 
         /**
          * The view is requested to return the context of the application.

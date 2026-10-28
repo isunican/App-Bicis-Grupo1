@@ -3,7 +3,13 @@ package es.unican.bicis.activities.details;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,50 +29,28 @@ import java.util.List;
 
 import es.unican.bicis.R;
 import es.unican.bicis.common.TimestampUtils;
+import es.unican.bicis.databaseAccess.AppDatabase;
 import es.unican.bicis.model.Incidence;
 import es.unican.bicis.model.Station;
 
-// TODO: Uncomment when Hilt and repository injection are ready
-// import javax.inject.Inject;
-// import dagger.hilt.android.AndroidEntryPoint;
-// import es.unican.bicis.repository.IIncidencesRepository;
-
-/**
- * View that shows the details of a bike station from a selected network and its incidences.
- */
-// @AndroidEntryPoint // Uncomment when repository injection is configured
 public class StationDetailsView extends AppCompatActivity implements IStationDetailsContract.View {
 
-    /** Key for the intent that contains the station */
     public static final String INTENT_STATION = "INTENT_STATION";
 
-    /** The presenter of this view */
-    private IStationDetailsContract.Presenter presenter;
-
-    /** Station of the view */
+    private StationDetailsPresenter presenter;
     private Station station;
 
-    // TODO: Uncomment when repository injection is configured
-    // @Inject
-    // IIncidencesRepository repository;
-
-    /**
-     * @see AppCompatActivity#onCreate(Bundle)
-     * @param savedInstanceState
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_station_details_view);
 
-        // Set up the toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();
         assert bar != null;
         bar.setDisplayHomeAsUpEnabled(true);
 
-        // Avoid overlap with system notches/bars
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         ConstraintLayout mainLayout = findViewById(R.id.main);
 
@@ -75,7 +59,7 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
 
             toolbar.setPadding(toolbar.getPaddingLeft(), insets.top, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
 
-            android.view.ViewGroup.LayoutParams params = toolbar.getLayoutParams();
+            ViewGroup.LayoutParams params = toolbar.getLayoutParams();
             int baseHeight = getResources().getDimensionPixelSize(androidx.appcompat.R.dimen.abc_action_bar_default_height_material);
             params.height = baseHeight + insets.top;
             toolbar.setLayoutParams(params);
@@ -85,19 +69,16 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
             return WindowInsetsCompat.CONSUMED;
         });
 
-        // Get Station from the intent that triggered this activity
         Parcelable wrapped = IntentCompat.getParcelableExtra(getIntent(), INTENT_STATION, Parcelable.class);
         if (wrapped != null) {
             station = Parcels.unwrap(wrapped);
         }
 
-        presenter = new StationDetailsPresenter();
+        AppDatabase db = AppDatabase.getDatabase(this);
+        presenter = new StationDetailsPresenter(db);
         presenter.init(this, station);
     }
 
-    /**
-     * @see IStationDetailsContract.View#init()
-     */
     @Override
     public void init() {
         TextView tvStationName = findViewById(R.id.tvStName);
@@ -110,11 +91,7 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
 
         if (station != null) {
             String name = station.getName();
-            if (name != null) {
-                tvStationName.setText(name);
-            } else {
-                tvStationName.setText(R.string.noData);
-            }
+            tvStationName.setText(name != null ? name : getString(R.string.noData));
 
             Double latitude = station.getLatitude();
             if (latitude == null || latitude > 90 || latitude < -90) {
@@ -145,11 +122,7 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
             }
 
             String id = station.getId();
-            if (id != null) {
-                tvId.setText(id);
-            } else {
-                tvId.setText(R.string.noData);
-            }
+            tvId.setText(id != null ? id : getString(R.string.noData));
 
             String timestamp = station.getTimestamp();
             if (timestamp != null) {
@@ -157,21 +130,67 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
             } else {
                 tvTime.setText(R.string.noData);
             }
+
+            setupIncidenciasSpinner();
         } else {
             Toast.makeText(this, R.string.loadErrorStation, Toast.LENGTH_LONG).show();
         }
     }
 
-    /*
-    @Override
-    public IIncidencesRepository getIncidencesRepository() {
-        return repository;
-    }
-    */
+    private void setupIncidenciasSpinner() {
+        ImageButton btBotonIncidencia = findViewById(R.id.btBotonIncidencia);
+        Spinner spIncidencias = findViewById(R.id.spIncidencias);
 
-    /**
-     * @see IStationDetailsContract.View#showIncidences(List)
-     */
+        if (spIncidencias != null) {
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                    this,
+                    R.array.incidencias_options,
+                    android.R.layout.simple_spinner_item
+            );
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spIncidencias.setAdapter(adapter);
+
+            if (btBotonIncidencia != null) {
+                btBotonIncidencia.setOnClickListener(v -> spIncidencias.performClick());
+            }
+
+            spIncidencias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                private boolean isInitial = true;
+
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (isInitial) {
+                        isInitial = false;
+                        return;
+                    }
+
+                    String option = parent.getItemAtPosition(position).toString();
+
+                    if (station != null && station.getId() != null) {
+                        String estacionId = station.getId();
+
+                        if (position == 0) {
+                            presenter.registrarIncidenciaEstacionRota(estacionId);
+                        } else if (position == 1) {
+                            presenter.registrarIncidenciaBiciRota(estacionId);
+                        } else {
+                            presenter.registrarIncidenciaOtro(option, estacionId);
+                        }
+                    }
+
+                    Toast.makeText(StationDetailsView.this,
+                            getString(R.string.incidencia_registrada) + ": " + option,
+                            Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    // Sin acción
+                }
+            });
+        }
+    }
+
     @Override
     public void showIncidences(List<Incidence> incidences) {
         ListView list = findViewById(R.id.lvIncidences);
@@ -179,27 +198,21 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
         list.setAdapter(adapter);
     }
 
-    /**
-     * @see IStationDetailsContract.View#showLoadError()
-     */
     @Override
     public void showLoadError() {
         Toast.makeText(this, R.string.loadErrorIncidences, Toast.LENGTH_SHORT).show();
     }
 
-    /**
-     * @see IStationDetailsContract.View#showRedError()
-     */
-    @Override
-    public void showRedError() {
-        Toast.makeText(this, R.string.redError, Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * @see IStationDetailsContract.View#getContext()
-     */
     @Override
     public Context getContext() {
         return this;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (presenter != null) {
+            presenter.onDestroy();
+        }
     }
 }

@@ -32,4 +32,12 @@
     <string name="IncidenciaEstacion">Estación estropeada</string>
     <string name="IncidenciaOtro">Otro problema:</string>
     <string name="loadErrorIncidences">Ha habido un error cargando las incidencias</string>
+    <string name="incidencia">Incidencia</string>
+    <string name="incidencia_registrada">Incidencia registrada</string>
+
+    <string-array name="incidencias_options">
+        <item>Estación dañada</item>
+        <item>Bicicleta defectuosa</item>
+        <item>Otro problema</item>
+    </string-array>
 </resources>

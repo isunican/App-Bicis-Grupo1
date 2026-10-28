@@ -1,107 +1,113 @@
 package es.unican.bicis.activities.details;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import es.unican.bicis.common.Utils;
+import es.unican.bicis.databaseAccess.AppDatabase;
 import es.unican.bicis.model.Incidence;
 import es.unican.bicis.model.IncidenceType;
 import es.unican.bicis.model.Station;
 
-
 /**
- * The presenter of the StationDetails activity. It controls {@link StationDetailsView}.
+ * Presentador de la actividad StationDetails. Controla {@link StationDetailsView}
+ * gestionando las incidencias directamente contra la base de datos local (Room).
  */
 public class StationDetailsPresenter implements IStationDetailsContract.Presenter {
 
-    /** The view that is controlled by this presenter */
     private IStationDetailsContract.View view;
-
-    /** Station displayed in the view */
     private Station station;
+    private final AppDatabase db;
+    private final ExecutorService executorService;
+    private final Handler mainHandler;
 
-    /**
-     * @see IStationDetailsContract.Presenter#init(IStationDetailsContract.View, Station)
-     * @param view the view to control
-     * @param station the station to display
-     */
+    public StationDetailsPresenter(AppDatabase db) {
+        this.db = db;
+        this.executorService = Executors.newSingleThreadExecutor();
+        this.mainHandler = new Handler(Looper.getMainLooper());
+    }
+
     @Override
     public void init(IStationDetailsContract.View view, Station station) {
         this.view = view;
         this.station = station;
         this.view.init();
 
-        if (this.station == null) {
+        if (this.station == null || this.station.getId() == null) {
             this.view.showLoadError();
             return;
         }
 
-        if (Utils.isNetworkAvailable(view.getContext())) {
-            load();
-        } else {
-            view.showRedError();
-        }
+        load();
     }
 
     /**
-     * Loads the incidences for the selected station and requests the view to display them.
-     * If an error occurs retrieving the incidences, requests the view to show an error message.
-     * If there are no incidences, requests the view to show a message stating that there are none.
+     * Consulta en segundo plano las incidencias de la estación en Room
+     * y actualiza la vista en el hilo de interfaz.
      */
     protected void load() {
-        // --- TEMPORARY MOCK (uncomment to test list display without persistence) ---
-        List<Incidence> mockList = new ArrayList<>();
+        if (db == null || station == null || executorService.isShutdown()) {
+            return;
+        }
 
-        Incidence mockIncidence = new Incidence();
-        mockIncidence.setId("0");
-        mockIncidence.setTypeId(IncidenceType.STATION);
-        mockIncidence.setType("Station");
-        mockIncidence.setAmount(1);
-
-        Incidence mockIncidence2 = new Incidence();
-        mockIncidence2.setId("1");
-        mockIncidence2.setTypeId(IncidenceType.BIKE);
-        mockIncidence2.setType("Bike");
-        mockIncidence2.setAmount(2);
-
-        Incidence mockIncidence3 = new Incidence();
-        mockIncidence3.setId("2");
-        mockIncidence3.setTypeId(IncidenceType.OTHER);
-        mockIncidence3.setType("Cosas ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc");
-        mockIncidence3.setAmount(1001);
-        Incidence mockIncidence4 = new Incidence();
-        mockIncidence4.setId("3");
-        mockIncidence4.setTypeId(IncidenceType.OTHER);
-        mockIncidence4.setType("Hola");
-        mockIncidence4.setAmount(10010);
-
-        mockList.add(mockIncidence);
-        mockList.add(mockIncidence2);
-        mockList.add(mockIncidence3);
-        mockList.add(mockIncidence4);
-        view.showIncidences(mockList);
-
-
-        // --- FINAL REPOSITORY CALL (uncomment when persistence layer is ready) ---
-        /*
-
-        IIncidencesRepository repository = view.getIncidencesRepository();
-
-        repository.requestIncidences(new IncidencesCallback() {
-            @Override
-            public void onSuccess(List<Incidence> incidences) {
-                if (incidences == null || incidences.isEmpty()) {
-                    //Nos dijo que no mostraramos nada especial
-                } else {
-                    view.showIncidences(incidences);
+        executorService.execute(() -> {
+            try {
+                List<Incidence> incidencias = db.incidenciaDao().obtenerIncidenciasPorEstacion(station.getId());
+                if (incidencias == null) {
+                    incidencias = new ArrayList<>();
                 }
-            }
 
-            @Override
-            public void onFailure(Throwable e) {
-                view.showLoadError();
+                final List<Incidence> listaFinal = incidencias;
+                mainHandler.post(() -> {
+                    if (view != null) {
+                        view.showIncidences(listaFinal);
+                    }
+                });
+            } catch (Exception e) {
+                mainHandler.post(() -> {
+                    if (view != null) {
+                        view.showLoadError();
+                    }
+                });
             }
-        }, station.getId());
-        */
+        });
+    }
+
+    public void registrarIncidenciaEstacionRota(String estacionId) {
+        Incidence nuevaIncidencia = new Incidence(estacionId, IncidenceType.STATION, "EstacionRota");
+        insertarEnBaseDeDatos(nuevaIncidencia);
+    }
+
+    public void registrarIncidenciaBiciRota(String estacionId) {
+        Incidence nuevaIncidencia = new Incidence(estacionId, IncidenceType.BIKE, "BiciRota");
+        insertarEnBaseDeDatos(nuevaIncidencia);
+    }
+
+    public void registrarIncidenciaOtro(String textoPersonalizado, String estacionId) {
+        Incidence nuevaIncidencia = new Incidence(estacionId, IncidenceType.OTHER, textoPersonalizado);
+        insertarEnBaseDeDatos(nuevaIncidencia);
+    }
+
+    /**
+     * Inserta la incidencia en segundo plano y refresca la lista.
+     */
+    private void insertarEnBaseDeDatos(Incidence incidencia) {
+        if (db != null && executorService != null && !executorService.isShutdown()) {
+            executorService.execute(() -> {
+                db.incidenciaDao().insertarIncidencia(incidencia);
+                load(); // Recarga las incidencias en la vista tras guardar
+            });
+        }
+    }
+
+    public void onDestroy() {
+        this.view = null;
+        if (executorService != null && !executorService.isShutdown()) {
+            executorService.shutdown();
+        }
     }
 }
