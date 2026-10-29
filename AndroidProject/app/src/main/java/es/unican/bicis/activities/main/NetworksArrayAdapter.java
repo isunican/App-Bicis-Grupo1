@@ -2,15 +2,21 @@ package es.unican.bicis.activities.main;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import es.unican.bicis.R;
 import es.unican.bicis.model.Network;
@@ -20,11 +26,22 @@ import es.unican.bicis.model.Network;
  */
 public class NetworksArrayAdapter extends BaseAdapter {
 
+    /** Interface for favorite click callbacks */
+    public interface OnFavoriteClickListener {
+        void onFavoriteClick(Network network);
+    }
+
     /** The list of networks to render */
     private final List<Network> networks;
 
     /** Context of the application */
     private final Context context;
+
+    /** Listener for favorite button clicks */
+    private final OnFavoriteClickListener favoriteClickListener;
+
+    /** The set of favorite network ids */
+    private Set<String> favoriteNetworkIds;
 
     /**
      * Constructs an adapter to handle a list of networks
@@ -32,9 +49,42 @@ public class NetworksArrayAdapter extends BaseAdapter {
      * @param objects the list of networks
      */
     public NetworksArrayAdapter(@NonNull Context context, @NonNull List<Network> objects) {
-        // we know the parameters are not null because of the @NonNull annotation
+        this(context, objects, null, Collections.emptySet());
+    }
+
+    /**
+     * Constructs an adapter to handle a list of networks with a favorite listener
+     * @param context the application context
+     * @param objects the list of networks
+     * @param favoriteClickListener the listener for favorite clicks
+     */
+    public NetworksArrayAdapter(@NonNull Context context, @NonNull List<Network> objects, @Nullable OnFavoriteClickListener favoriteClickListener) {
+        this(context, objects, favoriteClickListener, Collections.emptySet());
+    }
+
+    /**
+     * Constructs an adapter to handle a list of networks with a favorite listener and favorite network IDs
+     * @param context the application context
+     * @param objects the list of networks
+     * @param favoriteClickListener the listener for favorite clicks
+     * @param favoriteNetworkIds set of favorite network IDs
+     */
+    public NetworksArrayAdapter(@NonNull Context context, @NonNull List<Network> objects,
+                                @Nullable OnFavoriteClickListener favoriteClickListener,
+                                @Nullable Set<String> favoriteNetworkIds) {
         this.networks = objects;
         this.context = context;
+        this.favoriteClickListener = favoriteClickListener;
+        this.favoriteNetworkIds = favoriteNetworkIds != null ? favoriteNetworkIds : Collections.emptySet();
+    }
+
+    /**
+     * Updates the set of favorite network IDs and refreshes the list
+     * @param favoriteNetworkIds the new set of favorite network IDs
+     */
+    public void setFavoriteNetworkIds(@Nullable Set<String> favoriteNetworkIds) {
+        this.favoriteNetworkIds = favoriteNetworkIds != null ? favoriteNetworkIds : Collections.emptySet();
+        notifyDataSetChanged();
     }
 
     @Override
@@ -65,14 +115,54 @@ public class NetworksArrayAdapter extends BaseAdapter {
         // name
         {
             TextView tv = convertView.findViewById(R.id.tvName);
-            tv.setText(network.getName());
+            if (tv != null) {
+                tv.setText(network.getName());
+            }
         }
 
         // location (city)
         {
             TextView tv = convertView.findViewById(R.id.tvCity);
-            String city = network.getLocation() != null ? network.getLocation().getCity() : "";
-            tv.setText(city);
+            if (tv != null) {
+                String city = network.getLocation() != null ? network.getLocation().getCity() : "";
+                tv.setText(city);
+            }
+        }
+
+        // favorite star icon
+        boolean isFavorite = network != null && network.getId() != null && favoriteNetworkIds.contains(network.getId());
+        {
+            ImageView ivStar = convertView.findViewById(R.id.imageView);
+            if (ivStar != null) {
+                ivStar.setVisibility(isFavorite ? View.VISIBLE : View.GONE);
+            }
+        }
+
+        // options button (three points)
+        {
+            ImageButton btPoints = convertView.findViewById(R.id.btPoints);
+            if (btPoints != null) {
+                btPoints.setOnClickListener(v -> {
+                    PopupMenu popup = new PopupMenu(context, v);
+                    popup.getMenuInflater().inflate(R.menu.network_item_menu, popup.getMenu());
+
+                    MenuItem favItem = popup.getMenu().findItem(R.id.action_mark_favorite);
+                    if (favItem != null) {
+                        favItem.setTitle(R.string.mark_as_favorite);
+                    }
+
+                    popup.setOnMenuItemClickListener(item -> {
+                        if (item.getItemId() == R.id.action_mark_favorite) {
+                            if (favoriteClickListener != null) {
+                                favoriteClickListener.onFavoriteClick(network);
+                            }
+                            return true;
+                        }
+                        return false;
+                    });
+                    popup.show();
+                });
+            }
         }
 
         return convertView;

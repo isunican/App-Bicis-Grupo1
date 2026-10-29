@@ -16,6 +16,10 @@ class Location {
     - country : Strings
 }
 
+class Favourite {
+    + networkId : String
+}
+
 class NetworksResponse {
 
 }

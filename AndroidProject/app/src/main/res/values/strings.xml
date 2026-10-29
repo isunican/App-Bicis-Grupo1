@@ -28,6 +28,8 @@
     <string name="km" translatable="false">Km</string>
     <string name="filter_above_kms">Filters at a distance greater than the one entered</string>
     <string name="filter_below_kms">Filters at a distance less than the one entered</string>
+    <string name="more_options">More options</string>
+    <string name="marked_as_favorite">%s marked as favorite</string>
     <string name="id" translatable="false">ID:</string>
     <string name="Incidences">Incidences:</string>
     <string name="IncidenciaBicis">Broken bicycle</string>
@@ -42,4 +44,5 @@
         <item>Defective bike</item>
         <item>Other issue</item>
     </string-array>
+    <string name="mark_as_favorite">Mark as favorite</string>
 </resources>

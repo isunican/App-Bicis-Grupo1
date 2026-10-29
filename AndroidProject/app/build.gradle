@@ -108,6 +108,8 @@ dependencies {
     implementation libs.room3.common
     implementation libs.room3.runtime
 
+
+    androidTestImplementation libs.rules
     testImplementation libs.junit
     annotationProcessor libs.room.compiler
 
@@ -120,6 +122,10 @@ dependencies {
     androidTestImplementation libs.core
     androidTestImplementation libs.runner
     androidTestImplementation libs.rules
+
+    //Room
+    implementation "androidx.room:room-runtime:2.6.1"
+    annotationProcessor "androidx.room:room-compiler:2.6.1"
 
     // Parceler (automatically implements methods to create parcels)
     implementation libs.parceler.api
