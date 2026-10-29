@@ -31,6 +31,11 @@ public class NetworksArrayAdapter extends BaseAdapter {
         void onFavoriteClick(Network network);
     }
 
+    /** Interface for network item click callbacks */
+    public interface OnNetworkClickListener {
+        void onNetworkClick(Network network);
+    }
+
     /** The list of networks to render */
     private final List<Network> networks;
 
@@ -39,6 +44,9 @@ public class NetworksArrayAdapter extends BaseAdapter {
 
     /** Listener for favorite button clicks */
     private final OnFavoriteClickListener favoriteClickListener;
+
+    /** Listener for row clicks */
+    private final OnNetworkClickListener networkClickListener;
 
     /** The set of favorite network ids */
     private Set<String> favoriteNetworkIds;
@@ -49,7 +57,7 @@ public class NetworksArrayAdapter extends BaseAdapter {
      * @param objects the list of networks
      */
     public NetworksArrayAdapter(@NonNull Context context, @NonNull List<Network> objects) {
-        this(context, objects, null, Collections.emptySet());
+        this(context, objects, null, null, Collections.emptySet());
     }
 
     /**
@@ -59,7 +67,7 @@ public class NetworksArrayAdapter extends BaseAdapter {
      * @param favoriteClickListener the listener for favorite clicks
      */
     public NetworksArrayAdapter(@NonNull Context context, @NonNull List<Network> objects, @Nullable OnFavoriteClickListener favoriteClickListener) {
-        this(context, objects, favoriteClickListener, Collections.emptySet());
+        this(context, objects, favoriteClickListener, null, Collections.emptySet());
     }
 
     /**
@@ -72,9 +80,25 @@ public class NetworksArrayAdapter extends BaseAdapter {
     public NetworksArrayAdapter(@NonNull Context context, @NonNull List<Network> objects,
                                 @Nullable OnFavoriteClickListener favoriteClickListener,
                                 @Nullable Set<String> favoriteNetworkIds) {
+        this(context, objects, favoriteClickListener, null, favoriteNetworkIds);
+    }
+
+    /**
+     * Constructs an adapter to handle a list of networks with item click listener, favorite listener and favorite network IDs
+     * @param context the application context
+     * @param objects the list of networks
+     * @param favoriteClickListener the listener for favorite clicks
+     * @param networkClickListener the listener for item clicks
+     * @param favoriteNetworkIds set of favorite network IDs
+     */
+    public NetworksArrayAdapter(@NonNull Context context, @NonNull List<Network> objects,
+                                @Nullable OnFavoriteClickListener favoriteClickListener,
+                                @Nullable OnNetworkClickListener networkClickListener,
+                                @Nullable Set<String> favoriteNetworkIds) {
         this.networks = objects;
         this.context = context;
         this.favoriteClickListener = favoriteClickListener;
+        this.networkClickListener = networkClickListener;
         this.favoriteNetworkIds = favoriteNetworkIds != null ? favoriteNetworkIds : Collections.emptySet();
     }
 
@@ -111,6 +135,15 @@ public class NetworksArrayAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(context)
                     .inflate(R.layout.activity_main_list_item, parent, false);
         }
+
+        // handle click on the item row itself
+        convertView.setOnClickListener(v -> {
+            if (networkClickListener != null) {
+                networkClickListener.onNetworkClick(network);
+            } else if (context instanceof MainView) {
+                ((MainView) context).showNetworkDetails(network);
+            }
+        });
 
         // name
         {
