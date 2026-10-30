@@ -27,10 +27,8 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import org.parceler.Parcels;
-import es.unican.bicis.activities.details.IncidenceArrayAdapter;
 
 import java.util.List;
-
 
 import es.unican.bicis.R;
 import es.unican.bicis.common.TimestampUtils;
@@ -39,19 +37,16 @@ import es.unican.bicis.model.Incident;
 import es.unican.bicis.model.Station;
 
 /**
- * View that shows the details of one station.
+ * Vista que muestra los detalles de una estación.
  */
-public class StationDetailsView extends AppCompatActivity implements IStationsDetailsContract.View {
+public class StationDetailsView extends AppCompatActivity implements IStationDetailsContract.View {
 
-    /** Key for the intent that contains the station */
+    /** Clave para el intent que contiene la estación */
     public static final String INTENT_STATION = "INTENT_STATION";
 
-    private IStationsDetailsContract.Presenter presenter;
-    private Station station = null; // Guardar la estación a nivel de clase
+    private IStationDetailsContract.Presenter presenter;
+    private Station station = null;
 
-    /**
-     * @see AppCompatActivity#onCreate(Bundle)
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,12 +66,9 @@ public class StationDetailsView extends AppCompatActivity implements IStationsDe
         presenter.init(this, station);
     }
 
-    /**
-     * @see IStationsDetailsContract.View#init()
-     */
     @Override
     public void init() {
-        // CONFIGURACIÓN DE UI (Toolbar y Notch)
+        // --- CONFIGURACIÓN DE UI (Toolbar y Notch) ---
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();
@@ -96,7 +88,7 @@ public class StationDetailsView extends AppCompatActivity implements IStationsDe
             return WindowInsetsCompat.CONSUMED;
         });
 
-        //Cargar los y mostrar los valores de los datos de la estacion
+        // --- CARGAR Y MOSTRAR LOS VALORES DE LA ESTACIÓN ---
         TextView tvStationName = findViewById(R.id.tvStName);
         TextView tvLatitude = findViewById(R.id.tvLatDisplay);
         TextView tvLongitude = findViewById(R.id.tvLongDisplay);
@@ -155,12 +147,6 @@ public class StationDetailsView extends AppCompatActivity implements IStationsDe
             spIncidencias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 private boolean isInitial = true;
 
-                /**
-                 *
-                 * Metodo que se ejecuta cuando se selecciona un elemento del spinner
-                 * llamando al presenter para registrar la incidencia del tipo selecionado
-                 *
-                 * */
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     if (isInitial) {
@@ -169,8 +155,6 @@ public class StationDetailsView extends AppCompatActivity implements IStationsDe
                     }
 
                     if (position == 0) return;
-
-                    String option = parent.getItemAtPosition(position).toString();
 
                     if (station != null && station.getId() != null) {
                         String estacionId = station.getId();
@@ -196,11 +180,8 @@ public class StationDetailsView extends AppCompatActivity implements IStationsDe
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     String textoPersonalizado = input.getText().toString();
-
-                                    // Enviamos el texto personalizado al para añadir la incidencia presenter
                                     presenter.registrarIncidenciaOtro(textoPersonalizado, estacionId);
 
-                                    // Solo mostramos el mensaje de éxito si el usuario escribió algo
                                     if (!textoPersonalizado.trim().isEmpty()) {
                                         Toast.makeText(StationDetailsView.this, getString(R.string.incidencia_registrada) + ": " + textoPersonalizado, Toast.LENGTH_SHORT).show();
                                     }
@@ -222,7 +203,6 @@ public class StationDetailsView extends AppCompatActivity implements IStationsDe
                     }
                 }
 
-
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {}
             });
@@ -233,40 +213,29 @@ public class StationDetailsView extends AppCompatActivity implements IStationsDe
     public void showLoadError() {
         Toast.makeText(this, R.string.loadErrorIncidences, Toast.LENGTH_SHORT).show();
     }
+
     @Override
-    public void showIncidences(List<Incident> incidences) {
+    public void showIncidences(List<Incident> incidents) {
         ListView list = findViewById(R.id.lvIncidences);
-        IncidenceArrayAdapter adapter = new IncidenceArrayAdapter(this, incidences);
+        IncidentArrayAdapter adapter = new IncidentArrayAdapter(this, incidents);
         list.setAdapter(adapter);
     }
 
-    /**
-     * @see IStationsDetailsContract.View#showEmptyIssueError()
-     */
     @Override
     public void showEmptyIssueError() {
         Toast.makeText(this, getString(R.string.empty_issue_error), Toast.LENGTH_SHORT).show();
     }
 
-    /**
-     * @see IStationsDetailsContract.View#showDatabaseError()
-     */
     @Override
     public void showDatabaseError() {
         Toast.makeText(this, R.string.databaseError, Toast.LENGTH_SHORT).show();
     }
 
-    /**
-     * @see IStationsDetailsContract.View#getContext()
-     */
     @Override
     public Context getContext() {
         return this;
     }
 
-    /**
-     * Metodo onDestroy para limpiar los recursos
-     */
     @Override
     protected void onDestroy() {
         super.onDestroy();

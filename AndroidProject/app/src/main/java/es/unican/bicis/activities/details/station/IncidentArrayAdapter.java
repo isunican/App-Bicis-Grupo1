@@ -1,4 +1,4 @@
-package es.unican.bicis.activities.details;
+package es.unican.bicis.activities.details.station;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -17,12 +17,11 @@ import java.util.List;
 import es.unican.bicis.R;
 import es.unican.bicis.model.Incident;
 import es.unican.bicis.model.IncidentType;
-import es.unican.bicis.model.Incident;
 
 /**
  * Adapter that renders the incidences in each row of a ListView
  */
-public class IncidenceArrayAdapter extends BaseAdapter {
+public class IncidentArrayAdapter extends BaseAdapter {
 
     /** The list of Incidences to render */
     private final List<Incident> Incidences;
@@ -35,7 +34,7 @@ public class IncidenceArrayAdapter extends BaseAdapter {
      * @param context the application context
      * @param objects the list of incidences
      */
-    public IncidenceArrayAdapter(@NonNull Context context, @NonNull @UnknownNullability List<Incident> objects) {
+    public IncidentArrayAdapter(@NonNull Context context, @NonNull List<Incident> objects) {
         // we know the parameters are not null because of the @NonNull annotation
         this.Incidences = objects;
         this.context = context;

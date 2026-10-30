@@ -1,31 +1,31 @@
 package es.unican.bicis.activities.details.station;
 
 import android.content.Context;
-
 import java.util.List;
 
 import es.unican.bicis.model.Incident;
 import es.unican.bicis.model.Station;
+// TODO: Uncomment when repository interface exists
+// import es.unican.bicis.repository.IIncidencesRepository;
 
 /**
  * The Presenter-View contract for the StationDetails activity.
- * The StationDetails activity shows the details of a specific bike station
- * and allows the user to register incidents.
+ * The StationDetails activity displays details and incidences of a specific bike station.
  */
-public interface IStationsDetailsContract {
+public interface IStationDetailsContract {
 
     /**
      * Methods that must be implemented in the StationDetails Presenter.
      * Only the View should call these methods.
      */
-    public interface Presenter {
+    interface Presenter {
 
         /**
          * Links the presenter with its view.
-         * Only the View should call this method
+         * Only the View should call this method.
          *
          * @param view view to be linked
-         * @param station station of the view
+         * @param station station whose details and incidences are managed
          */
         void init(View view, Station station);
 
@@ -56,19 +56,47 @@ public interface IStationsDetailsContract {
          * Cleans up resources (like background threads) when the view is destroyed.
          */
         void onDestroy();
+
     }
 
     /**
-     * Methods that must be implemented in the StationDetail View.
+     * Methods that must be implemented in the StationDetails View.
      * Only the Presenter should call these methods.
      */
-    public interface View {
+    interface View {
 
         /**
-         * Initialize the view. Typically this should initialize all the listeners in the view.
-         * Only the Presenter should call this method
+         * Initialize the view. Typically this initializes views and text contents.
+         * Only the Presenter should call this method.
          */
         void init();
+
+
+        /**
+         * The view is requested to display the given list of incidences.
+         * Only the Presenter should call this method.
+         *
+         * @param incidences list of incidences of the station
+         */
+        void showIncidences(List<Incident> incidences);
+
+
+        /**
+         * The view is requested to display a notification indicating that the incidences
+         * could not be loaded.
+         * Only the Presenter should call this method.
+         */
+        void showLoadError();
+
+
+        /**
+         * The view is requested to return the context of the application.
+         * Only the Presenter should call this method.
+         *
+         * @return application context
+         */
+        Context getContext();
+
 
         /**
          * The view is requested to display a notification indicating that there is not database connection.
@@ -78,14 +106,6 @@ public interface IStationsDetailsContract {
 
 
         /**
-         * The view is requested to return the context of the application.
-         * Only the Presenter should call this method
-         *
-         * @return the application context
-         */
-        Context getContext();
-
-        /**
          * The view is requested to display a notification indicating
          * that the text with the description of other issue is empty.
          * Only the Presenter should call this method
@@ -93,8 +113,6 @@ public interface IStationsDetailsContract {
         void showEmptyIssueError();
 
 
-        void showIncidences(List<Incident> incidences);
 
-        void showLoadError();
     }
 }
