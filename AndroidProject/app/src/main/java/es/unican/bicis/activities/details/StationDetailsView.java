@@ -199,42 +199,37 @@ public class StationDetailsView extends AppCompatActivity {
                             presenter.registrarIncidenciaBiciRota(estacionId);
                         } else {
                             // Opción 3 o superior: "Otro"
+
                             AlertDialog.Builder builder = new AlertDialog.Builder(StationDetailsView.this);
-                            builder.setTitle("Otra incidencia");
-                            builder.setMessage("Describe el problema de la estación:");
+                            // Usamos los strings de los recursos
+                            builder.setTitle(getString(R.string.other_issue_title));
+                            builder.setMessage(getString(R.string.other_issue_message));
 
                             // Crear el campo de texto
                             final EditText input = new EditText(StationDetailsView.this);
                             builder.setView(input);
 
-                            // Botón Confirmar
-                            builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+                            // Botón Confirmar usando strings
+                            builder.setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     String textoPersonalizado = input.getText().toString();
 
-                                    // Mandamos el texto al presenter
                                     presenter.registrarIncidenciaOtro(textoPersonalizado, estacionId);
 
-                                    // Mostramos el Toast con lo que ha escrito
-                                    Toast.makeText(StationDetailsView.this,
-                                            getString(R.string.incidencia_registrada) + ": " + textoPersonalizado,
-                                            Toast.LENGTH_SHORT).show();
-
-                                    spIncidencias.setSelection(0); // Resetear
+                                    spIncidencias.setSelection(0);
                                 }
                             });
 
-                            // Botón Cancelar
-                            builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            // Botón Cancelar usando strings
+                            builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
-                                    spIncidencias.setSelection(0); // Resetear sin guardar
+                                    spIncidencias.setSelection(0);
                                 }
                             });
 
-                            // Si el usuario toca fuera de la ventana para cerrarla, también reseteamos el Spinner
                             builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
                                 @Override
                                 public void onCancel(DialogInterface dialog) {

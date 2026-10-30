@@ -31,6 +31,10 @@
     <string name="id" translatable="false">ID:</string>
     <string name="incidencia">Incident</string>
     <string name="incidencia_registrada">Incident reported</string>
+    <string name="other_issue_title">Other issue</string>
+    <string name="other_issue_message">Describe the station problem:</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
 
     <string-array name="incidencias_options">
         <item>Select an incidence...</item>

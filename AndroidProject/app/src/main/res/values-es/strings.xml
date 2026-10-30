@@ -29,6 +29,10 @@
     <string name="filter_below_kms">Filtra a distancia menor a la introducida</string>
     <string name="incidencia">Incidencia</string>
     <string name="incidencia_registrada">Incidencia registrada</string>
+    <string name="other_issue_title">Otra incidencia</string>
+    <string name="other_issue_message">Describe el problema de la estación:</string>
+    <string name="confirm">Confirmar</string>
+    <string name="cancel">Cancelar</string>
 
     <string-array name="incidencias_options">
         <item>Selecciona una incidencia...</item>
