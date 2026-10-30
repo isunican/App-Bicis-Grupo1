@@ -214,6 +214,10 @@ public class StationDetailsView extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     String textoPersonalizado = input.getText().toString();
+                                    if (textoPersonalizado.isEmpty()) {
+                                        Toast.makeText(StationDetailsView.this, "El campo no puede estar vacío", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
 
                                     presenter.registrarIncidenciaOtro(textoPersonalizado, estacionId);
 
