@@ -2,10 +2,12 @@ package es.unican.bicis.activities.details;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -73,7 +75,7 @@ public class IncidenceArrayAdapter extends BaseAdapter {
         {
             String type = incidence.getType();
             if (type == null) {
-                type = context.getString(R.string.loadError);
+                type = context.getString(R.string.loadErrorIncidences);
             }
             tvType.setText(type);
         }
@@ -84,7 +86,7 @@ public class IncidenceArrayAdapter extends BaseAdapter {
             int amount = incidence.getAmount();
             String amountText;
             if (amount == -1) {
-                amountText = context.getString(R.string.loadError);
+                amountText = context.getString(R.string.loadErrorIncidences);
             } else {
                 amountText = Integer.toString(amount);
             }

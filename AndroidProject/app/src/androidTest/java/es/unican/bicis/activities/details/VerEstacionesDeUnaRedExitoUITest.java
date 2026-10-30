@@ -36,7 +36,53 @@ import es.unican.bicis.activities.main.MainView;
 import es.unican.bicis.utils.MockLocationManager;
 
 @HiltAndroidTest
-public class VerEstacionesDeUnaRedExitoUITest {
+public class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{
     private static final double SANTANDER_LATITUDE = 43.471167;
     private static final double SANTANDER_LONGITUDE = -3.801385;
 

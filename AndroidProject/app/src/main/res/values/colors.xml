@@ -14,11 +14,11 @@
     <color name="colorAccent">#FF4081</color>
 
     <!-- Colores de incidencias -->
-    <color name="colorBici">#261C00</color>
-    <color name="colorEstacion">#BB0000</color>
-    <color name="colorOtros">#FFFF00</color>
+    <color name="colorBici">#9B4006</color>
+    <color name="colorEstacion">#CE0C0C</color>
+    <color name="colorOtros">#FFEB3B</color>
 
     <color name="colorTextoBici">#DCDCDC</color>
-    <color name="colorTextoEstacion">#1B1B1B</color>
+    <color name="colorTextoEstacion">#0B0B0B</color>
     <color name="colorTextoOtros">#000000</color>
 </resources>

@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="100dp"
-    android:background="@color/colorEstacion"
     android:paddingTop="16dp"
     android:paddingBottom="16dp">
 
@@ -13,31 +12,28 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="32dp"
         android:ellipsize="end"
         android:maxLines="2"
         android:textColor="@color/colorTextoEstacion"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/tvAmount"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5"
         tools:text="Tipo" />
 
     <TextView
         android:id="@+id/tvAmount"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:textColor="@color/colorTextoEstacion"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/tvType"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/tvType"
-        app:layout_constraintTop_toBottomOf="@+id/tvType"
-        app:layout_constraintVertical_bias="0.5"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/tvType"
+        app:layout_constraintTop_toTopOf="@+id/tvType"
         tools:text="0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
