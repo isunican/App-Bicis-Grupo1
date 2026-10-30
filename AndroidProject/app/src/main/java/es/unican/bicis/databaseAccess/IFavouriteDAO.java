@@ -1,4 +1,4 @@
-package es.unican.bicis.databaseAcces;
+package es.unican.bicis.databaseAccess;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
