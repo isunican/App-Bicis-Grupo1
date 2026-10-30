@@ -11,14 +11,14 @@ import es.unican.bicis.model.Favourite;
 
 // 1. Define las entidades (tablas) y la versión de la BD.
 // Si tienes más entidades (ej. Station), ponlas separadas por comas: {Incidencia.class, Station.class}
-@Database(entities = {Favourite.class}, version = 1, exportSchema = false)
+@Database(entities = {Favourite.class, Incident.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract IFavouriteDAO favouriteDAO();
+    public abstract IIncidenceDAO incidenciaDao();
 
     // 3. Variable volátil para el patrón Singleton
-    // HABIA UN VOLATIL AQUI
-    private static AppDatabase INSTANCE;
+    private static volatile AppDatabase INSTANCE;
 
     public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
@@ -26,7 +26,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     AppDatabase.class, "bicis_database") // Nombre del archivo físico de la BD
-                            // .fallbackToDestructiveMigration() // Descomenta esto en fase de desarrollo si cambias la estructura de las tablas
+                            .fallbackToDestructiveMigration()
                             .build();
                 }
             }

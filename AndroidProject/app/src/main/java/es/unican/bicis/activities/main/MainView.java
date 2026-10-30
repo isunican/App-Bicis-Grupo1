@@ -56,6 +56,9 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     /** The Room DAO for favorites */
     private IFavouriteDAO favouriteDAO;
 
+    /** Set of favorite network IDs */
+    private Set<String> favoriteNetworkIds = new HashSet<>();
+
     /** The repository to access the data. This is automatically injected by Hilt in this class */
     @Inject
     INetworksRepository repository;
@@ -196,9 +199,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     @Override
     public void showNetworks(List<Network> networks) {
         ListView list = findViewById(R.id.lvNetworks);
-        Set<String> favoriteIds = favouriteDAO != null ?
-                new HashSet<>(favouriteDAO.obtenerNetworkIdsFavoritos()) : new HashSet<>();
-        NetworksArrayAdapter adapter = new NetworksArrayAdapter(this, networks, presenter::onFavoriteClicked, favoriteIds);
+        NetworksArrayAdapter adapter = new NetworksArrayAdapter(this, networks, presenter::onFavoriteClicked, favoriteNetworkIds);
         list.setAdapter(adapter);
     }
 
@@ -271,9 +272,10 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
      */
     @Override
     public void updateFavorites(Set<String> favoriteNetworkIds) {
+        this.favoriteNetworkIds = favoriteNetworkIds != null ? favoriteNetworkIds : new HashSet<>();
         ListView list = findViewById(R.id.lvNetworks);
         if (list != null && list.getAdapter() instanceof NetworksArrayAdapter) {
-            ((NetworksArrayAdapter) list.getAdapter()).setFavoriteNetworkIds(favoriteNetworkIds);
+            ((NetworksArrayAdapter) list.getAdapter()).setFavoriteNetworkIds(this.favoriteNetworkIds);
         }
     }
 
