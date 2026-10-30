@@ -1,11 +1,11 @@
-package es.unican.bicis.activities.details;
+package es.unican.bicis.activities.details.station;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import es.unican.bicis.databaseAccess.AppDatabase;
-import es.unican.bicis.model.Incidence;
-import es.unican.bicis.model.IncidenceType;
+import es.unican.bicis.model.Incident;
+import es.unican.bicis.model.IncidentType;
 
 // Asegúrate de importar tu AppDatabase, Incidencia, etc.
 
@@ -27,7 +27,7 @@ public class StationDetailsPresenter {
     public void registrarIncidenciaEstacionRota(String estacionId) {
         // TODO comprobar el texto del tipo pulsado y convertirlo a IncidenceType
         // Asegúrate de que en tu clase Incidencia.java, 'estacionId' sea de tipo String.
-        Incidence nuevaIncidencia = new Incidence(estacionId, IncidenceType.STATION, "EstacionRota");
+        Incident nuevaIncidencia = new Incident(estacionId, IncidentType.STATION, "EstacionRota");
 
         // 2. Guardar en Room usando el hilo secundario
         executorService.execute(new Runnable() {
@@ -41,7 +41,7 @@ public class StationDetailsPresenter {
     public void registrarIncidenciaBiciRota(String estacionId) {
         // TODO comprobar el texto del tipo pulsado y convertirlo a IncidenceType
         // Asegúrate de que en tu clase Incidencia.java, 'estacionId' sea de tipo String.
-        Incidence nuevaIncidencia = new Incidence(estacionId, IncidenceType.BIKE, "BiciRota");
+        Incident nuevaIncidencia = new Incident(estacionId, IncidentType.BIKE, "BiciRota");
 
         // 2. Guardar en Room usando el hilo secundario
         executorService.execute(new Runnable() {
@@ -55,7 +55,7 @@ public class StationDetailsPresenter {
     public void registrarIncidenciaOtro(String textoPersonalizado, String estacionId) {
         // TODO comprobar el texto del tipo pulsado y convertirlo a IncidenceType
         // Asegúrate de que en tu clase Incidencia.java, 'estacionId' sea de tipo String.
-        Incidence nuevaIncidencia = new Incidence(estacionId, IncidenceType.OTHER, textoPersonalizado);
+        Incident nuevaIncidencia = new Incident(estacionId, IncidentType.OTHER, textoPersonalizado);
 
         // 2. Guardar en Room usando el hilo secundario
         executorService.execute(new Runnable() {

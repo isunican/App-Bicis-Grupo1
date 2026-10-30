@@ -6,11 +6,11 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import es.unican.bicis.model.Incidence;
+import es.unican.bicis.model.Incident;
 
 // 1. Define las entidades (tablas) y la versión de la BD.
 // Si tienes más entidades (ej. Station), ponlas separadas por comas: {Incidencia.class, Station.class}
-@Database(entities = {Incidence.class}, version = 1, exportSchema = false)
+@Database(entities = {Incident.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     // 2. Declara un método abstracto por cada DAO que tengas

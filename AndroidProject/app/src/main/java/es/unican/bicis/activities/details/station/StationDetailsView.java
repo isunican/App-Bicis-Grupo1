@@ -1,4 +1,4 @@
-package es.unican.bicis.activities.details;
+package es.unican.bicis.activities.details.station;
 
 import android.os.Bundle;
 import android.os.Parcelable;
