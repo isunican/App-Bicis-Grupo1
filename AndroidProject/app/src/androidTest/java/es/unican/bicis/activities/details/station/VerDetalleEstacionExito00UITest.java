@@ -1,10 +1,12 @@
-package es.unican.bicis.activities.details;
+package es.unican.bicis.activities.details.station;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.anything;
+
 import static es.unican.bicis.common.TimestampUtils.formatTimestamp;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -16,15 +18,17 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+// Importaciones necesarias para Hilt
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
+
 import es.unican.bicis.R;
 import es.unican.bicis.activities.main.MainView;
 
 @HiltAndroidTest // Anotación obligatoria para pruebas con Hilt
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class VerDetalleEstacionDatoAusente01UITest {
+public class VerDetalleEstacionExito00UITest {
 
     // Regla de Hilt con orden 0 para que se ejecute primero
     @Rule(order = 0)
@@ -37,23 +41,24 @@ public class VerDetalleEstacionDatoAusente01UITest {
     @Rule(order = 2)
     public ActivityScenarioRule<MainView> activityRule = new ActivityScenarioRule<>(MainView.class);
 
+
     @Test
-    public void prueba01_DatosAusentes() {
+    public void prueba00_Exito() {
         // 1. Clic exacto en la red BiciMAD de la primera pantalla
         onView(withText("BiciMAD")).perform(click());
 
         // 2. Clic exacto en la estación dictada por el plan de pruebas en la segunda pantalla
-        onView(withText("390 - Estacion datos ausentes")).perform(click());
+        onView(withText("377 - Metro Abrantes")).perform(click());
         // Se verifican los identificadores de la vista contra los datos exactos esperados
-        onView(withId(R.id.tvStName)).check(matches(withText("390 - Estacion datos ausentes")));
+        onView(withId(R.id.tvStName)).check(matches(withText("377 - Metro Abrantes")));
         onView(withId(R.id.tvIdDisplay)).check(matches(withText("01f5011f76069b1e81a11d4d51dd9d1d")));
 
         onView(withId(R.id.tvLatDisplay)).check(matches(withText("40.38091762")));
         onView(withId(R.id.tvLongDisplay)).check(matches(withText("-3.72783615")));
 
-        onView(withId(R.id.tvUsedSlotsDisplay)).check(matches(withText("-")));
-        onView(withId(R.id.tvFreeSlotsDisplay)).check(matches(withText("-")));
+        onView(withId(R.id.tvUsedSlotsDisplay)).check(matches(withText("0")));
+        onView(withId(R.id.tvFreeSlotsDisplay)).check(matches(withText("18")));
 
-        onView(withId(R.id.tvTimeDisplay)).check(matches(withText("-")));
+        onView(withId(R.id.tvTimeDisplay)).check(matches(withText(formatTimestamp("2026-09-24T11:11:40.490774+00:00Z"))));
     }
 }
