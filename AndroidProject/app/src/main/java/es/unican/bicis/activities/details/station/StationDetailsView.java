@@ -16,7 +16,8 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import org.parceler.Parcels;
-
+import es.unican.bicis.activities.details.IncidenceArrayAdapter;
+import es.unican.bicis.activities.details.IStationDetailsContract;
 import es.unican.bicis.R;
 import es.unican.bicis.common.TimestampUtils;
 import es.unican.bicis.model.Station;
