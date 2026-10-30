@@ -1,6 +1,10 @@
 package es.unican.bicis.activities.details.station;
 
 import android.content.Context;
+
+import java.util.List;
+
+import es.unican.bicis.model.Incident;
 import es.unican.bicis.model.Station;
 
 /**
@@ -87,5 +91,10 @@ public interface IStationsDetailsContract {
          * Only the Presenter should call this method
          */
         void showEmptyIssueError();
+
+
+        void showIncidences(List<Incident> incidences);
+
+        void showLoadError();
     }
 }
