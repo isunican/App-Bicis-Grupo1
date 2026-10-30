@@ -33,6 +33,9 @@
     <string name="other_issue_message">Describe el problema de la estación:</string>
     <string name="confirm">Confirmar</string>
     <string name="cancel">Cancelar</string>
+    <string name="empty_issue_error">No puedes dejar el texto vacío</string>
+    <string name="databaseError">No hay conexion a la base de datos</string>
+
 
     <string-array name="incidencias_options">
         <item>Selecciona una incidencia...</item>

@@ -35,6 +35,10 @@
     <string name="other_issue_message">Describe the station problem:</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+    <string name="empty_issue_error">You can\'t let the text field empty</string>
+    <string name="databaseError">There is not Database conexion</string>
+
+
 
     <string-array name="incidencias_options">
         <item>Select an incidence...</item>

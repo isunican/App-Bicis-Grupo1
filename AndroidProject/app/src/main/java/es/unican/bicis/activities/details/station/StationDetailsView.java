@@ -1,5 +1,6 @@
 package es.unican.bicis.activities.details.station;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -27,59 +28,70 @@ import androidx.core.view.WindowInsetsCompat;
 import org.parceler.Parcels;
 
 import es.unican.bicis.R;
+import es.unican.bicis.activities.details.red.IRedDetailsContract;
 import es.unican.bicis.common.TimestampUtils;
 import es.unican.bicis.databaseAccess.AppDatabase;
 import es.unican.bicis.model.Station;
 
 /**
- * View that shows the details of a bike station from a selected network.
- * Since this view does not have business logic, it can be implemented as an activity directly
+ * View that shows the details of one station.
  */
-public class StationDetailsView extends AppCompatActivity {
+public class StationDetailsView extends AppCompatActivity implements IStationsDetailsContract.View {
 
     /** Key for the intent that contains the station */
     public static final String INTENT_STATION = "INTENT_STATION";
 
-    // 1. Declarar el presentador
-    private StationDetailsPresenter presenter;
+    private IStationsDetailsContract.Presenter presenter;
+    private Station station = null; // Guardar la estación a nivel de clase
 
+    /**
+     * @see AppCompatActivity#onCreate(Bundle)
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_station_details_view);
 
-        // 2. Inicializar la base de datos y el presentador
+        // 1. Obtener la estación del Intent
+        Parcelable wrapped = IntentCompat.getParcelableExtra(getIntent(), INTENT_STATION, Parcelable.class);
+        if (wrapped != null) {
+            station = Parcels.unwrap(wrapped);
+        }
+
+        // 2. Inicializar base de datos y presenter
         AppDatabase db = AppDatabase.getDatabase(this);
         presenter = new StationDetailsPresenter(db);
 
-        // The default theme does not include a toolbar.
-        // In this app the toolbar is explicitly declared in the layout
-        // Set this toolbar as the activity ActionBar
+        // 3. Iniciar el presenter
+        presenter.init(this, station);
+    }
+
+    /**
+     * @see IStationsDetailsContract.View#init()
+     */
+    @Override
+    public void init() {
+        // CONFIGURACIÓN DE UI (Toolbar y Notch)
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();
-        assert bar != null;  // to avoid warning in the line below
-        bar.setDisplayHomeAsUpEnabled(true);  // show back button in action bar
+        assert bar != null;
+        bar.setDisplayHomeAsUpEnabled(true);
 
-        // Evitar solape con el notch
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         ConstraintLayout mainLayout = findViewById(R.id.main);
-
         ViewCompat.setOnApplyWindowInsetsListener(mainLayout, (v, windowInsets) -> {
             Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-
             toolbar.setPadding(toolbar.getPaddingLeft(), insets.top, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
-
             ViewGroup.LayoutParams params = toolbar.getLayoutParams();
             int baseHeight = getResources().getDimensionPixelSize(androidx.appcompat.R.dimen.abc_action_bar_default_height_material);
             params.height = baseHeight + insets.top;
             toolbar.setLayoutParams(params);
-
             v.setPadding(insets.left, 0, insets.right, insets.bottom);
-
             return WindowInsetsCompat.CONSUMED;
         });
 
+        //Cargar los y mostrar los valores de los datos de la estacion
         TextView tvStationName = findViewById(R.id.tvStName);
         TextView tvLatitude = findViewById(R.id.tvLatDisplay);
         TextView tvLongitude = findViewById(R.id.tvLongDisplay);
@@ -88,82 +100,46 @@ public class StationDetailsView extends AppCompatActivity {
         TextView tvId = findViewById(R.id.tvIdDisplay);
         TextView tvTime = findViewById(R.id.tvTimeDisplay);
 
-        // Get Station from the intent that triggered this activity
-        Parcelable wrapped = IntentCompat.getParcelableExtra(getIntent(), INTENT_STATION, Parcelable.class);
-        Station station = null;
-        if (wrapped != null) {
-            station = Parcels.unwrap(wrapped);
-        }
-
-        //Set texts on interface
         if (station != null) {
             String name = station.getName();
-            if (name != null) {
-                tvStationName.setText(name);
-            } else {
-                tvStationName.setText(R.string.noData);
-            }
+            tvStationName.setText(name != null ? name : getString(R.string.noData));
+
             Double latitude = station.getLatitude();
-            if (latitude == null) {
-                tvLatitude.setText(R.string.noData);
-            } else if (latitude > 90 || latitude < -90) {
+            if (latitude == null || latitude > 90 || latitude < -90) {
                 tvLatitude.setText(R.string.noData);
             } else {
                 tvLatitude.setText(String.valueOf(latitude));
             }
+
             Double longitude = station.getLongitude();
-            if (longitude == null) {
-                tvLongitude.setText(R.string.noData);
-            } else if (longitude > 180 || longitude < -180) {
+            if (longitude == null || longitude > 180 || longitude < -180) {
                 tvLongitude.setText(R.string.noData);
             } else {
                 tvLongitude.setText(String.valueOf(longitude));
             }
+
             Integer usedSlots = station.getFreeBikes();
-            if (usedSlots == null) {
-                tvUsedSlots.setText(R.string.noData);
-            } else if (usedSlots < 0) {
-                tvUsedSlots.setText(R.string.noData);
-            } else {
-                tvUsedSlots.setText(String.valueOf(usedSlots));
-            }
+            tvUsedSlots.setText(usedSlots == null || usedSlots < 0 ? getString(R.string.noData) : String.valueOf(usedSlots));
+
             Integer freeSlots = station.getEmptySlots();
-            if (freeSlots == null) {
-                tvFreeSlots.setText(R.string.noData);
-            } else if (freeSlots < 0) {
-                tvFreeSlots.setText(R.string.noData);
-            } else {
-                tvFreeSlots.setText(String.valueOf(freeSlots));
-            }
+            tvFreeSlots.setText(freeSlots == null || freeSlots < 0 ? getString(R.string.noData) : String.valueOf(freeSlots));
+
             String id = station.getId();
-            if (id != null) {
-                tvId.setText(id);
-            } else {
-                tvId.setText(R.string.noData);
-            }
+            tvId.setText(id != null ? id : getString(R.string.noData));
+
             String timestamp = station.getTimestamp();
-            if (timestamp != null) {
-                timestamp = TimestampUtils.formatTimestamp(timestamp);
-                tvTime.setText(timestamp);
-            } else {
-                tvTime.setText(R.string.noData);
-            }
+            tvTime.setText(timestamp != null ? TimestampUtils.formatTimestamp(timestamp) : getString(R.string.noData));
         } else {
             Toast.makeText(this, R.string.loadErrorStation, Toast.LENGTH_LONG).show();
         }
 
+        // --- CONFIGURAR SPINNER Y ALERT DIALOG ---
         ImageButton btBotonIncidencia = findViewById(R.id.btBotonIncidencia);
         Spinner spIncidencias = findViewById(R.id.spIncidencias);
 
-        // Hacemos que la variable station sea "final" para poder usarla dentro del listener del Spinner
-        final Station currentStation = station;
-
         if (spIncidencias != null) {
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                    this,
-                    R.array.incidencias_options,
-                    android.R.layout.simple_spinner_item
-            );
+                    this, R.array.incidencias_options, android.R.layout.simple_spinner_item);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spIncidencias.setAdapter(adapter);
 
@@ -174,6 +150,12 @@ public class StationDetailsView extends AppCompatActivity {
             spIncidencias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 private boolean isInitial = true;
 
+                /**
+                 *
+                 * Metodo que se ejecuta cuando se selecciona un elemento del spinner
+                 * llamando al presenter para registrar la incidencia del tipo selecionado
+                 *
+                 * */
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     if (isInitial) {
@@ -181,51 +163,46 @@ public class StationDetailsView extends AppCompatActivity {
                         return;
                     }
 
-                    if (position == 0) {
-                        return;
-                    }
+                    if (position == 0) return;
 
                     String option = parent.getItemAtPosition(position).toString();
 
-                    if (currentStation != null && currentStation.getId() != null) {
-                        String estacionId = currentStation.getId();
+                    if (station != null && station.getId() != null) {
+                        String estacionId = station.getId();
 
-                        // Llamamos al método del presenter según la opción elegida
                         if (position == 1) {
-                            // Suponiendo que la posición 1 es "Estación Rota"
                             presenter.registrarIncidenciaEstacionRota(estacionId);
-                        } else if (position == 2) {
-                            // Suponiendo que la posición 2 es "Bici Rota"
-                            presenter.registrarIncidenciaBiciRota(estacionId);
-                        } else {
-                            // Opción 3 o superior: "Otro"
+                            spIncidencias.setSelection(0);
 
+                        } else if (position == 2) {
+                            presenter.registrarIncidenciaBiciRota(estacionId);
+                            spIncidencias.setSelection(0);
+
+                        } else {
+                            // Opción 3: Otro
                             AlertDialog.Builder builder = new AlertDialog.Builder(StationDetailsView.this);
-                            // Usamos los strings de los recursos
                             builder.setTitle(getString(R.string.other_issue_title));
                             builder.setMessage(getString(R.string.other_issue_message));
 
-                            // Crear el campo de texto
                             final EditText input = new EditText(StationDetailsView.this);
                             builder.setView(input);
 
-                            // Botón Confirmar usando strings
                             builder.setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     String textoPersonalizado = input.getText().toString();
-                                    if (textoPersonalizado.isEmpty()) {
-                                        Toast.makeText(StationDetailsView.this, "El campo no puede estar vacío", Toast.LENGTH_SHORT).show();
-                                        return;
-                                    }
 
+                                    // Enviamos el texto personalizado al para añadir la incidencia presenter
                                     presenter.registrarIncidenciaOtro(textoPersonalizado, estacionId);
 
+                                    // Solo mostramos el mensaje de éxito si el usuario escribió algo
+                                    if (!textoPersonalizado.trim().isEmpty()) {
+                                        Toast.makeText(StationDetailsView.this, getString(R.string.incidencia_registrada) + ": " + textoPersonalizado, Toast.LENGTH_SHORT).show();
+                                    }
                                     spIncidencias.setSelection(0);
                                 }
                             });
 
-                            // Botón Cancelar usando strings
                             builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -234,28 +211,45 @@ public class StationDetailsView extends AppCompatActivity {
                                 }
                             });
 
-                            builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                @Override
-                                public void onCancel(DialogInterface dialog) {
-                                    spIncidencias.setSelection(0);
-                                }
-                            });
-
+                            builder.setOnCancelListener(dialog -> spIncidencias.setSelection(0));
                             builder.show();
                         }
                     }
                 }
 
                 @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                    // Do nothing
-                }
+                public void onNothingSelected(AdapterView<?> parent) {}
             });
-
         }
     }
 
-    // 4. Limpiar el presentador al salir de la activity para evitar fugas de memoria
+    /**
+     * @see IStationsDetailsContract.View#showEmptyIssueError()
+     */
+    @Override
+    public void showEmptyIssueError() {
+        Toast.makeText(this, getString(R.string.empty_issue_error), Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @see IStationsDetailsContract.View#showDatabaseError()
+     */
+    @Override
+    public void showDatabaseError() {
+        Toast.makeText(this, R.string.databaseError, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @see IStationsDetailsContract.View#getContext()
+     */
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    /**
+     * Metodo onDestroy para limpiar los recursos
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
