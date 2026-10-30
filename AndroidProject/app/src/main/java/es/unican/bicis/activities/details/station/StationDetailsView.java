@@ -31,6 +31,7 @@ import es.unican.bicis.activities.details.IncidenceArrayAdapter;
 
 import java.util.List;
 
+
 import es.unican.bicis.R;
 import es.unican.bicis.common.TimestampUtils;
 import es.unican.bicis.databaseAccess.AppDatabase;
