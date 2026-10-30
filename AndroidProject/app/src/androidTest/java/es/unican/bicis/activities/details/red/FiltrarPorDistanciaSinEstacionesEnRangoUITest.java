@@ -1,4 +1,4 @@
-package es.unican.bicis.activities.details;
+package es.unican.bicis.activities.details.red;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
@@ -16,16 +16,12 @@ import static es.unican.bicis.utils.Matchers.withListSize;
 import android.Manifest;
 import android.content.Context;
 import android.view.View;
-import android.widget.ListView;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

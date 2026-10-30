@@ -1,4 +1,4 @@
-package es.unican.bicis.activities.details;
+package es.unican.bicis.activities.details.red;
 
 import android.content.Context;
 import android.view.LayoutInflater;
