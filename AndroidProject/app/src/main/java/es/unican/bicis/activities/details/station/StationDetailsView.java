@@ -1,17 +1,20 @@
 package es.unican.bicis.activities.details.station;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -195,20 +198,53 @@ public class StationDetailsView extends AppCompatActivity {
                             // Suponiendo que la posición 2 es "Bici Rota"
                             presenter.registrarIncidenciaBiciRota(estacionId);
                         } else {
-                            // Cualquier otra posición (3) es "Otro"
-                            presenter.registrarIncidenciaOtro(option, estacionId);
+                            // Opción 3 o superior: "Otro"
+                            AlertDialog.Builder builder = new AlertDialog.Builder(StationDetailsView.this);
+                            builder.setTitle("Otra incidencia");
+                            builder.setMessage("Describe el problema de la estación:");
 
-                            // Nota: En un futuro, si es "Otro", podrías abrir un AlertDialog
-                            // con un EditText para que el usuario escriba el 'textoPersonalizado' real.
+                            // Crear el campo de texto
+                            final EditText input = new EditText(StationDetailsView.this);
+                            builder.setView(input);
+
+                            // Botón Confirmar
+                            builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String textoPersonalizado = input.getText().toString();
+
+                                    // Mandamos el texto al presenter
+                                    presenter.registrarIncidenciaOtro(textoPersonalizado, estacionId);
+
+                                    // Mostramos el Toast con lo que ha escrito
+                                    Toast.makeText(StationDetailsView.this,
+                                            getString(R.string.incidencia_registrada) + ": " + textoPersonalizado,
+                                            Toast.LENGTH_SHORT).show();
+
+                                    spIncidencias.setSelection(0); // Resetear
+                                }
+                            });
+
+                            // Botón Cancelar
+                            builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                    spIncidencias.setSelection(0); // Resetear sin guardar
+                                }
+                            });
+
+                            // Si el usuario toca fuera de la ventana para cerrarla, también reseteamos el Spinner
+                            builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                @Override
+                                public void onCancel(DialogInterface dialog) {
+                                    spIncidencias.setSelection(0);
+                                }
+                            });
+
+                            builder.show();
                         }
                     }
-
-                    // La vista solo se encarga de avisar al usuario de que la acción se ha procesado
-                    Toast.makeText(StationDetailsView.this,
-                            getString(R.string.incidencia_registrada) + ": " + option,
-                            Toast.LENGTH_SHORT).show();
-
-                    spIncidencias.setSelection(0);
                 }
 
                 @Override
