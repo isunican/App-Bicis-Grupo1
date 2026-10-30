@@ -88,7 +88,8 @@ public class VerEstacionesDeUnaRedSinEstacionesUITest {
         }
         */
 
-        onData(anything()).inAdapterView(withId(R.id.lvNetworks)).atPosition(3).perform(click());
+        //onData(anything()).inAdapterView(withId(R.id.lvNetworks)).atPosition(3).perform(click());
+        onView(withText("BiciSinEstaciones")).perform(click());
 
         onView(allOf(withId(R.id.tvName), withParent(withId(R.id.main)))).check(matches(withText("BiciSinEstaciones")));
         onView(withId(R.id.tvCity)).check(matches(withText("Santander (ES)")));

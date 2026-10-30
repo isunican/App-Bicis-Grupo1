@@ -75,7 +75,8 @@ public class VerEstacionesDeUnaRedExitoUITest {
     @Test
     public void verEstacionesDeUnaRedExitoTest() {
         //elegimos TUeBICI
-        onData(anything()).inAdapterView(withId(R.id.lvNetworks)).atPosition(2).perform(click());
+        //onData(anything()).inAdapterView(withId(R.id.lvNetworks)).atPosition(2).perform(click());
+        onView(withText("TUeBICI")).perform(click());
 
         onView(allOf(withId(R.id.tvName), withParent(withId(R.id.main)))).check(matches(withText("TUeBICI")));
         onView(withId(R.id.tvCity)).check(matches(withText("Santander (ES)")));
