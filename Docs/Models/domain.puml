@@ -34,15 +34,15 @@ class Station {
     - emptySlots : int
 }
 
-class Incidence {
+class Incident {
     - id: int
     - idStation: String
     - amount: int
     - type: String
-    - typeId: IncidenceType
+    - typeId: IncidentType
 }
 
-enum IncidenceType {
+enum IncidentType {
     BIKE
     STATION
     OTHER
