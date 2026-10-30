@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,12 +28,10 @@ import androidx.core.view.WindowInsetsCompat;
 
 import org.parceler.Parcels;
 import es.unican.bicis.activities.details.IncidenceArrayAdapter;
-import es.unican.bicis.activities.details.IStationDetailsContract;
 
 import java.util.List;
 
 import es.unican.bicis.R;
-import es.unican.bicis.activities.details.red.IRedDetailsContract;
 import es.unican.bicis.common.TimestampUtils;
 import es.unican.bicis.databaseAccess.AppDatabase;
 import es.unican.bicis.model.Incident;
@@ -229,14 +226,14 @@ public class StationDetailsView extends AppCompatActivity implements IStationsDe
                 public void onNothingSelected(AdapterView<?> parent) {}
             });
         }
-
+    }
 
     @Override
     public void showLoadError() {
         Toast.makeText(this, R.string.loadErrorIncidences, Toast.LENGTH_SHORT).show();
     }
     @Override
-    public void showIncidences(List<Incidence> incidences) {
+    public void showIncidences(List<Incident> incidences) {
         ListView list = findViewById(R.id.lvIncidences);
         IncidenceArrayAdapter adapter = new IncidenceArrayAdapter(this, incidences);
         list.setAdapter(adapter);
