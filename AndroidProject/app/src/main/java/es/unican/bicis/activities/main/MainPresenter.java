@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import es.unican.bicis.common.Utils;
-import es.unican.bicis.databaseAcces.IFavouriteDAO;
+import es.unican.bicis.databaseAccess.IFavouriteDAO;
 import es.unican.bicis.model.Favourite;
 import es.unican.bicis.model.Network;
 import es.unican.bicis.repository.INetworksRepository;

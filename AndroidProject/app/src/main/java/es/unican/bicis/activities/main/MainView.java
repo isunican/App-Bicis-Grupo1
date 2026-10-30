@@ -39,8 +39,8 @@ import es.unican.bicis.activities.details.StationsArrayAdapter;
 import es.unican.bicis.activities.info.InfoView;
 import es.unican.bicis.activities.details.RedDetailsView;
 import es.unican.bicis.common.LocationUtils;
-import es.unican.bicis.databaseAcces.AppDatabase;
-import es.unican.bicis.databaseAcces.IFavouriteDAO;
+import es.unican.bicis.databaseAccess.AppDatabase;
+import es.unican.bicis.databaseAccess.IFavouriteDAO;
 import es.unican.bicis.model.Network;
 import es.unican.bicis.repository.INetworksRepository;
 
