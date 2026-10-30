@@ -1,4 +1,4 @@
-package es.unican.bicis.activities.details;
+package es.unican.bicis.activities.main;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -12,6 +12,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import android.content.Context;
+import android.os.Handler;
 
 import org.junit.After;
 import org.junit.Before;
@@ -25,11 +26,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
-import es.unican.bicis.activities.main.IMainContract;
-import es.unican.bicis.activities.main.MainPresenter;
 import es.unican.bicis.common.Utils;
-import es.unican.bicis.databaseAcces.IFavouriteDAO;
+import es.unican.bicis.databaseAccess.IFavouriteDAO;
 import es.unican.bicis.model.Favourite;
 import es.unican.bicis.model.Network;
 import es.unican.bicis.repository.INetworksRepository;
@@ -45,6 +45,10 @@ public class MainPresenterTest {
     private INetworksRepository mockNetworkRepo;
     @Mock
     private Context mockContext;
+    @Mock
+    private ExecutorService executor;
+    @Mock
+    private Handler mainHandler;
     @InjectMocks
     private MainPresenter presenter;
     private MockedStatic<Utils> mockUtils;
@@ -54,6 +58,19 @@ public class MainPresenterTest {
         when(mockView.getContext()).thenReturn(mockContext);
         when(mockView.getNetworksRepository()).thenReturn(mockNetworkRepo);
         when(mockView.getFavouriteDAO()).thenReturn(mockDAO);
+        // Ejecutar el executor de forma síncrona
+        doAnswer(invocation -> {
+            Runnable runnable = invocation.getArgument(0);
+            runnable.run();
+            return null;
+        }).when(executor).execute(any(Runnable.class));
+
+        // Ejecutar el handler de la UI de forma síncrona
+        doAnswer(invocation -> {
+            Runnable runnable = invocation.getArgument(0);
+            runnable.run();
+            return true;
+        }).when(mainHandler).post(any(Runnable.class));
     }
 
     @After
