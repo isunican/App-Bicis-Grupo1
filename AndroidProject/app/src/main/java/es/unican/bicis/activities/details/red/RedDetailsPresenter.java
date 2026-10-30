@@ -1,4 +1,4 @@
-package es.unican.bicis.activities.details;
+package es.unican.bicis.activities.details.red;
 
 import java.util.ArrayList;
 import java.util.Comparator;

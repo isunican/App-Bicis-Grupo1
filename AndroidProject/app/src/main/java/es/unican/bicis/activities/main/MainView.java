@@ -34,10 +34,10 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import es.unican.bicis.R;
-import es.unican.bicis.activities.details.IRedDetailsContract;
-import es.unican.bicis.activities.details.StationsArrayAdapter;
+import es.unican.bicis.activities.details.red.IRedDetailsContract;
+import es.unican.bicis.activities.details.red.StationsArrayAdapter;
 import es.unican.bicis.activities.info.InfoView;
-import es.unican.bicis.activities.details.RedDetailsView;
+import es.unican.bicis.activities.details.red.RedDetailsView;
 import es.unican.bicis.common.LocationUtils;
 import es.unican.bicis.databaseAccess.AppDatabase;
 import es.unican.bicis.databaseAccess.IFavouriteDAO;
