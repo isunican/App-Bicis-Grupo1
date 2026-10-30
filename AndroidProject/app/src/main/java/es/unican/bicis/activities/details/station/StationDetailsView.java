@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,8 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import org.parceler.Parcels;
+import es.unican.bicis.activities.details.IncidenceArrayAdapter;
+import es.unican.bicis.activities.details.IStationDetailsContract;
 
 import java.util.List;
 
@@ -80,7 +83,7 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
     }
 
     @Override
-    public void init() {
+    public void init(IStationDetailsContract.View view, Station station) {
         TextView tvStationName = findViewById(R.id.tvStName);
         TextView tvLatitude = findViewById(R.id.tvLatDisplay);
         TextView tvLongitude = findViewById(R.id.tvLongDisplay);
