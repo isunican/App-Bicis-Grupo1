@@ -7,12 +7,12 @@ import androidx.room.Query;
 
 import java.util.List;
 
-import es.unican.bicis.model.Incidence;
+import es.unican.bicis.model.Incident;
 
 @Dao
 public interface IIncidenceDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertarIncidencia(Incidence incidencia);
+    long insertarIncidencia(Incident incidencia);
 
     @Query("SELECT " +
             "MIN(id) AS id, " +
@@ -23,5 +23,5 @@ public interface IIncidenceDAO {
             "FROM incidencias " +
             "WHERE idEstacion = :id " +
             "GROUP BY CASE WHEN typeId = 'OTHER' THEN id ELSE typeId END")
-    List<Incidence> obtenerIncidenciasPorEstacion(String id);
+    List<Incident> obtenerIncidenciasPorEstacion(String id);
 }

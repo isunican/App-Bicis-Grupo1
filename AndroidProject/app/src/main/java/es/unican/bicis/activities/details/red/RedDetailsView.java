@@ -1,4 +1,4 @@
-package es.unican.bicis.activities.details;
+package es.unican.bicis.activities.details.red;
 
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +27,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import es.unican.bicis.R;
+import es.unican.bicis.activities.details.station.StationDetailsView;
 import es.unican.bicis.common.LocationUtils;
 import es.unican.bicis.model.Location;
 import es.unican.bicis.model.Network;

@@ -13,19 +13,19 @@ import lombok.Setter;
 @Parcel
 @Getter
 @Setter
-public class Incidence {
+public class Incident {
     @PrimaryKey (autoGenerate = true)
     @SerializedName("id")                 public int id;
     @SerializedName("idEstacion")         public String idEstacion;
-    @SerializedName("typeId")             public IncidenceType typeId;
+    @SerializedName("typeId")             public IncidentType typeId;
     @SerializedName("type")               public String type;
     @SerializedName("amount")             public int amount;
 
-    public Incidence(String estacionId, IncidenceType typeId, String type) {
+    public Incident(String estacionId, IncidentType typeId, String type) {
         this.idEstacion = estacionId;
         this.typeId = typeId;
         this.type = type;
     }
 
-    public Incidence(){}
+    public Incident(){}
 }

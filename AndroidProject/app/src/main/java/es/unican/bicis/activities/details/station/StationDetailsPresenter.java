@@ -1,4 +1,4 @@
-package es.unican.bicis.activities.details;
+package es.unican.bicis.activities.details.station;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -8,9 +8,10 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import es.unican.bicis.activities.details.IStationDetailsContract;
 import es.unican.bicis.databaseAccess.AppDatabase;
-import es.unican.bicis.model.Incidence;
-import es.unican.bicis.model.IncidenceType;
+import es.unican.bicis.model.Incident;
+import es.unican.bicis.model.IncidentType;
 import es.unican.bicis.model.Station;
 
 /**
@@ -25,6 +26,11 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
     private final ExecutorService executorService;
     private final Handler mainHandler;
 
+    // Necesitamos la base de datos y el executor para el hilo secundario
+    private AppDatabase db;
+    private ExecutorService executorService;
+
+    // Constructor: le pasamos la base de datos cuando lo instanciemos en la Activity
     public StationDetailsPresenter(AppDatabase db) {
         this.db = db;
         this.executorService = Executors.newSingleThreadExecutor();
@@ -56,12 +62,12 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
 
         executorService.execute(() -> {
             try {
-                List<Incidence> incidencias = db.incidenciaDao().obtenerIncidenciasPorEstacion(station.getId());
+                List<Incident> incidencias = db.incidenciaDao().obtenerIncidenciasPorEstacion(station.getId());
                 if (incidencias == null) {
                     incidencias = new ArrayList<>();
                 }
 
-                final List<Incidence> listaFinal = incidencias;
+                final List<Incident> listaFinal = incidencias;
                 mainHandler.post(() -> {
                     if (view != null) {
                         view.showIncidences(listaFinal);
@@ -78,17 +84,17 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
     }
 
     public void registrarIncidenciaEstacionRota(String estacionId) {
-        Incidence nuevaIncidencia = new Incidence(estacionId, IncidenceType.STATION, "EstacionRota");
+        Incident nuevaIncidencia = new Incident(estacionId, IncidentType.STATION, "EstacionRota");
         insertarEnBaseDeDatos(nuevaIncidencia);
     }
 
     public void registrarIncidenciaBiciRota(String estacionId) {
-        Incidence nuevaIncidencia = new Incidence(estacionId, IncidenceType.BIKE, "BiciRota");
+        Incident nuevaIncidencia = new Incident(estacionId, IncidentType.BIKE, "BiciRota");
         insertarEnBaseDeDatos(nuevaIncidencia);
     }
 
     public void registrarIncidenciaOtro(String textoPersonalizado, String estacionId) {
-        Incidence nuevaIncidencia = new Incidence(estacionId, IncidenceType.OTHER, textoPersonalizado);
+        Incident nuevaIncidencia = new Incident(estacionId, IncidentType.OTHER, textoPersonalizado);
         insertarEnBaseDeDatos(nuevaIncidencia);
     }
 
