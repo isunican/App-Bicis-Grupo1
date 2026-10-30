@@ -28,9 +28,6 @@ public interface IStationDetailsContract {
          * @param station station whose details and incidences are managed
          */
         void init(View view, Station station);
-
-        // TODO: Add when clicking on an incidence is supported
-        // void onIncidenceClicked(Incidence incidence);
     }
 
     /**
@@ -45,14 +42,6 @@ public interface IStationDetailsContract {
          */
         void init();
 
-        /**
-         * Returns a repository that can be called by the Presenter to retrieve incidences.
-         * Only the Presenter should call this method.
-         *
-         * @return repository to access incidence data
-         */
-        // TODO: Uncomment when persistence layer is implemented
-        // IIncidencesRepository getIncidencesRepository();
 
         /**
          * The view is requested to display the given list of incidences.

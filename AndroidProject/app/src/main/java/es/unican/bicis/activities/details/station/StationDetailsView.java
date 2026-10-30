@@ -28,7 +28,6 @@ import org.parceler.Parcels;
 import java.util.List;
 
 import es.unican.bicis.R;
-import es.unican.bicis.activities.details.IncidentArrayAdapter;
 import es.unican.bicis.common.TimestampUtils;
 import es.unican.bicis.databaseAccess.AppDatabase;
 import es.unican.bicis.model.Incident;

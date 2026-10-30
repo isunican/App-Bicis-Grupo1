@@ -14,7 +14,7 @@ import es.unican.bicis.model.Incident;
 public abstract class AppDatabase extends RoomDatabase {
 
     // 2. Declara un método abstracto por cada DAO que tengas
-    public abstract IIncidenceDAO incidenciaDao();
+    public abstract IIncidentDAO incidenciaDao();
 
     // 3. Variable volátil para el patrón Singleton
     // HABIA UN VOLATIL AQUI
