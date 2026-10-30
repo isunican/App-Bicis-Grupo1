@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import es.unican.bicis.activities.details.IStationDetailsContract;
 import es.unican.bicis.databaseAccess.AppDatabase;
 import es.unican.bicis.model.Incident;
 import es.unican.bicis.model.IncidentType;
@@ -25,10 +24,6 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
     private final AppDatabase db;
     private final ExecutorService executorService;
     private final Handler mainHandler;
-
-    // Necesitamos la base de datos y el executor para el hilo secundario
-    private AppDatabase db;
-    private ExecutorService executorService;
 
     // Constructor: le pasamos la base de datos cuando lo instanciemos en la Activity
     public StationDetailsPresenter(AppDatabase db) {
@@ -101,7 +96,7 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
     /**
      * Inserta la incidencia en segundo plano y refresca la lista.
      */
-    private void insertarEnBaseDeDatos(Incidence incidencia) {
+    private void insertarEnBaseDeDatos(Incident incidencia) {
         if (db != null && executorService != null && !executorService.isShutdown()) {
             executorService.execute(() -> {
                 db.incidenciaDao().insertarIncidencia(incidencia);

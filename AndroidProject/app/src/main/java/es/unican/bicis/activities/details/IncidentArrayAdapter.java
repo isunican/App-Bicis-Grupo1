@@ -1,13 +1,10 @@
 package es.unican.bicis.activities.details;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,18 +13,16 @@ import androidx.annotation.Nullable;
 import java.util.List;
 
 import es.unican.bicis.R;
-import es.unican.bicis.common.LocationUtils;
-import es.unican.bicis.common.Utils;
-import es.unican.bicis.model.Incidence;
-import es.unican.bicis.model.IncidenceType;
+import es.unican.bicis.model.Incident;
+import es.unican.bicis.model.IncidentType;
 
 /**
  * Adapter that renders the incidences in each row of a ListView
  */
-public class IncidenceArrayAdapter extends BaseAdapter {
+public class IncidentArrayAdapter extends BaseAdapter {
 
     /** The list of Incidences to render */
-    private final List<Incidence> Incidences;
+    private final List<Incident> Incidences;
 
     /** Context of the application */
     private final Context context;
@@ -37,7 +32,7 @@ public class IncidenceArrayAdapter extends BaseAdapter {
      * @param context the application context
      * @param objects the list of incidences
      */
-    public IncidenceArrayAdapter(@NonNull Context context, @NonNull List<Incidence> objects) {
+    public IncidentArrayAdapter(@NonNull Context context, @NonNull List<Incident> objects) {
         // we know the parameters are not null because of the @NonNull annotation
         this.Incidences = objects;
         this.context = context;
@@ -61,7 +56,7 @@ public class IncidenceArrayAdapter extends BaseAdapter {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        Incidence incidence = (Incidence) getItem(position);
+        Incident incidence = (Incident) getItem(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(context)
@@ -95,7 +90,7 @@ public class IncidenceArrayAdapter extends BaseAdapter {
 
         // color
         {
-            IncidenceType type = incidence.getTypeId();
+            IncidentType type = incidence.getTypeId();
             if (type != null) {
                 int colorTexto = 0;
                 int colorFondo = 0;

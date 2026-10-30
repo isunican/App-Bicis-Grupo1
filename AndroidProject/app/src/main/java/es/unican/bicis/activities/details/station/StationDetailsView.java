@@ -28,9 +28,10 @@ import org.parceler.Parcels;
 import java.util.List;
 
 import es.unican.bicis.R;
+import es.unican.bicis.activities.details.IncidentArrayAdapter;
 import es.unican.bicis.common.TimestampUtils;
 import es.unican.bicis.databaseAccess.AppDatabase;
-import es.unican.bicis.model.Incidence;
+import es.unican.bicis.model.Incident;
 import es.unican.bicis.model.Station;
 
 public class StationDetailsView extends AppCompatActivity implements IStationDetailsContract.View {
@@ -192,9 +193,9 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
     }
 
     @Override
-    public void showIncidences(List<Incidence> incidences) {
+    public void showIncidences(List<Incident> incidences) {
         ListView list = findViewById(R.id.lvIncidences);
-        IncidenceArrayAdapter adapter = new IncidenceArrayAdapter(this, incidences);
+        IncidentArrayAdapter adapter = new IncidentArrayAdapter(this, incidences);
         list.setAdapter(adapter);
     }
 
@@ -215,4 +216,5 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
             presenter.onDestroy();
         }
     }
+
 }

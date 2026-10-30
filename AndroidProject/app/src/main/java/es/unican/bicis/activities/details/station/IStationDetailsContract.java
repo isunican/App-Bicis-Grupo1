@@ -1,9 +1,9 @@
-package es.unican.bicis.activities.details;
+package es.unican.bicis.activities.details.station;
 
 import android.content.Context;
 import java.util.List;
 
-import es.unican.bicis.model.Incidence;
+import es.unican.bicis.model.Incident;
 import es.unican.bicis.model.Station;
 // TODO: Uncomment when repository interface exists
 // import es.unican.bicis.repository.IIncidencesRepository;
@@ -60,7 +60,7 @@ public interface IStationDetailsContract {
          *
          * @param incidences list of incidences of the station
          */
-        void showIncidences(List<Incidence> incidences);
+        void showIncidences(List<Incident> incidences);
 
 
         /**
