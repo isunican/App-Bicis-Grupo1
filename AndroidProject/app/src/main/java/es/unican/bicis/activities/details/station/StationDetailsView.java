@@ -1,12 +1,14 @@
 package es.unican.bicis.activities.details.station;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -31,23 +34,51 @@ import es.unican.bicis.activities.details.IStationDetailsContract;
 import java.util.List;
 
 import es.unican.bicis.R;
+import es.unican.bicis.activities.details.red.IRedDetailsContract;
 import es.unican.bicis.common.TimestampUtils;
 import es.unican.bicis.databaseAccess.AppDatabase;
-import es.unican.bicis.model.Incidence;
+import es.unican.bicis.model.Incident;
 import es.unican.bicis.model.Station;
 
-public class StationDetailsView extends AppCompatActivity implements IStationDetailsContract.View {
+/**
+ * View that shows the details of one station.
+ */
+public class StationDetailsView extends AppCompatActivity implements IStationsDetailsContract.View {
 
+    /** Key for the intent that contains the station */
     public static final String INTENT_STATION = "INTENT_STATION";
 
-    private StationDetailsPresenter presenter;
-    private Station station;
+    private IStationsDetailsContract.Presenter presenter;
+    private Station station = null; // Guardar la estación a nivel de clase
 
+    /**
+     * @see AppCompatActivity#onCreate(Bundle)
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_station_details_view);
 
+        // 1. Obtener la estación del Intent
+        Parcelable wrapped = IntentCompat.getParcelableExtra(getIntent(), INTENT_STATION, Parcelable.class);
+        if (wrapped != null) {
+            station = Parcels.unwrap(wrapped);
+        }
+
+        // 2. Inicializar base de datos y presenter
+        AppDatabase db = AppDatabase.getDatabase(this);
+        presenter = new StationDetailsPresenter(db);
+
+        // 3. Iniciar el presenter
+        presenter.init(this, station);
+    }
+
+    /**
+     * @see IStationsDetailsContract.View#init()
+     */
+    @Override
+    public void init() {
+        // CONFIGURACIÓN DE UI (Toolbar y Notch)
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();
@@ -56,34 +87,18 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
 
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         ConstraintLayout mainLayout = findViewById(R.id.main);
-
         ViewCompat.setOnApplyWindowInsetsListener(mainLayout, (v, windowInsets) -> {
             Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-
             toolbar.setPadding(toolbar.getPaddingLeft(), insets.top, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
-
             ViewGroup.LayoutParams params = toolbar.getLayoutParams();
             int baseHeight = getResources().getDimensionPixelSize(androidx.appcompat.R.dimen.abc_action_bar_default_height_material);
             params.height = baseHeight + insets.top;
             toolbar.setLayoutParams(params);
-
             v.setPadding(insets.left, 0, insets.right, insets.bottom);
-
             return WindowInsetsCompat.CONSUMED;
         });
 
-        Parcelable wrapped = IntentCompat.getParcelableExtra(getIntent(), INTENT_STATION, Parcelable.class);
-        if (wrapped != null) {
-            station = Parcels.unwrap(wrapped);
-        }
-
-        AppDatabase db = AppDatabase.getDatabase(this);
-        presenter = new StationDetailsPresenter(db);
-        presenter.init(this, station);
-    }
-
-    @Override
-    public void init(IStationDetailsContract.View view, Station station) {
+        //Cargar los y mostrar los valores de los datos de la estacion
         TextView tvStationName = findViewById(R.id.tvStName);
         TextView tvLatitude = findViewById(R.id.tvLatDisplay);
         TextView tvLongitude = findViewById(R.id.tvLongDisplay);
@@ -111,45 +126,27 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
             }
 
             Integer usedSlots = station.getFreeBikes();
-            if (usedSlots == null || usedSlots < 0) {
-                tvUsedSlots.setText(R.string.noData);
-            } else {
-                tvUsedSlots.setText(String.valueOf(usedSlots));
-            }
+            tvUsedSlots.setText(usedSlots == null || usedSlots < 0 ? getString(R.string.noData) : String.valueOf(usedSlots));
 
             Integer freeSlots = station.getEmptySlots();
-            if (freeSlots == null || freeSlots < 0) {
-                tvFreeSlots.setText(R.string.noData);
-            } else {
-                tvFreeSlots.setText(String.valueOf(freeSlots));
-            }
+            tvFreeSlots.setText(freeSlots == null || freeSlots < 0 ? getString(R.string.noData) : String.valueOf(freeSlots));
 
             String id = station.getId();
             tvId.setText(id != null ? id : getString(R.string.noData));
 
             String timestamp = station.getTimestamp();
-            if (timestamp != null) {
-                tvTime.setText(TimestampUtils.formatTimestamp(timestamp));
-            } else {
-                tvTime.setText(R.string.noData);
-            }
-
-            setupIncidenciasSpinner();
+            tvTime.setText(timestamp != null ? TimestampUtils.formatTimestamp(timestamp) : getString(R.string.noData));
         } else {
             Toast.makeText(this, R.string.loadErrorStation, Toast.LENGTH_LONG).show();
         }
-    }
 
-    private void setupIncidenciasSpinner() {
+        // --- CONFIGURAR SPINNER Y ALERT DIALOG ---
         ImageButton btBotonIncidencia = findViewById(R.id.btBotonIncidencia);
         Spinner spIncidencias = findViewById(R.id.spIncidencias);
 
         if (spIncidencias != null) {
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                    this,
-                    R.array.incidencias_options,
-                    android.R.layout.simple_spinner_item
-            );
+                    this, R.array.incidencias_options, android.R.layout.simple_spinner_item);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spIncidencias.setAdapter(adapter);
 
@@ -160,6 +157,12 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
             spIncidencias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 private boolean isInitial = true;
 
+                /**
+                 *
+                 * Metodo que se ejecuta cuando se selecciona un elemento del spinner
+                 * llamando al presenter para registrar la incidencia del tipo selecionado
+                 *
+                 * */
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     if (isInitial) {
@@ -167,33 +170,71 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
                         return;
                     }
 
+                    if (position == 0) return;
+
                     String option = parent.getItemAtPosition(position).toString();
 
                     if (station != null && station.getId() != null) {
                         String estacionId = station.getId();
 
-                        if (position == 0) {
+                        if (position == 1) {
                             presenter.registrarIncidenciaEstacionRota(estacionId);
-                        } else if (position == 1) {
+                            spIncidencias.setSelection(0);
+
+                        } else if (position == 2) {
                             presenter.registrarIncidenciaBiciRota(estacionId);
+                            spIncidencias.setSelection(0);
+
                         } else {
-                            presenter.registrarIncidenciaOtro(option, estacionId);
+                            // Opción 3: Otro
+                            AlertDialog.Builder builder = new AlertDialog.Builder(StationDetailsView.this);
+                            builder.setTitle(getString(R.string.other_issue_title));
+                            builder.setMessage(getString(R.string.other_issue_message));
+
+                            final EditText input = new EditText(StationDetailsView.this);
+                            builder.setView(input);
+
+                            builder.setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String textoPersonalizado = input.getText().toString();
+
+                                    // Enviamos el texto personalizado al para añadir la incidencia presenter
+                                    presenter.registrarIncidenciaOtro(textoPersonalizado, estacionId);
+
+                                    // Solo mostramos el mensaje de éxito si el usuario escribió algo
+                                    if (!textoPersonalizado.trim().isEmpty()) {
+                                        Toast.makeText(StationDetailsView.this, getString(R.string.incidencia_registrada) + ": " + textoPersonalizado, Toast.LENGTH_SHORT).show();
+                                    }
+                                    spIncidencias.setSelection(0);
+                                }
+                            });
+
+                            builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                    spIncidencias.setSelection(0);
+                                }
+                            });
+
+                            builder.setOnCancelListener(dialog -> spIncidencias.setSelection(0));
+                            builder.show();
                         }
                     }
-
-                    Toast.makeText(StationDetailsView.this,
-                            getString(R.string.incidencia_registrada) + ": " + option,
-                            Toast.LENGTH_SHORT).show();
                 }
+
 
                 @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                    // Sin acción
-                }
+                public void onNothingSelected(AdapterView<?> parent) {}
             });
         }
-    }
 
+
+    @Override
+    public void showLoadError() {
+        Toast.makeText(this, R.string.loadErrorIncidences, Toast.LENGTH_SHORT).show();
+    }
     @Override
     public void showIncidences(List<Incidence> incidences) {
         ListView list = findViewById(R.id.lvIncidences);
@@ -201,16 +242,33 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
         list.setAdapter(adapter);
     }
 
+    /**
+     * @see IStationsDetailsContract.View#showEmptyIssueError()
+     */
     @Override
-    public void showLoadError() {
-        Toast.makeText(this, R.string.loadErrorIncidences, Toast.LENGTH_SHORT).show();
+    public void showEmptyIssueError() {
+        Toast.makeText(this, getString(R.string.empty_issue_error), Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * @see IStationsDetailsContract.View#showDatabaseError()
+     */
+    @Override
+    public void showDatabaseError() {
+        Toast.makeText(this, R.string.databaseError, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @see IStationsDetailsContract.View#getContext()
+     */
     @Override
     public Context getContext() {
         return this;
     }
 
+    /**
+     * Metodo onDestroy para limpiar los recursos
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();

@@ -38,8 +38,17 @@
     <string name="loadErrorIncidences">Failed to load incidences</string>
     <string name="incidencia">Incident</string>
     <string name="incidencia_registrada">Incident reported</string>
+    <string name="other_issue_title">Other issue</string>
+    <string name="other_issue_message">Describe the station problem:</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="empty_issue_error">You can\'t let the text field empty</string>
+    <string name="databaseError">There is not Database conexion</string>
+
+
 
     <string-array name="incidencias_options">
+        <item>Select an incidence...</item>
         <item>Damaged station</item>
         <item>Defective bike</item>
         <item>Other issue</item>

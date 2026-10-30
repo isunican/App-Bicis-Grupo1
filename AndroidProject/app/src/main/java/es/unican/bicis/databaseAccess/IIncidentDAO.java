@@ -8,10 +8,10 @@ import androidx.room.Query;
 import es.unican.bicis.model.Incident;
 import java.util.List;
 
-
+import es.unican.bicis.model.Incident;
 
 @Dao
-public interface IIncidenceDAO {
+public interface IIncidentDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertarIncidencia(Incident incidencia);
     //void insertarIncidencia(Incident incidencia);

@@ -6,67 +6,112 @@ import java.util.concurrent.Executors;
 import es.unican.bicis.databaseAccess.AppDatabase;
 import es.unican.bicis.model.Incident;
 import es.unican.bicis.model.IncidentType;
+import es.unican.bicis.model.Station;
 
-// Asegúrate de importar tu AppDatabase, Incidencia, etc.
+public class StationDetailsPresenter implements IStationsDetailsContract.Presenter {
 
-public class StationDetailsPresenter {
-
-    // Necesitamos la base de datos y el executor para el hilo secundario
     private AppDatabase db;
     private ExecutorService executorService;
 
-    // Constructor: le pasamos la base de datos cuando lo instanciemos en la Activity
+    // Variables para guardar la vista y el modelo (estación)
+    private IStationsDetailsContract.View view;
+    private Station station;
+
     public StationDetailsPresenter(AppDatabase db) {
         this.db = db;
         this.executorService = Executors.newSingleThreadExecutor();
     }
 
     /**
-     * Este método será llamado desde la Vista cuando el usuario elija una opción en el Spinner.
+     * @see IStationsDetailsContract.Presenter#init(IStationsDetailsContract.View, Station)
      */
-    public void registrarIncidenciaEstacionRota(String estacionId) {
-        // TODO comprobar el texto del tipo pulsado y convertirlo a IncidenceType
-        // Asegúrate de que en tu clase Incidencia.java, 'estacionId' sea de tipo String.
-        Incident nuevaIncidencia = new Incident(estacionId, IncidentType.STATION, "EstacionRota");
+    @Override
+    public void init(IStationsDetailsContract.View view, Station station) {
+        this.view = view;
+        this.station = station;
+        // Le decimos a la vista que ya puede inicializar sus componentes visuales
+        this.view.init();
+    }
 
-        // 2. Guardar en Room usando el hilo secundario
+    /**
+     * @see IStationsDetailsContract.Presenter#registrarIncidenciaEstacionRota(String)
+     */
+    @Override
+    public void registrarIncidenciaEstacionRota(String estacionId) {
+        Incident nuevaIncidencia = new Incident(estacionId, IncidentType.STATION, "EstacionRota");
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                db.incidenciaDao().insertarIncidencia(nuevaIncidencia);
+                try {
+                    // Intentamos guardar en la base de datos
+                    db.incidenciaDao().insertarIncidencia(nuevaIncidencia);
+                } catch (Exception e) {
+                    // Si ocurre CUALQUIER error de base de datos, avisamos a la vista
+                    if (view != null) {
+                        view.showDatabaseError();
+                    }
+                }
             }
         });
     }
 
+    /**
+     * @see IStationsDetailsContract.Presenter#registrarIncidenciaBiciRota(String)
+     */
+    @Override
     public void registrarIncidenciaBiciRota(String estacionId) {
-        // TODO comprobar el texto del tipo pulsado y convertirlo a IncidenceType
-        // Asegúrate de que en tu clase Incidencia.java, 'estacionId' sea de tipo String.
         Incident nuevaIncidencia = new Incident(estacionId, IncidentType.BIKE, "BiciRota");
 
         // 2. Guardar en Room usando el hilo secundario
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                db.incidenciaDao().insertarIncidencia(nuevaIncidencia);
+                try {
+                    // Intentamos guardar en la base de datos
+                    db.incidenciaDao().insertarIncidencia(nuevaIncidencia);
+                } catch (Exception e) {
+                    // Si ocurre CUALQUIER error de base de datos, avisamos a la vista
+                    if (view != null) {
+                        view.showDatabaseError();
+                    }
+                }
             }
         });
     }
 
+    /**
+     * @see IStationsDetailsContract.Presenter#registrarIncidenciaOtro(String, String)
+     */
+    @Override
     public void registrarIncidenciaOtro(String textoPersonalizado, String estacionId) {
-        // TODO comprobar el texto del tipo pulsado y convertirlo a IncidenceType
-        // Asegúrate de que en tu clase Incidencia.java, 'estacionId' sea de tipo String.
+        if (textoPersonalizado.trim().isEmpty()) {
+            // Llamamos a la vista para que muestre el error
+            view.showEmptyIssueError();
+            return;
+        }
         Incident nuevaIncidencia = new Incident(estacionId, IncidentType.OTHER, textoPersonalizado);
 
         // 2. Guardar en Room usando el hilo secundario
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                db.incidenciaDao().insertarIncidencia(nuevaIncidencia);
+                try {
+                    // Intentamos guardar en la base de datos
+                    db.incidenciaDao().insertarIncidencia(nuevaIncidencia);
+                } catch (Exception e) {
+                    // Si ocurre CUALQUIER error de base de datos, avisamos a la vista
+                    if (view != null) {
+                        view.showDatabaseError();
+                    }
+                }
             }
         });
     }
 
-    // Es buena práctica apagar el hilo cuando la vista se destruya
+    /**
+     * @see IStationsDetailsContract.Presenter#onDestroy()
+     */
+    @Override
     public void onDestroy() {
         if (executorService != null) {
             executorService.shutdown();

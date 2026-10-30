@@ -14,11 +14,13 @@ import es.unican.bicis.model.Favourite;
 @Database(entities = {Favourite.class, Incident.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
+    // 2. Declara un método abstracto por cada DAO que tengas
     public abstract IFavouriteDAO favouriteDAO();
-    public abstract IIncidenceDAO incidenciaDao();
+    public abstract IIncidentDAO incidenciaDao();
 
     // 3. Variable volátil para el patrón Singleton
-    private static volatile AppDatabase INSTANCE;
+    // HABIA UN VOLATIL AQUI
+    private static AppDatabase INSTANCE;
 
     // 4. Método estático para obtener la instancia de la base de datos
     public static AppDatabase getDatabase(final Context context) {
@@ -28,7 +30,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     AppDatabase.class, "bicis_database") // Nombre del archivo físico de la BD
-                            .fallbackToDestructiveMigration()
+                            // .fallbackToDestructiveMigration() // Descomenta esto en fase de desarrollo si cambias la estructura de las tablas
                             .build();
                 }
             }
