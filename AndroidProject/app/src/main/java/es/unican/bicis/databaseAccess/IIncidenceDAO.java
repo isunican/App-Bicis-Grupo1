@@ -14,6 +14,14 @@ public interface IIncidenceDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertarIncidencia(Incidence incidencia);
 
-    @Query("SELECT * FROM incidencias WHERE idEstacion = :id")
+    @Query("SELECT " +
+            "MIN(id) AS id, " +
+            "idEstacion, " +
+            "typeId, " +
+            "MIN(type) AS type, " +
+            "CASE WHEN COUNT(*) > 1 THEN COUNT(*) ELSE 1 END AS amount " +
+            "FROM incidencias " +
+            "WHERE idEstacion = :id " +
+            "GROUP BY CASE WHEN typeId = 'OTHER' THEN id ELSE typeId END")
     List<Incidence> obtenerIncidenciasPorEstacion(String id);
 }
