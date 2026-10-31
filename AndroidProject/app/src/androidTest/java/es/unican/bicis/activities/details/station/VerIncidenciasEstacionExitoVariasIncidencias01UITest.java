@@ -15,15 +15,12 @@ import android.Manifest;
 
 import androidx.test.espresso.DataInteraction;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.LargeTest;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -51,7 +48,7 @@ public class VerIncidenciasEstacionExitoVariasIncidencias01UITest {
         // Initializes the app database with test data
         AppDatabase db = DatabaseTestUtils.setInMemoryDatabase();
 
-        String idEstacion = "0a7638aa73949d3c8742f13f56cedff0";
+        String idEstacion = "0a7638aa73949d3c8742f13f56cedff0"; // Station id of the test station
 
         /*
          * Inserts all the data into the database. The data entered into the database is as follows:
@@ -90,27 +87,27 @@ public class VerIncidenciasEstacionExitoVariasIncidencias01UITest {
         // Checks that the list of incidences contains 3 elements grouped (all 3 possible types)
         onView(withId(R.id.lvIncidences)).check(matches(withListSize(3)));
 
-        //INFO: App fetches data in descendant order
+        //INFO: App fetches data in descendant order following the insertion order.
 
         // Verifies that the list of incidences contains an entry with a custom incident
+        // and has the correct background color
         DataInteraction itemOtro = onData(anything()).inAdapterView(withId(R.id.lvIncidences)).atPosition(0);
+        itemOtro.check(matches(hasBackgroundColor(R.color.colorOtros)));
         itemOtro.onChildView(withId(R.id.tvType)).check(matches(withText("Falta de material de mantenimiento")));
         itemOtro.onChildView(withId(R.id.tvAmount)).check(matches(withText("1")));
-        // Verifies that the entry has the correct background color
-        itemOtro.check(matches(hasBackgroundColor(R.color.colorOtros)));
-
-        // Verifies that the list of incidences contains an entry with 2 EstacionRota incidents
-        DataInteraction itemEstacion = onData(anything()).inAdapterView(withId(R.id.lvIncidences)).atPosition(1);
-        itemEstacion.onChildView(withId(R.id.tvType)).check(matches(withText("EstacionRota")));
-        itemEstacion.onChildView(withId(R.id.tvAmount)).check(matches(withText("2")));
-        // Verifies that the entry has the correct background color
-        itemEstacion.check(matches(hasBackgroundColor(R.color.colorEstacion)));
 
         // Verifies that the list of incidences contains an entry with 3 BiciRota incidents
-        DataInteraction itemBici = onData(anything()).inAdapterView(withId(R.id.lvIncidences)).atPosition(2);
+        // and has the correct background color
+        DataInteraction itemBici = onData(anything()).inAdapterView(withId(R.id.lvIncidences)).atPosition(1);
+        itemBici.check(matches(hasBackgroundColor(R.color.colorBici)));
         itemBici.onChildView(withId(R.id.tvType)).check(matches(withText("BiciRota")));
         itemBici.onChildView(withId(R.id.tvAmount)).check(matches(withText("3")));
-        // Verifies that the entry has the correct background color
-        itemBici.check(matches(hasBackgroundColor(R.color.colorBici)));
+
+        // Verifies that the list of incidences contains an entry with 2 EstacionRota incidents
+        // and has the correct background color
+        DataInteraction itemEstacion = onData(anything()).inAdapterView(withId(R.id.lvIncidences)).atPosition(2);
+        itemEstacion.check(matches(hasBackgroundColor(R.color.colorEstacion)));
+        itemEstacion.onChildView(withId(R.id.tvType)).check(matches(withText("EstacionRota")));
+        itemEstacion.onChildView(withId(R.id.tvAmount)).check(matches(withText("2")));
     }
 }
