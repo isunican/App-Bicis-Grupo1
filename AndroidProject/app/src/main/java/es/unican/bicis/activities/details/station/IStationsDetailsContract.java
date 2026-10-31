@@ -1,6 +1,8 @@
 package es.unican.bicis.activities.details.station;
 
 import android.content.Context;
+
+import es.unican.bicis.databaseAccess.AppDatabase;
 import es.unican.bicis.model.Station;
 
 /**
@@ -22,36 +24,35 @@ public interface IStationsDetailsContract {
          *
          * @param view view to be linked
          * @param station station of the view
+         * @param db the app database
          */
-        void init(View view, Station station);
+        public void init(View view, Station station, AppDatabase db);
 
         /**
          * Registers a "Damaged station" incident in the database.
-         *
-         * @param estacionId the ID of the station
+         * If there is a database connection error, it notifies the view to show an error.
          */
-        void registrarIncidenciaEstacionRota(String estacionId);
+        public void registrarIncidenciaEstacionRota();
 
         /**
          * Registers a "Defective bike" incident in the database.
-         *
-         * @param estacionId the ID of the station
+         * If there is a database connection error, it notifies the view to show an error.
          */
-        void registrarIncidenciaBiciRota(String estacionId);
+        public void registrarIncidenciaBiciRota();
 
         /**
          * Registers an "Other issue" incident with a custom text in the database.
-         * If the text is empty, it notifies the view to show an error.
+         * If the text is empty or null, it notifies the view to show an error.
+         * If there is a database connection error, it notifies the view to show an error.
          *
          * @param textoPersonalizado the custom description of the incident
-         * @param estacionId the ID of the station
          */
-        void registrarIncidenciaOtro(String textoPersonalizado, String estacionId);
+        public void registrarIncidenciaOtro(String textoPersonalizado);
 
         /**
          * Cleans up resources (like background threads) when the view is destroyed.
          */
-        void onDestroy();
+        public void onDestroy();
     }
 
     /**
@@ -64,14 +65,13 @@ public interface IStationsDetailsContract {
          * Initialize the view. Typically this should initialize all the listeners in the view.
          * Only the Presenter should call this method
          */
-        void init();
+        public void init();
 
         /**
          * The view is requested to display a notification indicating that there is not database connection.
          * Only the Presenter should call this method
          */
-        void showDatabaseError();
-
+        public void showDatabaseError();
 
         /**
          * The view is requested to return the context of the application.
@@ -79,13 +79,18 @@ public interface IStationsDetailsContract {
          *
          * @return the application context
          */
-        Context getContext();
+        public Context getContext();
 
         /**
          * The view is requested to display a notification indicating
          * that the text with the description of other issue is empty.
          * Only the Presenter should call this method
          */
-        void showEmptyIssueError();
+        public void showEmptyIssueError();
+
+        /**
+         * Cleans up resources (like background threads) when the view is destroyed.
+         */
+        public void onDestroy();
     }
 }
