@@ -10,7 +10,7 @@ import es.unican.bicis.model.Station;
  * The StationDetails activity shows the details of a specific bike station
  * and allows the user to register incidents.
  */
-public interface IStationsDetailsContract {
+public interface IStationDetailsContract {
 
     /**
      * Methods that must be implemented in the StationDetails Presenter.

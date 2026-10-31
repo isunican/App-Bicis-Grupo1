@@ -11,7 +11,7 @@ import es.unican.bicis.model.Station;
 /**
  * The presenter of the StationDetails activity of the application. It controls {@link StationDetailsView}
  */
-public class StationDetailsPresenter implements IStationsDetailsContract.Presenter {
+public class StationDetailsPresenter implements IStationDetailsContract.Presenter {
 
     /** App Database */
     private AppDatabase db;
@@ -20,16 +20,16 @@ public class StationDetailsPresenter implements IStationsDetailsContract.Present
     private ExecutorService executorService;
 
     /** The view that is controlled by this presenter */
-    private IStationsDetailsContract.View view;
+    private IStationDetailsContract.View view;
 
     /** Statation of the view */
     private Station station;
 
     /**
-     * @see IStationsDetailsContract.Presenter#init(IStationsDetailsContract.View, Station, AppDatabase)
+     * @see IStationDetailsContract.Presenter#init(IStationDetailsContract.View, Station, AppDatabase)
      */
     @Override
-    public void init(IStationsDetailsContract.View view, Station station, AppDatabase db) {
+    public void init(IStationDetailsContract.View view, Station station, AppDatabase db) {
         this.view = view;
         this.station = station;
         this.db = db;
@@ -39,7 +39,7 @@ public class StationDetailsPresenter implements IStationsDetailsContract.Present
     }
 
     /**
-     * @see IStationsDetailsContract.Presenter#registrarIncidenciaEstacionRota()
+     * @see IStationDetailsContract.Presenter#registrarIncidenciaEstacionRota()
      */
     @Override
     public void registrarIncidenciaEstacionRota() {
@@ -61,7 +61,7 @@ public class StationDetailsPresenter implements IStationsDetailsContract.Present
     }
 
     /**
-     * @see IStationsDetailsContract.Presenter#registrarIncidenciaBiciRota()
+     * @see IStationDetailsContract.Presenter#registrarIncidenciaBiciRota()
      */
     @Override
     public void registrarIncidenciaBiciRota() {
@@ -83,7 +83,7 @@ public class StationDetailsPresenter implements IStationsDetailsContract.Present
     }
 
     /**
-     * @see IStationsDetailsContract.Presenter#registrarIncidenciaOtro(String)
+     * @see IStationDetailsContract.Presenter#registrarIncidenciaOtro(String)
      */
     @Override
     public void registrarIncidenciaOtro(String textoPersonalizado) {
@@ -111,7 +111,7 @@ public class StationDetailsPresenter implements IStationsDetailsContract.Present
     }
 
     /**
-     * @see IStationsDetailsContract.Presenter#onDestroy()
+     * @see IStationDetailsContract.Presenter#onDestroy()
      */
     @Override
     public void onDestroy() {

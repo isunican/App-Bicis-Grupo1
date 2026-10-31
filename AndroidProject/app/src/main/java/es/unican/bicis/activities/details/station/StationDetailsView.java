@@ -28,7 +28,6 @@ import androidx.core.view.WindowInsetsCompat;
 import org.parceler.Parcels;
 
 import es.unican.bicis.R;
-import es.unican.bicis.activities.details.red.IRedDetailsContract;
 import es.unican.bicis.common.TimestampUtils;
 import es.unican.bicis.databaseAccess.AppDatabase;
 import es.unican.bicis.model.Station;
@@ -36,13 +35,13 @@ import es.unican.bicis.model.Station;
 /**
  * View that shows the details of one station.
  */
-public class StationDetailsView extends AppCompatActivity implements IStationsDetailsContract.View {
+public class StationDetailsView extends AppCompatActivity implements IStationDetailsContract.View {
 
     /** Key for the intent that contains the station */
     public static final String INTENT_STATION = "INTENT_STATION";
 
     /** The presenter of this view */
-    private IStationsDetailsContract.Presenter presenter;
+    private IStationDetailsContract.Presenter presenter;
 
     /** Station of the view */
     private Station station = null;
@@ -69,7 +68,7 @@ public class StationDetailsView extends AppCompatActivity implements IStationsDe
     }
 
     /**
-     * @see IStationsDetailsContract.View#init()
+     * @see IStationDetailsContract.View#init()
      */
     @Override
     public void init() {
@@ -161,8 +160,6 @@ public class StationDetailsView extends AppCompatActivity implements IStationsDe
 
                     if (position == 0) return;
 
-                    String option = parent.getItemAtPosition(position).toString();
-
                     if (station != null && station.getId() != null) {
 
                         if (position == 1) {
@@ -213,7 +210,7 @@ public class StationDetailsView extends AppCompatActivity implements IStationsDe
     }
 
     /**
-     * @see IStationsDetailsContract.View#showEmptyIssueError()
+     * @see IStationDetailsContract.View#showEmptyIssueError()
      */
     @Override
     public void showEmptyIssueError() {
@@ -221,7 +218,7 @@ public class StationDetailsView extends AppCompatActivity implements IStationsDe
     }
 
     /**
-     * @see IStationsDetailsContract.View#showDatabaseError()
+     * @see IStationDetailsContract.View#showDatabaseError()
      */
     @Override
     public void showDatabaseError() {
@@ -229,7 +226,7 @@ public class StationDetailsView extends AppCompatActivity implements IStationsDe
     }
 
     /**
-     * @see IStationsDetailsContract.View#getContext()
+     * @see IStationDetailsContract.View#getContext()
      */
     @Override
     public Context getContext() {
@@ -237,7 +234,7 @@ public class StationDetailsView extends AppCompatActivity implements IStationsDe
     }
 
     /**
-     * @see IStationsDetailsContract.View#onDestroy()
+     * @see IStationDetailsContract.View#onDestroy()
      */
     @Override
     public void onDestroy() {
