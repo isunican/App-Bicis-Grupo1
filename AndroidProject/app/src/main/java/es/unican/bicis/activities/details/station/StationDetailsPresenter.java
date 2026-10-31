@@ -3,6 +3,7 @@ package es.unican.bicis.activities.details.station;
 import android.os.Handler;
 import android.os.Looper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -48,7 +49,7 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
 
         // Cargamos las incidencias existentes de la estación al iniciar
         if (station != null && station.getId() != null) {
-            cargarIncidencias(station.getId());
+            load();
         }
     }
 
@@ -64,6 +65,7 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
                 try {
                     // Intentamos guardar en la base de datos
                     db.incidenciaDao().insertarIncidencia(nuevaIncidencia);
+                    load();
                 } catch (Exception e) {
                     // Si ocurre CUALQUIER error de base de datos, avisamos a la vista
                     if (view != null) {
@@ -86,6 +88,7 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
                 try {
                     // Intentamos guardar en la base de datos
                     db.incidenciaDao().insertarIncidencia(nuevaIncidencia);
+                    load();
                 } catch (Exception e) {
                     // Si ocurre CUALQUIER error de base de datos, avisamos a la vista
                     if (view != null) {
@@ -114,6 +117,7 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
                 try {
                     // Intentamos guardar en la base de datos
                     db.incidenciaDao().insertarIncidencia(nuevaIncidencia);
+                    load();
                 } catch (Exception e) {
                     // Si ocurre CUALQUIER error de base de datos, avisamos a la vista
                     if (view != null) {
@@ -125,16 +129,25 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
     }
 
     /**
-     * @see IStationDetailsContract.Presenter#onDestroy()
-     * Consulta las incidencias en segundo plano y las envía a la vista en el hilo principal.
+     * Consulta en segundo plano las incidencias de la estación en Room
+     * y actualiza la vista en el hilo de interfaz.
      */
-    private void cargarIncidencias(String estacionId) {
+    protected void load() {
+        if (db == null || station == null || executorService.isShutdown()) {
+            return;
+        }
+
         executorService.execute(() -> {
             try {
-                List<Incident> incidencias = db.incidenciaDao().obtenerIncidenciasPorEstacion(estacionId);
+                List<Incident> incidencias = db.incidenciaDao().obtenerIncidenciasPorEstacion(station.getId());
+                if (incidencias == null) {
+                    incidencias = new ArrayList<>();
+                }
+
+                final List<Incident> listaFinal = incidencias;
                 mainHandler.post(() -> {
                     if (view != null) {
-                        view.showIncidences(incidencias);
+                        view.showIncidences(listaFinal);
                     }
                 });
             } catch (Exception e) {

@@ -77,7 +77,6 @@ public class IncidentArrayAdapter extends BaseAdapter {
             tvType.setText(type);
         }
 
-
         // amount
         {
             int amount = incidence.getAmount();
@@ -115,7 +114,6 @@ public class IncidentArrayAdapter extends BaseAdapter {
                 convertView.setBackgroundColor(colorFondo);
             }
         }
-
 
         return convertView;
     }
