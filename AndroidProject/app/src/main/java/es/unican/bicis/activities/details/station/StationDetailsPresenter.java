@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import es.unican.bicis.R;
 import es.unican.bicis.databaseAccess.AppDatabase;
 import es.unican.bicis.model.Incident;
 import es.unican.bicis.model.IncidentType;
@@ -56,7 +57,7 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
      */
     @Override
     public void registrarIncidenciaEstacionRota() {
-        Incident nuevaIncidencia = new Incident(station.getId(), IncidentType.STATION, "EstacionRota");
+        Incident nuevaIncidencia = new Incident(station.getId(), IncidentType.STATION, view.getContext().getString(R.string.estcRotaIncidentTxt));
         executorService.execute(new Runnable() {
             @Override
             public void run() {
@@ -78,7 +79,7 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
      */
     @Override
     public void registrarIncidenciaBiciRota() {
-        Incident nuevaIncidencia = new Incident(station.getId(), IncidentType.BIKE, "BiciRota");
+        Incident nuevaIncidencia = new Incident(station.getId(), IncidentType.BIKE, view.getContext().getString(R.string.biciRotaIncidentTxt));
         executorService.execute(new Runnable() {
             @Override
             public void run() {
@@ -124,6 +125,7 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
     }
 
     /**
+     * @see IStationDetailsContract.Presenter#onDestroy()
      * Consulta las incidencias en segundo plano y las envía a la vista en el hilo principal.
      */
     private void cargarIncidencias(String estacionId) {
