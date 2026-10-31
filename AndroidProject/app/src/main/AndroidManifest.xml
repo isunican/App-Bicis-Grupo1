@@ -23,7 +23,7 @@
             android:exported="false"
             android:parentActivityName=".activities.main.MainView" />
         <activity
-            android:name=".activities.details.RedDetailsView"
+            android:name=".activities.details.red.RedDetailsView"
             android:exported="false"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.main.MainView" />
@@ -37,9 +37,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.details.StationDetailsView"
+            android:name=".activities.details.station.StationDetailsView"
             android:exported="false"
-            android:parentActivityName=".activities.details.RedDetailsView" />
+            android:parentActivityName=".activities.details.red.RedDetailsView" />
     </application>
 
 </manifest>

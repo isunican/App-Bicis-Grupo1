@@ -1,12 +1,14 @@
-package es.unican.bicis.activities.details;
+package es.unican.bicis.activities.details.station;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -30,21 +33,50 @@ import java.util.List;
 import es.unican.bicis.R;
 import es.unican.bicis.common.TimestampUtils;
 import es.unican.bicis.databaseAccess.AppDatabase;
-import es.unican.bicis.model.Incidence;
+import es.unican.bicis.model.Incident;
 import es.unican.bicis.model.Station;
 
+/**
+ * View that shows the details of one station.
+ */
 public class StationDetailsView extends AppCompatActivity implements IStationDetailsContract.View {
 
+    /** Key for the intent that contains the station */
     public static final String INTENT_STATION = "INTENT_STATION";
 
-    private StationDetailsPresenter presenter;
-    private Station station;
+    /** The presenter of this view */
+    private IStationDetailsContract.Presenter presenter;
 
+    /** Station of the view */
+    private Station station = null;
+
+    /**
+     * @see AppCompatActivity#onCreate(Bundle)
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_station_details_view);
 
+        // Obtener la estación del Intent
+        Parcelable wrapped = IntentCompat.getParcelableExtra(getIntent(), INTENT_STATION, Parcelable.class);
+        if (wrapped != null) {
+            station = Parcels.unwrap(wrapped);
+        }
+
+        // Inicializar base de datos y presenter
+        AppDatabase db = AppDatabase.getDatabase(this);
+        presenter = new StationDetailsPresenter();
+        presenter.init(this, station, db);
+    }
+
+    /**
+     * @see IStationDetailsContract.View#init()
+     */
+    @Override
+    public void init() {
+        // CONFIGURACIÓN DE UI (Toolbar y Notch)
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();
@@ -53,34 +85,18 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
 
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         ConstraintLayout mainLayout = findViewById(R.id.main);
-
         ViewCompat.setOnApplyWindowInsetsListener(mainLayout, (v, windowInsets) -> {
             Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-
             toolbar.setPadding(toolbar.getPaddingLeft(), insets.top, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
-
             ViewGroup.LayoutParams params = toolbar.getLayoutParams();
             int baseHeight = getResources().getDimensionPixelSize(androidx.appcompat.R.dimen.abc_action_bar_default_height_material);
             params.height = baseHeight + insets.top;
             toolbar.setLayoutParams(params);
-
             v.setPadding(insets.left, 0, insets.right, insets.bottom);
-
             return WindowInsetsCompat.CONSUMED;
         });
 
-        Parcelable wrapped = IntentCompat.getParcelableExtra(getIntent(), INTENT_STATION, Parcelable.class);
-        if (wrapped != null) {
-            station = Parcels.unwrap(wrapped);
-        }
-
-        AppDatabase db = AppDatabase.getDatabase(this);
-        presenter = new StationDetailsPresenter(db);
-        presenter.init(this, station);
-    }
-
-    @Override
-    public void init() {
+        //Cargar y mostrar los valores de los datos de la estacion
         TextView tvStationName = findViewById(R.id.tvStName);
         TextView tvLatitude = findViewById(R.id.tvLatDisplay);
         TextView tvLongitude = findViewById(R.id.tvLongDisplay);
@@ -108,45 +124,27 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
             }
 
             Integer usedSlots = station.getFreeBikes();
-            if (usedSlots == null || usedSlots < 0) {
-                tvUsedSlots.setText(R.string.noData);
-            } else {
-                tvUsedSlots.setText(String.valueOf(usedSlots));
-            }
+            tvUsedSlots.setText(usedSlots == null || usedSlots < 0 ? getString(R.string.noData) : String.valueOf(usedSlots));
 
             Integer freeSlots = station.getEmptySlots();
-            if (freeSlots == null || freeSlots < 0) {
-                tvFreeSlots.setText(R.string.noData);
-            } else {
-                tvFreeSlots.setText(String.valueOf(freeSlots));
-            }
+            tvFreeSlots.setText(freeSlots == null || freeSlots < 0 ? getString(R.string.noData) : String.valueOf(freeSlots));
 
             String id = station.getId();
             tvId.setText(id != null ? id : getString(R.string.noData));
 
             String timestamp = station.getTimestamp();
-            if (timestamp != null) {
-                tvTime.setText(TimestampUtils.formatTimestamp(timestamp));
-            } else {
-                tvTime.setText(R.string.noData);
-            }
-
-            setupIncidenciasSpinner();
+            tvTime.setText(timestamp != null ? TimestampUtils.formatTimestamp(timestamp) : getString(R.string.noData));
         } else {
             Toast.makeText(this, R.string.loadErrorStation, Toast.LENGTH_LONG).show();
         }
-    }
 
-    private void setupIncidenciasSpinner() {
+        // CONFIGURAR SPINNER Y ALERT DIALOG
         ImageButton btBotonIncidencia = findViewById(R.id.btBotonIncidencia);
         Spinner spIncidencias = findViewById(R.id.spIncidencias);
 
         if (spIncidencias != null) {
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                    this,
-                    R.array.incidencias_options,
-                    android.R.layout.simple_spinner_item
-            );
+                    this, R.array.incidencias_options, android.R.layout.simple_spinner_item);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spIncidencias.setAdapter(adapter);
 
@@ -164,38 +162,55 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
                         return;
                     }
 
-                    String option = parent.getItemAtPosition(position).toString();
+                    if (position == 0) return;
 
                     if (station != null && station.getId() != null) {
-                        String estacionId = station.getId();
 
-                        if (position == 0) {
-                            presenter.registrarIncidenciaEstacionRota(estacionId);
-                        } else if (position == 1) {
-                            presenter.registrarIncidenciaBiciRota(estacionId);
+                        if (position == 1) {
+                            presenter.registrarIncidenciaEstacionRota();
+                            spIncidencias.setSelection(0);
+
+                        } else if (position == 2) {
+                            presenter.registrarIncidenciaBiciRota();
+                            spIncidencias.setSelection(0);
+
                         } else {
-                            presenter.registrarIncidenciaOtro(option, estacionId);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(StationDetailsView.this);
+                            builder.setTitle(getString(R.string.other_issue_title));
+                            builder.setMessage(getString(R.string.other_issue_message));
+
+                            final EditText input = new EditText(StationDetailsView.this);
+                            builder.setView(input);
+
+                            builder.setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String textoPersonalizado = input.getText().toString();
+
+                                    // Enviamos el texto personalizado para añadir la incidencia al presenter
+                                    presenter.registrarIncidenciaOtro(textoPersonalizado);
+                                    spIncidencias.setSelection(0);
+                                }
+                            });
+
+                            builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                    spIncidencias.setSelection(0);
+                                }
+                            });
+
+                            builder.setOnCancelListener(dialog -> spIncidencias.setSelection(0));
+                            builder.show();
                         }
                     }
-
-                    Toast.makeText(StationDetailsView.this,
-                            getString(R.string.incidencia_registrada) + ": " + option,
-                            Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                    // Sin acción
-                }
+                public void onNothingSelected(AdapterView<?> parent) {}
             });
         }
-    }
-
-    @Override
-    public void showIncidences(List<Incidence> incidences) {
-        ListView list = findViewById(R.id.lvIncidences);
-        IncidenceArrayAdapter adapter = new IncidenceArrayAdapter(this, incidences);
-        list.setAdapter(adapter);
     }
 
     @Override
@@ -204,12 +219,41 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
     }
 
     @Override
+    public void showIncidences(List<Incident> incidents) {
+        ListView list = findViewById(R.id.lvIncidences);
+        IncidentArrayAdapter adapter = new IncidentArrayAdapter(this, incidents);
+        list.setAdapter(adapter);
+    }
+
+    /**
+     * @see IStationDetailsContract.View#showEmptyIssueError()
+     */
+    @Override
+    public void showEmptyIssueError() {
+        Toast.makeText(this, getString(R.string.empty_issue_error), Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @see IStationDetailsContract.View#showDatabaseError()
+     */
+    @Override
+    public void showDatabaseError() {
+        Toast.makeText(this, R.string.databaseError, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @see IStationDetailsContract.View#getContext()
+     */
+    @Override
     public Context getContext() {
         return this;
     }
 
+    /**
+     * @see IStationDetailsContract.View#onDestroy()
+     */
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         if (presenter != null) {
             presenter.onDestroy();
