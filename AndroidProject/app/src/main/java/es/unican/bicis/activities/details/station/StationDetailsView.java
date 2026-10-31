@@ -37,38 +37,46 @@ import es.unican.bicis.model.Incident;
 import es.unican.bicis.model.Station;
 
 /**
- * Vista que muestra los detalles de una estación.
+ * View that shows the details of one station.
  */
 public class StationDetailsView extends AppCompatActivity implements IStationDetailsContract.View {
 
-    /** Clave para el intent que contiene la estación */
+    /** Key for the intent that contains the station */
     public static final String INTENT_STATION = "INTENT_STATION";
 
+    /** The presenter of this view */
     private IStationDetailsContract.Presenter presenter;
+
+    /** Station of the view */
     private Station station = null;
 
+    /**
+     * @see AppCompatActivity#onCreate(Bundle)
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_station_details_view);
 
-        // 1. Obtener la estación del Intent
+        // Obtener la estación del Intent
         Parcelable wrapped = IntentCompat.getParcelableExtra(getIntent(), INTENT_STATION, Parcelable.class);
         if (wrapped != null) {
             station = Parcels.unwrap(wrapped);
         }
 
-        // 2. Inicializar base de datos y presenter
+        // Inicializar base de datos y presenter
         AppDatabase db = AppDatabase.getDatabase(this);
-        presenter = new StationDetailsPresenter(db);
-
-        // 3. Iniciar el presenter
-        presenter.init(this, station);
+        presenter = new StationDetailsPresenter();
+        presenter.init(this, station, db);
     }
 
+    /**
+     * @see IStationDetailsContract.View#init()
+     */
     @Override
     public void init() {
-        // --- CONFIGURACIÓN DE UI (Toolbar y Notch) ---
+        // CONFIGURACIÓN DE UI (Toolbar y Notch)
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();
@@ -88,7 +96,7 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
             return WindowInsetsCompat.CONSUMED;
         });
 
-        // --- CARGAR Y MOSTRAR LOS VALORES DE LA ESTACIÓN ---
+        //Cargar y mostrar los valores de los datos de la estacion
         TextView tvStationName = findViewById(R.id.tvStName);
         TextView tvLatitude = findViewById(R.id.tvLatDisplay);
         TextView tvLongitude = findViewById(R.id.tvLongDisplay);
@@ -130,7 +138,7 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
             Toast.makeText(this, R.string.loadErrorStation, Toast.LENGTH_LONG).show();
         }
 
-        // --- CONFIGURAR SPINNER Y ALERT DIALOG ---
+        // CONFIGURAR SPINNER Y ALERT DIALOG
         ImageButton btBotonIncidencia = findViewById(R.id.btBotonIncidencia);
         Spinner spIncidencias = findViewById(R.id.spIncidencias);
 
@@ -157,18 +165,16 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
                     if (position == 0) return;
 
                     if (station != null && station.getId() != null) {
-                        String estacionId = station.getId();
 
                         if (position == 1) {
-                            presenter.registrarIncidenciaEstacionRota(estacionId);
+                            presenter.registrarIncidenciaEstacionRota();
                             spIncidencias.setSelection(0);
 
                         } else if (position == 2) {
-                            presenter.registrarIncidenciaBiciRota(estacionId);
+                            presenter.registrarIncidenciaBiciRota();
                             spIncidencias.setSelection(0);
 
                         } else {
-                            // Opción 3: Otro
                             AlertDialog.Builder builder = new AlertDialog.Builder(StationDetailsView.this);
                             builder.setTitle(getString(R.string.other_issue_title));
                             builder.setMessage(getString(R.string.other_issue_message));
@@ -180,11 +186,9 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     String textoPersonalizado = input.getText().toString();
-                                    presenter.registrarIncidenciaOtro(textoPersonalizado, estacionId);
 
-                                    if (!textoPersonalizado.trim().isEmpty()) {
-                                        Toast.makeText(StationDetailsView.this, getString(R.string.incidencia_registrada) + ": " + textoPersonalizado, Toast.LENGTH_SHORT).show();
-                                    }
+                                    // Enviamos el texto personalizado para añadir la incidencia al presenter
+                                    presenter.registrarIncidenciaOtro(textoPersonalizado);
                                     spIncidencias.setSelection(0);
                                 }
                             });
@@ -221,23 +225,35 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
         list.setAdapter(adapter);
     }
 
+    /**
+     * @see IStationDetailsContract.View#showEmptyIssueError()
+     */
     @Override
     public void showEmptyIssueError() {
         Toast.makeText(this, getString(R.string.empty_issue_error), Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * @see IStationDetailsContract.View#showDatabaseError()
+     */
     @Override
     public void showDatabaseError() {
         Toast.makeText(this, R.string.databaseError, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * @see IStationDetailsContract.View#getContext()
+     */
     @Override
     public Context getContext() {
         return this;
     }
 
+    /**
+     * @see IStationDetailsContract.View#onDestroy()
+     */
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         if (presenter != null) {
             presenter.onDestroy();

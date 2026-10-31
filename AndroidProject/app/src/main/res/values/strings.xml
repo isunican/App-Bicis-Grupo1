@@ -43,7 +43,7 @@
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="empty_issue_error">You can\'t let the text field empty</string>
-    <string name="databaseError">There is not Database conexion</string>
+    <string name="databaseError">An error has ocurred</string>
 
 
 

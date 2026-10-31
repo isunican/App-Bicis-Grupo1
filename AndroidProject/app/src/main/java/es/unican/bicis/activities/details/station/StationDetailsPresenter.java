@@ -13,27 +13,36 @@ import es.unican.bicis.model.IncidentType;
 import es.unican.bicis.model.Station;
 
 /**
- * Presentador de la actividad StationDetails. Gestiona la lógica de la estación
- * y el acceso a Room para las incidencias.
+ * The presenter of the StationDetails activity of the application. It controls {@link StationDetailsView}
  */
 public class StationDetailsPresenter implements IStationDetailsContract.Presenter {
 
-    private IStationDetailsContract.View view;
-    private Station station;
-    private final AppDatabase db;
-    private final ExecutorService executorService;
-    private final Handler mainHandler;
+    /** App Database */
+    private AppDatabase db;
 
-    public StationDetailsPresenter(AppDatabase db) {
+    /** ExecutorService for background tasks */
+    private ExecutorService executorService;
+
+    /** The view that is controlled by this presenter */
+    private IStationDetailsContract.View view;
+
+    /** Statation of the view */
+    private Station station;
+
+    /** Handler for background tasks */
+    private Handler mainHandler;
+
+    /**
+     * @see IStationDetailsContract.Presenter#init(IStationDetailsContract.View, Station, AppDatabase)
+     */
+    @Override
+    public void init(IStationDetailsContract.View view, Station station, AppDatabase db) {
+        this.view = view;
+        this.station = station;
         this.db = db;
         this.executorService = Executors.newSingleThreadExecutor();
         this.mainHandler = new Handler(Looper.getMainLooper());
-    }
-
-    @Override
-    public void init(IStationDetailsContract.View view, Station station) {
-        this.view = view;
-        this.station = station;
+        // Le decimos a la vista que ya puede inicializar sus componentes visuales
         this.view.init();
 
         // Cargamos las incidencias existentes de la estación al iniciar
@@ -42,44 +51,74 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
         }
     }
 
-    @Override
-    public void registrarIncidenciaEstacionRota(String estacionId) {
-        Incident nuevaIncidencia = new Incident(estacionId, IncidentType.STATION, "EstacionRota");
-        guardarIncidencia(nuevaIncidencia, estacionId);
-    }
-
-    @Override
-    public void registrarIncidenciaBiciRota(String estacionId) {
-        Incident nuevaIncidencia = new Incident(estacionId, IncidentType.BIKE, "BiciRota");
-        guardarIncidencia(nuevaIncidencia, estacionId);
-    }
-
-    @Override
-    public void registrarIncidenciaOtro(String textoPersonalizado, String estacionId) {
-        if (textoPersonalizado == null || textoPersonalizado.trim().isEmpty()) {
-            view.showEmptyIssueError();
-            return;
-        }
-        Incident nuevaIncidencia = new Incident(estacionId, IncidentType.OTHER, textoPersonalizado.trim());
-        guardarIncidencia(nuevaIncidencia, estacionId);
-    }
-
     /**
-     * Inserta la incidencia en segundo plano, comunica los errores en el hilo principal
-     * y refresca la lista si la inserción es correcta.
+     * @see IStationDetailsContract.Presenter#registrarIncidenciaEstacionRota()
      */
-    private void guardarIncidencia(Incident incidencia, String estacionId) {
-        executorService.execute(() -> {
-            try {
-                db.incidenciaDao().insertarIncidencia(incidencia);
-                // Si se guarda correctamente, refrescamos la lista
-                cargarIncidencias(estacionId);
-            } catch (Exception e) {
-                mainHandler.post(() -> {
+    @Override
+    public void registrarIncidenciaEstacionRota() {
+        Incident nuevaIncidencia = new Incident(station.getId(), IncidentType.STATION, "EstacionRota");
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // Intentamos guardar en la base de datos
+                    db.incidenciaDao().insertarIncidencia(nuevaIncidencia);
+                } catch (Exception e) {
+                    // Si ocurre CUALQUIER error de base de datos, avisamos a la vista
                     if (view != null) {
                         view.showDatabaseError();
                     }
-                });
+                }
+            }
+        });
+    }
+
+    /**
+     * @see IStationDetailsContract.Presenter#registrarIncidenciaBiciRota()
+     */
+    @Override
+    public void registrarIncidenciaBiciRota() {
+        Incident nuevaIncidencia = new Incident(station.getId(), IncidentType.BIKE, "BiciRota");
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // Intentamos guardar en la base de datos
+                    db.incidenciaDao().insertarIncidencia(nuevaIncidencia);
+                } catch (Exception e) {
+                    // Si ocurre CUALQUIER error de base de datos, avisamos a la vista
+                    if (view != null) {
+                        view.showDatabaseError();
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * @see IStationDetailsContract.Presenter#registrarIncidenciaOtro(String)
+     */
+    @Override
+    public void registrarIncidenciaOtro(String textoPersonalizado) {
+        if (textoPersonalizado == null || textoPersonalizado.trim().isEmpty()) {
+            // Llamamos a la vista para que muestre el error
+            view.showEmptyIssueError();
+            return;
+        }
+        Incident nuevaIncidencia = new Incident(station.getId(), IncidentType.OTHER, textoPersonalizado);
+
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // Intentamos guardar en la base de datos
+                    db.incidenciaDao().insertarIncidencia(nuevaIncidencia);
+                } catch (Exception e) {
+                    // Si ocurre CUALQUIER error de base de datos, avisamos a la vista
+                    if (view != null) {
+                        view.showDatabaseError();
+                    }
+                }
             }
         });
     }
@@ -106,6 +145,9 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
         });
     }
 
+    /**
+     * @see IStationDetailsContract.Presenter#onDestroy()
+     */
     @Override
     public void onDestroy() {
         if (executorService != null) {
