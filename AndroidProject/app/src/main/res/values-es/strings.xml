@@ -34,8 +34,16 @@
     <string name="loadErrorIncidences">Ha habido un error cargando las incidencias</string>
     <string name="incidencia">Incidencia</string>
     <string name="incidencia_registrada">Incidencia registrada</string>
+    <string name="other_issue_title">Otra incidencia</string>
+    <string name="other_issue_message">Describe el problema de la estación:</string>
+    <string name="confirm">Confirmar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="empty_issue_error">No puedes dejar el texto vacío</string>
+    <string name="databaseError">Ha ocurrido un error</string>
+
 
     <string-array name="incidencias_options">
+        <item>Selecciona una incidencia...</item>
         <item>Estación dañada</item>
         <item>Bicicleta defectuosa</item>
         <item>Otro problema</item>
