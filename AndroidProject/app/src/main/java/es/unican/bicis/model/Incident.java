@@ -25,11 +25,20 @@ public class Incident {
     @SerializedName("type")               public String type;
     @SerializedName("amount")             public int amount;
 
+    /**
+     * Constructor for an incident.
+     * @param estacionId id of the station.
+     * @param typeId type of the incident.
+     * @param type description of the incident.
+     */
     public Incident(String estacionId, IncidentType typeId, String type) {
         this.idEstacion = estacionId;
         this.typeId = typeId;
         this.type = type;
     }
 
+    /**
+     * Empty constructor for the incident used by Room.
+     */
     public Incident(){}
 }
