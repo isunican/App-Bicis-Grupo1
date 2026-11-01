@@ -12,4 +12,13 @@
 
     <!--   a secondary color for controls like checkboxes and text fields. -->
     <color name="colorAccent">#FF4081</color>
+
+    <!-- Colores de incidencias -->
+    <color name="colorBici">#9B4006</color>
+    <color name="colorEstacion">#CE0C0C</color>
+    <color name="colorOtros">#FFEB3B</color>
+
+    <color name="colorTextoBici">#DCDCDC</color>
+    <color name="colorTextoEstacion">#0B0B0B</color>
+    <color name="colorTextoOtros">#000000</color>
 </resources>

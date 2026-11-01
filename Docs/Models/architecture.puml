@@ -18,6 +18,8 @@ RedDetailsPresenter ..|> IRedDetailsContract.Presenter
 RedDetailsView --> INetworksRepository : repository
 RedDetailsView --> RedDetailsPresenter : presenter
 RedDetailsPresenter --> RedDetailsView : view
+MainView --> IFavouriteDAO : favouriteDAO
+MainView ..> AppDatabase : <<use>>
 
 class MainView {
 }
@@ -38,8 +40,17 @@ class RedDetailsPresenter {
     -load()
 }
 
+class AppDatabase {
+    + favouriteDAO() : IFavouriteDAO
+    + getDatabase(context : Context) : AppDatabase
+}
+
 class ApiNetworksRepository
 class JsonNetworksRepository
+
+interface IFavouriteDAO {
+    + insertarFavorito(favorito : Favourite)
+}
 
 interface IMainContract.View {
     + init()
@@ -49,12 +60,16 @@ interface IMainContract.View {
     + showLoadError()
     + showNetworkDetails(network : Network)
     + showInfoActivity()
+    + getFavouriteDAO() : IFavouriteDAO
+    + showMarkedAsFavorite(network : Network)
+    + updateFavorites(favoriteNetworkIds : Set<String>)
 }
 
 interface IMainContract.Presenter {
     + init(View view)
     + onNetworkClicked(network : Network)
     + onMenuInfoClicked()
+    + onFavoriteClicked(network : Network)
 }
 
 interface IRedDetailsContract.View {

@@ -8,29 +8,39 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import org.parceler.Parcels;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 import es.unican.bicis.R;
-import es.unican.bicis.activities.details.IRedDetailsContract;
-import es.unican.bicis.activities.details.StationsArrayAdapter;
+import es.unican.bicis.activities.details.red.IRedDetailsContract;
+import es.unican.bicis.activities.details.red.StationsArrayAdapter;
 import es.unican.bicis.activities.info.InfoView;
-import es.unican.bicis.activities.details.RedDetailsView;
+import es.unican.bicis.activities.details.red.RedDetailsView;
 import es.unican.bicis.common.LocationUtils;
+import es.unican.bicis.databaseAccess.AppDatabase;
+import es.unican.bicis.databaseAccess.IFavouriteDAO;
 import es.unican.bicis.model.Network;
 import es.unican.bicis.repository.INetworksRepository;
 
@@ -43,6 +53,12 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     /** The presenter of this view */
     private IMainContract.Presenter presenter;
 
+    /** The Room DAO for favorites */
+    private IFavouriteDAO favouriteDAO;
+
+    /** Set of favorite network IDs */
+    private Set<String> favoriteNetworkIds = new HashSet<>();
+
     /** The repository to access the data. This is automatically injected by Hilt in this class */
     @Inject
     INetworksRepository repository;
@@ -52,11 +68,32 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        favouriteDAO = AppDatabase.getDatabase(this).favouriteDAO();
+
         // The default theme does not include a toolbar.
         // In this app the toolbar is explicitly declared in the layout
         // Set this toolbar as the activity ActionBar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Evitar solape con el notch
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        ConstraintLayout mainLayout = findViewById(R.id.main);
+
+        ViewCompat.setOnApplyWindowInsetsListener(mainLayout, (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+
+            toolbar.setPadding(toolbar.getPaddingLeft(), insets.top, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
+
+            ViewGroup.LayoutParams params = toolbar.getLayoutParams();
+            int baseHeight = getResources().getDimensionPixelSize(androidx.appcompat.R.dimen.abc_action_bar_default_height_material);
+            params.height = baseHeight + insets.top;
+            toolbar.setLayoutParams(params);
+
+            v.setPadding(insets.left, 0, insets.right, insets.bottom);
+
+            return WindowInsetsCompat.CONSUMED;
+        });
 
         LocationUtils.init(getApplicationContext());
 
@@ -147,13 +184,22 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     }
 
     /**
+     * @see IMainContract.View#getFavouriteDAO()
+     * @return the IFavouriteDAO instance
+     */
+    @Override
+    public IFavouriteDAO getFavouriteDAO() {
+        return favouriteDAO;
+    }
+
+    /**
      * @see IMainContract.View#showNetworks(List)
      * @param networks the list of networks
      */
     @Override
     public void showNetworks(List<Network> networks) {
         ListView list = findViewById(R.id.lvNetworks);
-        NetworksArrayAdapter adapter = new NetworksArrayAdapter(this, networks);
+        NetworksArrayAdapter adapter = new NetworksArrayAdapter(this, networks, presenter::onFavoriteClicked, favoriteNetworkIds);
         list.setAdapter(adapter);
     }
 
@@ -208,6 +254,29 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     public void showInfoActivity() {
         Intent intent = new Intent(this, InfoView.class);
         startActivity(intent);
+    }
+
+    /**
+     * @see IMainContract.View#showMarkedAsFavorite(Network)
+     * @param network the network
+     */
+    @Override
+    public void showMarkedAsFavorite(Network network) {
+        String name = network != null ? network.getName() : "";
+        Toast.makeText(this, getString(R.string.marked_as_favorite, name), Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @see IMainContract.View#updateFavorites(Set)
+     * @param favoriteNetworkIds set of favorite network IDs
+     */
+    @Override
+    public void updateFavorites(Set<String> favoriteNetworkIds) {
+        this.favoriteNetworkIds = favoriteNetworkIds != null ? favoriteNetworkIds : new HashSet<>();
+        ListView list = findViewById(R.id.lvNetworks);
+        if (list != null && list.getAdapter() instanceof NetworksArrayAdapter) {
+            ((NetworksArrayAdapter) list.getAdapter()).setFavoriteNetworkIds(this.favoriteNetworkIds);
+        }
     }
 
     /**

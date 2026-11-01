@@ -57,6 +57,7 @@ android {
     testOptions {
         unitTests {
             includeAndroidResources = true
+            unitTests.returnDefaultValues = true
         }
         unitTests.all {
             jacoco {
@@ -103,11 +104,29 @@ dependencies {
     implementation libs.activity
     implementation libs.constraintlayout
     implementation libs.play.services.location
+    implementation libs.room.common
+    implementation libs.room.runtime
+    implementation libs.room3.common
+    implementation libs.room3.runtime
+
+
     androidTestImplementation libs.rules
     testImplementation libs.junit
-    testImplementation libs.espresso.core
+    annotationProcessor libs.room.compiler
+
+    debugImplementation libs.core
+    debugImplementation libs.runner
+    debugImplementation libs.rules
+
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+    androidTestImplementation libs.core
+    androidTestImplementation libs.runner
+    androidTestImplementation libs.rules
+
+    //Room
+    implementation "androidx.room:room-runtime:2.6.1"
+    annotationProcessor "androidx.room:room-compiler:2.6.1"
 
     // Parceler (automatically implements methods to create parcels)
     implementation libs.parceler.api
