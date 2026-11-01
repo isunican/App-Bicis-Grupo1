@@ -8,11 +8,15 @@ import org.parceler.Parcel;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * An incident reported on a station of a network.
+ */
 @Entity(tableName = "incidencias")
 @Parcel
 @Getter
 @Setter
 public class Incident {
+    
     @PrimaryKey (autoGenerate = true)
     @SerializedName("id")                 public int id;
     @SerializedName("idEstacion")         public String idEstacion;
