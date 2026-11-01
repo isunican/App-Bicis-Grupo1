@@ -24,6 +24,11 @@ public interface IIncidentDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertarIncidencia(Incident incidencia);
 
+    /**
+     * Obtiene todas las incidencias de una estación.
+     * @param id El ID de la estación.
+     * @return Una lista con las incidencias de la estación.
+     */
     @Query("SELECT " +
             "MIN(id) AS id, " +
             "idEstacion, " +

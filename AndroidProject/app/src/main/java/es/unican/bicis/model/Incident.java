@@ -3,6 +3,7 @@ import com.google.gson.annotations.SerializedName;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+
 import org.parceler.Parcel;
 
 import lombok.Getter;
@@ -16,7 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Incident {
-    
+
     @PrimaryKey (autoGenerate = true)
     @SerializedName("id")                 public int id;
     @SerializedName("idEstacion")         public String idEstacion;
