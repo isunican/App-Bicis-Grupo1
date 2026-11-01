@@ -11,7 +11,7 @@ import es.unican.bicis.model.Incident;
 /**
  * Esta clase representa la base de datos de la aplicación con sus tablas (entidades).
  */
-@Database(entities = {Incident.class}, version = 1, exportSchema = false)
+@Database(entities = {Incident.class}, version = 2, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     // DAO para las incidencias
