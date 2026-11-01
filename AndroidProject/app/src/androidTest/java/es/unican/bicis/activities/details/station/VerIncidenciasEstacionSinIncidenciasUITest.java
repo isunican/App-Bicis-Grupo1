@@ -26,7 +26,7 @@ import es.unican.bicis.databaseAccess.AppDatabase;
 import es.unican.bicis.utils.DatabaseTestUtils;
 
 @HiltAndroidTest
-public class VerIncidenciasEstacionSinIncidencias02UITest {
+public class VerIncidenciasEstacionSinIncidenciasUITest {
     @Rule(order = 0)
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 

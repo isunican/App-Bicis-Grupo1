@@ -32,7 +32,7 @@ import es.unican.bicis.model.IncidentType;
 import es.unican.bicis.utils.DatabaseTestUtils;
 
 @HiltAndroidTest
-public class VerIncidenciasEstacionExitoVariasIncidencias01UITest {
+public class VerIncidenciasEstacionExitoVariasIncidenciasUITest {
 
     @Rule(order = 0)
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
