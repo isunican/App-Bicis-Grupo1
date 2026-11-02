@@ -19,6 +19,13 @@ RedDetailsView --> INetworksRepository : repository
 RedDetailsView --> RedDetailsPresenter : presenter
 RedDetailsPresenter --> RedDetailsView : view
 
+StationDetailsView ..|> IStationDetailsContract.View
+StationDetailsPresenter ..|> IStationDetailsContract.Presenter
+StationDetailsView --> StationDetailsPresenter : presenter
+StationDetailsPresenter --> StationDetailsView : view
+StationDetailsPresenter --> IIncidentDAO : <<use>>
+
+
 class MainView {
 }
 
@@ -28,7 +35,13 @@ class MainPresenter {
 
 class InfoView
 
-class StationDetailsView
+class StationDetailsView{
+}
+
+class StationDetailsPresenter {
+    -load()
+}
+
 
 class RedDetailsView {
     +onClickFilterMoreThanDistance()
@@ -94,6 +107,33 @@ interface NetworkDetailsCallback {
 enum DistanceFilter {
     LESS_THAN
     MORE_THAN
+}
+
+interface IStationDetailsContract.Presenter {
+    + init(View view, Station station, AppDatabase db)
+    + registrarIncidencia(IncidentType type, String texto)
+    + onDestroy()
+}
+
+interface IStationDetailsContract.View {
+    + init()
+    + showDatabaseError()
+    + Context getContext(): Context
+    + showEmptyIssueError()
+    + onDestroy()
+}
+
+interface IIncidentDAO {
+    + insertarIncidencia(Incident incidencia) : long
+    + obtenerIncidenciasPorEstacion(String id) : List<Incident>
+}
+
+enum IncidentType {
+    BIKE("Bicicleta defectuosa")
+    STATION("Estación dañada")
+    OTHER("")
+    --
+    - description : String
 }
 
 @enduml
