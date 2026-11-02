@@ -46,6 +46,8 @@ enum IncidentType {
     BIKE
     STATION
     OTHER
+    --
+    - descripcion: String
 }
 
 Network *--> "1" Location : location
