@@ -48,13 +48,18 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
             return;
         }
 
-        if (texto == null || texto.trim().isEmpty()) {
+        if (type == IncidentType.OTHER && (texto == null || texto.trim().isEmpty())) {
             // Llamamos a la vista para que muestre el error
             view.showEmptyIssueError();
             return;
         }
 
-        Incident nuevaIncidencia = new Incident(station.getId(), type, texto);
+        String txt = type.getDescripcion();
+        if (type == IncidentType.OTHER) {
+            txt = texto;
+        }
+
+        Incident nuevaIncidencia = new Incident(station.getId(), type, txt);
 
         executorService.execute(new Runnable() {
             @Override

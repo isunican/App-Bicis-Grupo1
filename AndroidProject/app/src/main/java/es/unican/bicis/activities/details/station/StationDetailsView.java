@@ -164,10 +164,10 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
                     if (station != null && station.getId() != null) {
 
                         if (position == 1) {
-                            presenter.registrarIncidencia(IncidentType.STATION, getString(R.string.estcRotaIncidentTxt));
+                            presenter.registrarIncidencia(IncidentType.STATION, null);
 
                         } else if (position == 2) {
-                            presenter.registrarIncidencia(IncidentType.BIKE, getString(R.string.biciRotaIncidentTxt));
+                            presenter.registrarIncidencia(IncidentType.BIKE, null);
 
                         } else {
                             AlertDialog.Builder builder = new AlertDialog.Builder(StationDetailsView.this);

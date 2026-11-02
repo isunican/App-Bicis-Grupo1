@@ -32,7 +32,8 @@ public interface IStationDetailsContract {
         /**
          * Registers an incident in the database.
          * If type is null, it does not register the incident.
-         * If type is not null and texto is empty or null, it notifies the view to show an error.
+         * Param texto only applies if the incident type is OTHER.
+         * If type is OTHER and texto is null or empty, it notifies the view to show an error.
          * If there is a database connection error, it notifies the view to show an error.
          *
          * @param type the type of the incident
