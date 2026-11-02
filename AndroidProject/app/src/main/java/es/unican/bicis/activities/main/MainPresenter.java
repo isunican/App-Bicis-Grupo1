@@ -71,45 +71,58 @@ public class MainPresenter implements IMainContract.Presenter {
      */
     @Override
     public void onFavoriteClicked(Network network) {
-        if (network != null && network.getId() != null) {
-            executor.execute(() -> {
-                IFavouriteDAO dao = view != null ? view.getFavouriteDAO() : null;
-                if (dao != null) {
-                    dao.insertarFavorito(new Favourite(network));
-                    Set<String> favoriteIds = new HashSet<>(dao.obtenerNetworkIdsFavoritos());
+        // Cláusula de guarda: salimos rápido si los datos son inválidos
+        if (network == null || network.getId() == null) {
+            return;
+        }
 
-                    List<Network> networksToSort = lastLoadedNetworks;
-                    List<Network> sortedNetworks;
-                    if (networksToSort != null) {
-                        List<Network> favoritas = new ArrayList<>();
-                        List<Network> resto = new ArrayList<>();
+        executor.execute(() -> processFavoriteSelection(network));
+    }
 
-                        for (Network net : networksToSort) {
-                            if (net != null && net.getId() != null && favoriteIds.contains(net.getId())) {
-                                favoritas.add(net);
-                            } else if (net != null) {
-                                resto.add(net);
-                            }
-                        }
-                        favoritas.addAll(resto);
-                        sortedNetworks = favoritas;
-                    } else {
-                        sortedNetworks = new ArrayList<>();
-                    }
+    private void processFavoriteSelection(Network network) {
+        if (view == null) return;
 
-                    List<Network> finalNetworks = sortedNetworks;
+        IFavouriteDAO dao = view.getFavouriteDAO();
+        if (dao == null) return;
 
-                    mainHandler.post(() -> {
-                        if (view != null) {
-                            view.showMarkedAsFavorite(network);
-                            view.updateFavorites(favoriteIds);
-                            if (!finalNetworks.isEmpty()) {
-                                view.showNetworks(finalNetworks);
-                            }
-                        }
-                    });
-                }
-            });
+        dao.insertarFavorito(new Favourite(network));
+        Set<String> favoriteIds = new HashSet<>(dao.obtenerNetworkIdsFavoritos());
+
+        List<Network> sortedNetworks = buildSortedNetworkList(lastLoadedNetworks, favoriteIds);
+
+        mainHandler.post(() -> updateUiElements(network, favoriteIds, sortedNetworks));
+    }
+
+    private List<Network> buildSortedNetworkList(List<Network> networks, Set<String> favoriteIds) {
+        if (networks == null || networks.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<Network> favoritas = new ArrayList<>();
+        List<Network> resto = new ArrayList<>();
+
+        for (Network net : networks) {
+            if (net == null) continue;
+
+            if (net.getId() != null && favoriteIds.contains(net.getId())) {
+                favoritas.add(net);
+            } else {
+                resto.add(net);
+            }
+        }
+
+        favoritas.addAll(resto);
+        return favoritas;
+    }
+
+    private void updateUiElements(Network network, Set<String> favoriteIds, List<Network> sortedNetworks) {
+        if (view == null) return;
+
+        view.showMarkedAsFavorite(network);
+        view.updateFavorites(favoriteIds);
+
+        if (!sortedNetworks.isEmpty()) {
+            view.showNetworks(sortedNetworks);
         }
     }
 
