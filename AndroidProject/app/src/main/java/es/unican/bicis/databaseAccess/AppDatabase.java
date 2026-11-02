@@ -21,6 +21,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract IIncidentDAO incidenciaDao();
 
     // Variable volátil para el patrón Singleton
+    // Silenciamos la advertencia: el patrón Double-Checked Locking exige el uso de volatile aquí.
+    @SuppressWarnings("squid:S3077")
     private static volatile AppDatabase INSTANCE;
 
     /**
