@@ -26,8 +26,8 @@ public class MainPresenter implements IMainContract.Presenter {
     private IMainContract.View view;
     private List<Network> lastLoadedNetworks;
 
-    private ExecutorService executor = Executors.newSingleThreadExecutor();
-    private Handler mainHandler = new Handler(Looper.getMainLooper());
+    private ExecutorService executor;
+    private Handler mainHandler;
 
     /**
      * @see IMainContract.Presenter#init(IMainContract.View)
@@ -37,6 +37,8 @@ public class MainPresenter implements IMainContract.Presenter {
     public void init(IMainContract.View view) {
         this.view = view;
         this.view.init();
+        this.executor = Executors.newSingleThreadExecutor();
+        this.mainHandler = new Handler(Looper.getMainLooper());
         if (Utils.isNetworkAvailable(view.getContext())) {
             load();
         } else {
