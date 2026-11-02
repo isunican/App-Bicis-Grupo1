@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -21,12 +22,14 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import es.unican.bicis.common.Utils;
 import es.unican.bicis.databaseAccess.IFavouriteDAO;
@@ -52,25 +55,35 @@ public class MainPresenterTest {
     @InjectMocks
     private MainPresenter presenter;
     private MockedStatic<Utils> mockUtils;
+    private MockedStatic<Executors> mockExecutors;
+    private MockedConstruction<Handler> mockHandler;
 
     @Before
     public void setUp() {
         when(mockView.getContext()).thenReturn(mockContext);
         when(mockView.getNetworksRepository()).thenReturn(mockNetworkRepo);
         when(mockView.getFavouriteDAO()).thenReturn(mockDAO);
-        // Ejecutar el executor de forma síncrona
-        doAnswer(invocation -> {
-            Runnable runnable = invocation.getArgument(0);
-            runnable.run();
-            return null;
-        }).when(executor).execute(any(Runnable.class));
+        mockExecutors = mockStatic(Executors.class);
+        mockExecutors.when(Executors::newSingleThreadExecutor).thenReturn(executor);
+        mockHandler = mockConstruction(Handler.class, (mock, context) -> {
+            doAnswer(invocation -> {
+                Runnable runnable = invocation.getArgument(0);
+                runnable.run();
+                return true;
+            }).when(mock).post(any(Runnable.class));
+        });
 
-        // Ejecutar el handler de la UI de forma síncrona
         doAnswer(invocation -> {
             Runnable runnable = invocation.getArgument(0);
             runnable.run();
             return true;
         }).when(mainHandler).post(any(Runnable.class));
+
+        doAnswer(invocation -> {
+            Runnable runnable = invocation.getArgument(0);
+            runnable.run();
+            return null;
+        }).when(executor).execute(any(Runnable.class));
     }
 
     @After
@@ -78,6 +91,14 @@ public class MainPresenterTest {
         if (mockUtils != null) {
             mockUtils.close();
             mockUtils = null;
+        }
+        if (mockExecutors != null) {
+            mockExecutors.close();
+            mockExecutors = null;
+        }
+        if (mockHandler != null) {
+            mockHandler.close();
+            mockHandler = null;
         }
     }
 
