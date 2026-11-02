@@ -17,6 +17,7 @@ import es.unican.bicis.model.Network;
 import es.unican.bicis.repository.INetworksRepository;
 import es.unican.bicis.repository.NetworksCallback;
 
+
 /**
  * The presenter of the main activity of the application. It controls {@link MainView}
  */
@@ -28,6 +29,7 @@ public class MainPresenter implements IMainContract.Presenter {
 
     private ExecutorService executor;
     private Handler mainHandler;
+
 
     /**
      * @see IMainContract.Presenter#init(IMainContract.View)
