@@ -3,6 +3,7 @@ package es.unican.bicis.activities.details.station;
 import android.content.Context;
 
 import es.unican.bicis.databaseAccess.AppDatabase;
+import es.unican.bicis.model.IncidentType;
 import es.unican.bicis.model.Station;
 
 /**
@@ -29,25 +30,15 @@ public interface IStationDetailsContract {
         public void init(View view, Station station, AppDatabase db);
 
         /**
-         * Registers a "Damaged station" incident in the database.
-         * If there is a database connection error, it notifies the view to show an error.
-         */
-        public void registrarIncidenciaEstacionRota();
-
-        /**
-         * Registers a "Defective bike" incident in the database.
-         * If there is a database connection error, it notifies the view to show an error.
-         */
-        public void registrarIncidenciaBiciRota();
-
-        /**
-         * Registers an "Other issue" incident with a custom text in the database.
-         * If the text is empty or null, it notifies the view to show an error.
+         * Registers an incident in the database.
+         * If texto is empty or null, it notifies the view to show an error.
+         * If type is null, it does not register the incident.
          * If there is a database connection error, it notifies the view to show an error.
          *
-         * @param textoPersonalizado the custom description of the incident
+         * @param type the type of the incident
+         * @param texto the custom description of the incident if the incident type is OTHER
          */
-        public void registrarIncidenciaOtro(String textoPersonalizado);
+        public void registrarIncidencia(IncidentType type, String texto);
 
         /**
          * Cleans up resources (like background threads) when the view is destroyed.

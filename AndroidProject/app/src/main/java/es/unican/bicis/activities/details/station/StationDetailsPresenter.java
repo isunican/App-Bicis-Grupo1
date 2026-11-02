@@ -40,60 +40,21 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
     }
 
     /**
-     * @see IStationDetailsContract.Presenter#registrarIncidenciaEstacionRota()
+     * @see IStationDetailsContract.Presenter#registrarIncidencia(IncidentType, String)
      */
     @Override
-    public void registrarIncidenciaEstacionRota() {
-        Incident nuevaIncidencia = new Incident(station.getId(), IncidentType.STATION, view.getContext().getString(R.string.estcRotaIncidentTxt));
-        executorService.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    // Intentamos guardar en la base de datos
-                    db.incidenciaDao().insertarIncidencia(nuevaIncidencia);
-                } catch (Exception e) {
-                    // Si ocurre CUALQUIER error de base de datos, avisamos a la vista
-                    if (view != null) {
-                        view.showDatabaseError();
-                    }
-                }
-            }
-        });
-    }
+    public void registrarIncidencia(IncidentType type, String texto) {
+        if (type == null) {
+            return;
+        }
 
-    /**
-     * @see IStationDetailsContract.Presenter#registrarIncidenciaBiciRota()
-     */
-    @Override
-    public void registrarIncidenciaBiciRota() {
-        Incident nuevaIncidencia = new Incident(station.getId(), IncidentType.BIKE, view.getContext().getString(R.string.biciRotaIncidentTxt));
-        executorService.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    // Intentamos guardar en la base de datos
-                    db.incidenciaDao().insertarIncidencia(nuevaIncidencia);
-                } catch (Exception e) {
-                    // Si ocurre CUALQUIER error de base de datos, avisamos a la vista
-                    if (view != null) {
-                        view.showDatabaseError();
-                    }
-                }
-            }
-        });
-    }
-
-    /**
-     * @see IStationDetailsContract.Presenter#registrarIncidenciaOtro(String)
-     */
-    @Override
-    public void registrarIncidenciaOtro(String textoPersonalizado) {
-        if (textoPersonalizado == null || textoPersonalizado.trim().isEmpty()) {
+        if (texto == null || texto.trim().isEmpty()) {
             // Llamamos a la vista para que muestre el error
             view.showEmptyIssueError();
             return;
         }
-        Incident nuevaIncidencia = new Incident(station.getId(), IncidentType.OTHER, textoPersonalizado);
+
+        Incident nuevaIncidencia = new Incident(station.getId(), type, texto);
 
         executorService.execute(new Runnable() {
             @Override

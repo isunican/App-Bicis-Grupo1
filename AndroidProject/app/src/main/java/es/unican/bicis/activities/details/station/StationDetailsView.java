@@ -30,6 +30,7 @@ import org.parceler.Parcels;
 import es.unican.bicis.R;
 import es.unican.bicis.common.TimestampUtils;
 import es.unican.bicis.databaseAccess.AppDatabase;
+import es.unican.bicis.model.IncidentType;
 import es.unican.bicis.model.Station;
 
 /**
@@ -163,12 +164,10 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
                     if (station != null && station.getId() != null) {
 
                         if (position == 1) {
-                            presenter.registrarIncidenciaEstacionRota();
-                            spIncidencias.setSelection(0);
+                            presenter.registrarIncidencia(IncidentType.STATION, getString(R.string.estcRotaIncidentTxt));
 
                         } else if (position == 2) {
-                            presenter.registrarIncidenciaBiciRota();
-                            spIncidencias.setSelection(0);
+                            presenter.registrarIncidencia(IncidentType.BIKE, getString(R.string.biciRotaIncidentTxt));
 
                         } else {
                             AlertDialog.Builder builder = new AlertDialog.Builder(StationDetailsView.this);
@@ -184,8 +183,7 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
                                     String textoPersonalizado = input.getText().toString();
 
                                     // Enviamos el texto personalizado para añadir la incidencia al presenter
-                                    presenter.registrarIncidenciaOtro(textoPersonalizado);
-                                    spIncidencias.setSelection(0);
+                                    presenter.registrarIncidencia(IncidentType.OTHER, textoPersonalizado);
                                 }
                             });
 
@@ -193,13 +191,13 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
-                                    spIncidencias.setSelection(0);
                                 }
                             });
 
                             builder.setOnCancelListener(dialog -> spIncidencias.setSelection(0));
                             builder.show();
                         }
+                        spIncidencias.setSelection(0);
                     }
                 }
 
