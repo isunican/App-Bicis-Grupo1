@@ -43,9 +43,9 @@ class Incident {
 }
 
 enum IncidentType {
-    BIKE
-    STATION
-    OTHER
+    BIKE("Bicicleta defectuosa")
+    STATION("Estación dañada")
+    OTHER("")
     --
     - descripcion: String
 }

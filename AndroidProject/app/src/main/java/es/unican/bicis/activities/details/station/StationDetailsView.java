@@ -208,7 +208,9 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
                 }
 
                 @Override
-                public void onNothingSelected(AdapterView<?> parent) {}
+                public void onNothingSelected(AdapterView<?> parent) {
+                    // Si no seleccionas nada no ocurre nada
+                }
             });
         }
     }
