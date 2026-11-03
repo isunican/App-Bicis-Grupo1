@@ -3,6 +3,7 @@ package es.unican.bicis.activities.details.station;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.after;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
@@ -14,9 +15,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowLooper;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import es.unican.bicis.databaseAccess.AppDatabase;
 import es.unican.bicis.databaseAccess.IIncidentDAO;
@@ -24,6 +31,7 @@ import es.unican.bicis.model.Incident;
 import es.unican.bicis.model.IncidentType;
 import es.unican.bicis.model.Station;
 
+@RunWith(RobolectricTestRunner.class)
 public class StationDetailsPresenterTest {
 
     private StationDetailsPresenter sut;
@@ -51,10 +59,12 @@ public class StationDetailsPresenterTest {
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        when(mockAppDatabase.incidenciaDao()).thenReturn(mockIIncidentDAO);
         sut = new StationDetailsPresenter();
         sut.init(mockStationDetailsView, station, mockAppDatabase);
 
-        when(mockAppDatabase.incidenciaDao()).thenReturn(mockIIncidentDAO);
+        ShadowLooper.idleMainLooper();
     }
 
     @After
@@ -71,6 +81,8 @@ public class StationDetailsPresenterTest {
 
         ArgumentCaptor<Incident> incidentCaptor = ArgumentCaptor.forClass(Incident.class);
         verify(mockIIncidentDAO, timeout(1000)).insertarIncidencia(incidentCaptor.capture());
+
+        ShadowLooper.idleMainLooper();
 
         Incident newIncident = incidentCaptor.getValue();
         assertEquals(station.getId(), newIncident.getIdEstacion());
@@ -90,6 +102,8 @@ public class StationDetailsPresenterTest {
         ArgumentCaptor<Incident> incidentCaptor = ArgumentCaptor.forClass(Incident.class);
         verify(mockIIncidentDAO, timeout(1000)).insertarIncidencia(incidentCaptor.capture());
 
+        ShadowLooper.idleMainLooper();
+
         Incident newIncident = incidentCaptor.getValue();
         assertEquals(station.getId(), newIncident.getIdEstacion());
         assertEquals(IncidentType.OTHER, newIncident.getTypeId());
@@ -107,6 +121,8 @@ public class StationDetailsPresenterTest {
 
         ArgumentCaptor<Incident> incidentCaptor = ArgumentCaptor.forClass(Incident.class);
         verify(mockIIncidentDAO, timeout(1000)).insertarIncidencia(incidentCaptor.capture());
+
+        ShadowLooper.idleMainLooper();
 
         Incident newIncident = incidentCaptor.getValue();
         assertEquals(station.getId(), newIncident.getIdEstacion());
@@ -149,12 +165,17 @@ public class StationDetailsPresenterTest {
     }
 
     @Test
-    public void registrarIncidenciaTest_PU07 () {
+    public void registrarIncidenciaTest_PU07 () throws InterruptedException {
 
-        when(mockIIncidentDAO.insertarIncidencia(any(Incident.class))).thenThrow(new SQLiteException());
+        CountDownLatch latch = new CountDownLatch(1);
+
+        doThrow(new SQLiteException()).when(mockIIncidentDAO).insertarIncidencia(any(Incident.class));
         sut.registrarIncidencia(IncidentType.BIKE, null);
 
+        latch.await(2, TimeUnit.SECONDS);
+
         verify(mockIIncidentDAO, timeout(1000)).insertarIncidencia(any(Incident.class));
+        ShadowLooper.idleMainLooper();
         verify(mockStationDetailsView, timeout(1000)).showDatabaseError();
         verify(mockStationDetailsView, never()).showEmptyIssueError();
     }

@@ -1,9 +1,11 @@
 package es.unican.bicis.activities.details.station;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import es.unican.bicis.R;
 import es.unican.bicis.databaseAccess.AppDatabase;
 import es.unican.bicis.model.Incident;
 import es.unican.bicis.model.IncidentType;
@@ -26,6 +28,9 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
     /** Statation of the view */
     private Station station;
 
+    /** Handler for background tasks */
+    private Handler mainHandler;
+
     /**
      * @see IStationDetailsContract.Presenter#init(IStationDetailsContract.View, Station, AppDatabase)
      */
@@ -35,6 +40,7 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
         this.station = station;
         this.db = db;
         this.executorService = Executors.newSingleThreadExecutor();
+        this.mainHandler = new Handler(Looper.getMainLooper());
         // Le decimos a la vista que ya puede inicializar sus componentes visuales
         this.view.init();
     }
@@ -69,9 +75,11 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
                     db.incidenciaDao().insertarIncidencia(nuevaIncidencia);
                 } catch (Exception e) {
                     // Si ocurre CUALQUIER error de base de datos, avisamos a la vista
-                    if (view != null) {
-                        view.showDatabaseError();
-                    }
+                    mainHandler.post(() -> {
+                        if (view != null) {
+                            view.showDatabaseError();
+                        }
+                    });
                 }
             }
         });
