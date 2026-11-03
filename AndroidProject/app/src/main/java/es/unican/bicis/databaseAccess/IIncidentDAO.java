@@ -8,7 +8,6 @@ import androidx.room.Query;
 import es.unican.bicis.model.Incident;
 import java.util.List;
 
-import es.unican.bicis.model.Incident;
 
 /**
  * DAO para acceder a la tabla de incidencias en la base de datos.

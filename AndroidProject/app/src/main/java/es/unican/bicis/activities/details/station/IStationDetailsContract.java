@@ -3,6 +3,7 @@ package es.unican.bicis.activities.details.station;
 import android.content.Context;
 
 import es.unican.bicis.databaseAccess.AppDatabase;
+import es.unican.bicis.model.IncidentType;
 import java.util.List;
 
 import es.unican.bicis.model.Incident;
@@ -23,34 +24,25 @@ public interface IStationDetailsContract {
 
         /**
          * Links the presenter with its view.
-         * Only the View should call this method.
+         * Only the View should call this method
          *
          * @param view view to be linked
-         * @param station station whose details and incidences are managed
+         * @param station station of the view
          * @param db the app database
          */
         public void init(View view, Station station, AppDatabase db);
 
         /**
-         * Registers a "Damaged station" incident in the database.
-         * If there is a database connection error, it notifies the view to show an error.
-         */
-        public void registrarIncidenciaEstacionRota();
-
-        /**
-         * Registers a "Defective bike" incident in the database.
-         * If there is a database connection error, it notifies the view to show an error.
-         */
-        public void registrarIncidenciaBiciRota();
-
-        /**
-         * Registers an "Other issue" incident with a custom text in the database.
-         * If the text is empty or null, it notifies the view to show an error.
+         * Registers an incident in the database.
+         * If type is null, it does not register the incident.
+         * Param texto only applies if the incident type is OTHER.
+         * If type is OTHER and texto is null or empty, it notifies the view to show an error.
          * If there is a database connection error, it notifies the view to show an error.
          *
-         * @param textoPersonalizado the custom description of the incident
+         * @param type the type of the incident
+         * @param texto the custom description of the incident if the incident type is OTHER
          */
-        public void registrarIncidenciaOtro(String textoPersonalizado);
+        public void registrarIncidencia(IncidentType type, String texto);
 
         /**
          * Cleans up resources (like background threads) when the view is destroyed.
@@ -59,14 +51,14 @@ public interface IStationDetailsContract {
     }
 
     /**
-     * Methods that must be implemented in the StationDetails View.
+     * Methods that must be implemented in the StationDetail View.
      * Only the Presenter should call these methods.
      */
     public interface View {
 
         /**
-         * Initialize the view. Typically this initializes views and text contents.
-         * Only the Presenter should call this method.
+         * Initialize the view. Typically this should initialize all the listeners in the view.
+         * Only the Presenter should call this method
          */
         public void init();
 

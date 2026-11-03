@@ -53,7 +53,5 @@
         <item>Defective bike</item>
         <item>Other issue</item>
     </string-array>
-    <string name="biciRotaIncidentTxt" translatable="false">Bicicleta defectuosa</string>
-    <string name="estcRotaIncidentTxt" translatable="false">Estación dañada</string>
     <string name="mark_as_favorite">Mark as favorite</string>
 </resources>
