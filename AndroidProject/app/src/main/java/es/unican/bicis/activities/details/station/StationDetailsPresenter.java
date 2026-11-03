@@ -83,9 +83,11 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
                     load();
                 } catch (Exception e) {
                     // Si ocurre CUALQUIER error de base de datos, avisamos a la vista
-                    if (view != null) {
-                        view.showDatabaseError();
-                    }
+                    mainHandler.post(() -> {
+                        if (view != null) {
+                            view.showDatabaseError();
+                        }
+                    });
                 }
             }
         });
