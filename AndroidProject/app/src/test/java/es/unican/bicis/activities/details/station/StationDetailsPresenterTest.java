@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteException;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -27,7 +28,7 @@ public class StationDetailsPresenterTest {
 
     private StationDetailsPresenter sut;
 
-    private Station station;
+    private static Station station;
     @Mock
     private AppDatabase mockAppDatabase;
     @Mock
@@ -35,8 +36,8 @@ public class StationDetailsPresenterTest {
     @Mock
     private IIncidentDAO mockIIncidentDAO;
 
-    @Before
-    public void setUp() {
+    @BeforeClass
+    public static void setUpStation() {
         station = new Station();
         station.setId("0a7638aa73949d3c8742f13f56cedff0");
         station.setName("Perinés");
@@ -45,7 +46,10 @@ public class StationDetailsPresenterTest {
         station.setTimestamp("2026-09-24T11:11:30.548463+00:00Z");
         station.setFreeBikes(5);
         station.setEmptySlots(7);
+    }
 
+    @Before
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
         sut = new StationDetailsPresenter();
         sut.init(mockStationDetailsView, station, mockAppDatabase);

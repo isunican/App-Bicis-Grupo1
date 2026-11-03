@@ -1,7 +1,9 @@
 package es.unican.bicis.utils;
 
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -29,6 +31,25 @@ public class Matchers {
         };
     }
 
+    /**
+     * Matcher personalizado para comprobar el número de elementos mostrados en un spinner.
+     */
+    public static Matcher<View> withSpinnerSize(final int expectedSize) {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public boolean matchesSafely(final View view) {
+                if (!(view instanceof Spinner)) {
+                    return false;
+                }
+                Spinner spinner = (Spinner) view;
+                Adapter adapter = spinner.getAdapter();
+                return adapter != null && adapter.getCount() == expectedSize;
+            }
 
-
+            @Override
+            public void describeTo(final Description description) {
+                description.appendText("El Spinner debería tener " + expectedSize + " elementos");
+            }
+        };
+    }
 }
