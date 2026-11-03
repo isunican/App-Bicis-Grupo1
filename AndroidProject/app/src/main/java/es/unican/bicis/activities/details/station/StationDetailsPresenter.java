@@ -82,7 +82,7 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
                     db.incidenciaDao().insertarIncidencia(nuevaIncidencia);
                     load();
                 } catch (Exception e) {
-                    // Si ocurre CUALQUIER error de base de datos, avisamos a la vista
+                    // Si ocurre CUALQUIER error de base de datos, avisamos a la vista para que muestre el error
                     mainHandler.post(() -> {
                         if (view != null) {
                             view.showDatabaseError();
