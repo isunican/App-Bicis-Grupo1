@@ -62,7 +62,6 @@ public class StationDetailsPresenterTest {
         when(mockAppDatabase.incidenciaDao()).thenReturn(mockIIncidentDAO);
 
         sut = new StationDetailsPresenter();
-        sut.init(mockStationDetailsView, station, mockAppDatabase);
     }
 
     @After
@@ -75,6 +74,7 @@ public class StationDetailsPresenterTest {
     @Test
     public void registrarIncidenciaTest_PU01 () {
 
+        sut.init(mockStationDetailsView, station, mockAppDatabase);
         sut.registrarIncidencia(IncidentType.BIKE, null);
 
         ArgumentCaptor<Incident> incidentCaptor = ArgumentCaptor.forClass(Incident.class);
@@ -93,6 +93,7 @@ public class StationDetailsPresenterTest {
     @Test
     public void registrarIncidenciaTest_PU02 () {
 
+        sut.init(mockStationDetailsView, station, mockAppDatabase);
         sut.registrarIncidencia(IncidentType.OTHER, "Luz fundida");
 
         ArgumentCaptor<Incident> incidentCaptor = ArgumentCaptor.forClass(Incident.class);
@@ -111,6 +112,7 @@ public class StationDetailsPresenterTest {
     @Test
     public void registrarIncidenciaTest_PU03 () {
 
+        sut.init(mockStationDetailsView, station, mockAppDatabase);
         sut.registrarIncidencia(IncidentType.BIKE, "Bici");
 
         ArgumentCaptor<Incident> incidentCaptor = ArgumentCaptor.forClass(Incident.class);
@@ -129,6 +131,7 @@ public class StationDetailsPresenterTest {
     @Test
     public void registrarIncidenciaTest_PU04 () {
 
+        sut.init(mockStationDetailsView, station, mockAppDatabase);
         sut.registrarIncidencia(IncidentType.OTHER, "");
 
         verify(mockIIncidentDAO, after(1000).never()).insertarIncidencia(any(Incident.class));
@@ -139,6 +142,7 @@ public class StationDetailsPresenterTest {
     @Test
     public void registrarIncidenciaTest_PU05 () {
 
+        sut.init(mockStationDetailsView, station, mockAppDatabase);
         sut.registrarIncidencia(IncidentType.OTHER, null);
 
         verify(mockIIncidentDAO, after(1000).never()).insertarIncidencia(any(Incident.class));
@@ -149,6 +153,7 @@ public class StationDetailsPresenterTest {
     @Test
     public void registrarIncidenciaTest_PU06 () {
 
+        sut.init(mockStationDetailsView, station, mockAppDatabase);
         sut.registrarIncidencia(null, "Bici");
 
         verify(mockIIncidentDAO, after(1000).never()).insertarIncidencia(any(Incident.class));
@@ -159,6 +164,7 @@ public class StationDetailsPresenterTest {
     @Test
     public void registrarIncidenciaTest_PU07 () {
 
+        sut.init(mockStationDetailsView, station, mockAppDatabase);
         doThrow(new SQLiteException()).when(mockIIncidentDAO).insertarIncidencia(any(Incident.class));
         sut.registrarIncidencia(IncidentType.BIKE, null);
 

@@ -78,8 +78,11 @@ public class CrearIncidenciaPersonalizadaExitoUITest {
         onView(withId(R.id.btBotonIncidencia)).check(matches(isDisplayed()));
         onView(withId(R.id.btBotonIncidencia)).perform(click());
 
-        Context context = ApplicationProvider.getApplicationContext();
-        String[] expectedSpOptions = context.getResources().getStringArray(R.array.incidencias_options);
+        String[] expectedSpOptions = new String[4];
+        expectedSpOptions[0] = "Select an incidence...";
+        expectedSpOptions[1] = "Damaged station";
+        expectedSpOptions[2] = "Defective bike";
+        expectedSpOptions[3] = "Other issue";
 
         for (String option : expectedSpOptions) {
             onData(allOf(is(instanceOf(String.class)), is(option))).check(matches(isDisplayed()));
@@ -87,10 +90,10 @@ public class CrearIncidenciaPersonalizadaExitoUITest {
 
         onData(allOf(is(instanceOf(String.class)), is(expectedSpOptions[3]))).perform(click());
 
-        String expectedTitle = context.getString(R.string.other_issue_title);
-        String expectedMessage = context.getString(R.string.other_issue_message);
-        String expectedPositiveButtonText = context.getString(R.string.confirm);
-        String expectedNegativeButtonText = context.getString(R.string.cancel);
+        String expectedTitle = "Other issue";
+        String expectedMessage = "Describe the station problem:";
+        String expectedPositiveButtonText = "Confirm";
+        String expectedNegativeButtonText = "Cancel";
 
         onView(withText(expectedTitle)).inRoot(isDialog()).check(matches(isDisplayed()));
         onView(withText(expectedMessage)).inRoot(isDialog()).check(matches(isDisplayed()));
