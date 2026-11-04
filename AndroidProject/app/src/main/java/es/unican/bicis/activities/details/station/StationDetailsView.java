@@ -76,26 +76,7 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
      */
     @Override
     public void init() {
-        // CONFIGURACIÓN DE UI (Toolbar y Notch)
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar bar = getSupportActionBar();
-        assert bar != null;
-        bar.setDisplayHomeAsUpEnabled(true);
-
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        ConstraintLayout mainLayout = findViewById(R.id.main);
-        ViewCompat.setOnApplyWindowInsetsListener(mainLayout, (v, windowInsets) -> {
-            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-            toolbar.setPadding(toolbar.getPaddingLeft(), insets.top, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
-            ViewGroup.LayoutParams params = toolbar.getLayoutParams();
-            int baseHeight = getResources().getDimensionPixelSize(androidx.appcompat.R.dimen.abc_action_bar_default_height_material);
-            params.height = baseHeight + insets.top;
-            toolbar.setLayoutParams(params);
-            v.setPadding(insets.left, 0, insets.right, insets.bottom);
-            return WindowInsetsCompat.CONSUMED;
-        });
-
+        configurarUI();
         //Cargar y mostrar los valores de los datos de la estacion
         TextView tvStationName = findViewById(R.id.tvStName);
         TextView tvLatitude = findViewById(R.id.tvLatDisplay);
@@ -138,6 +119,40 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
             Toast.makeText(this, R.string.loadErrorStation, Toast.LENGTH_LONG).show();
         }
 
+        configurarSpinnerYAlertDialog();
+
+    }
+
+    /**
+     * Private method for configuring the UI
+     */
+    private void configurarUI() {
+        // CONFIGURACIÓN DE UI (Toolbar y Notch)
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar bar = getSupportActionBar();
+        assert bar != null;
+        bar.setDisplayHomeAsUpEnabled(true);
+
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        ConstraintLayout mainLayout = findViewById(R.id.main);
+        ViewCompat.setOnApplyWindowInsetsListener(mainLayout, (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            toolbar.setPadding(toolbar.getPaddingLeft(), insets.top, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
+            ViewGroup.LayoutParams params = toolbar.getLayoutParams();
+            int baseHeight = getResources().getDimensionPixelSize(androidx.appcompat.R.dimen.abc_action_bar_default_height_material);
+            params.height = baseHeight + insets.top;
+            toolbar.setLayoutParams(params);
+            v.setPadding(insets.left, 0, insets.right, insets.bottom);
+            return WindowInsetsCompat.CONSUMED;
+        });
+
+    }
+
+    /**
+     * Private method for configuring the Spinner and Alert Dialog
+     */
+    private void configurarSpinnerYAlertDialog(){
         // CONFIGURAR SPINNER Y ALERT DIALOG
         ImageButton btBotonIncidencia = findViewById(R.id.btBotonIncidencia);
         Spinner spIncidencias = findViewById(R.id.spIncidencias);
@@ -214,12 +229,17 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
             });
         }
     }
-
+    /**
+     * @see IStationDetailsContract.View#showLoadError()
+     */
     @Override
     public void showLoadError() {
         Toast.makeText(this, R.string.loadErrorIncidences, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * @see IStationDetailsContract.View#showIncidences(List)
+     */
     @Override
     public void showIncidences(List<Incident> incidents) {
         ListView list = findViewById(R.id.lvIncidences);
