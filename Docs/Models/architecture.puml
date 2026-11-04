@@ -60,6 +60,8 @@ interface IMainContract.View {
     + showNetworks(networks : List<Network>)
     + showLoadCorrect(networks : int)
     + showLoadError()
+    + showRedError()
+    + getContext() : Context
     + showNetworkDetails(network : Network)
     + showInfoActivity()
 }

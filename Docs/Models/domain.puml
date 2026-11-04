@@ -35,11 +35,11 @@ class Station {
 }
 
 class Incident {
-    - id: int
-    - idStation: String
-    - amount: int
-    - type: String
-    - typeId: IncidentType
+    + id: int
+    + idStation: String
+    + amount: int
+    + type: String
+    + typeId: IncidentType
 }
 
 enum IncidentType {
