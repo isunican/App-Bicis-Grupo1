@@ -175,7 +175,9 @@ public class MockLocationManager {
         Location lastKnown = locationManager.getLastKnownLocation(PROVIDER_NAME);
         while (!isMockedPosition(lastKnown) && SystemClock.elapsedRealtime() < deadline) {
             locationManager.setTestProviderLocation(PROVIDER_NAME, lastMockedLocation);
-            Thread.sleep(POLL_INTERVAL_MS);
+            java.util.concurrent.locks.LockSupport.parkNanos(
+                    java.util.concurrent.TimeUnit.MILLISECONDS.toNanos(POLL_INTERVAL_MS)
+            );
             lastKnown = locationManager.getLastKnownLocation(PROVIDER_NAME);
         }
         return isMockedPosition(lastKnown) ? lastKnown : null;

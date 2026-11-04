@@ -65,29 +65,25 @@ public class StationsArrayAdapter extends BaseAdapter {
         }
 
         // name
-        {
-            TextView tvName = convertView.findViewById(R.id.tvName);
-            String name = station.getName();
-            if (name == null) {
-                name = context.getString(R.string.noData);
-            }
-            tvName.setText(name);
+        TextView tvName = convertView.findViewById(R.id.tvName);
+        String name = station.getName();
+        if (name == null) {
+            name = context.getString(R.string.noData);
         }
+        tvName.setText(name);
 
         // distance
-        {
-            String distanceString = context.getString(R.string.noData);
-            if (Utils.isLocationEnabled(context)) {
-                float distance = LocationUtils.calcularDistanciaA(station.getLatitude(), station.getLongitude());
-                if (distance == -1){
-                    distanceString = context.getString(R.string.noData);
-                } else {
-                    distanceString = String.format(java.util.Locale.US, "%.1f Km", distance);
-                }
+        String distanceString = context.getString(R.string.noData);
+        if (Utils.isLocationEnabled(context)) {
+            float distance = LocationUtils.calcularDistanciaA(station.getLatitude(), station.getLongitude());
+            if (distance == -1){
+                distanceString = context.getString(R.string.noData);
+            } else {
+                distanceString = String.format(java.util.Locale.US, "%.1f Km", distance);
             }
-            TextView tvDistance = convertView.findViewById(R.id.tvDistance);
-            tvDistance.setText(distanceString);
         }
+        TextView tvDistance = convertView.findViewById(R.id.tvDistance);
+        tvDistance.setText(distanceString);
 
         return convertView;
     }

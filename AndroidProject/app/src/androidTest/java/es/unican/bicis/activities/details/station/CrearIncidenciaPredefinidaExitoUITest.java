@@ -42,7 +42,7 @@ import es.unican.bicis.utils.DatabaseTestUtils;
 @HiltAndroidTest
 public class CrearIncidenciaPredefinidaExitoUITest {
 
-    private final static String STATION_ID = "0a7638aa73949d3c8742f13f56cedff0";
+    private static final String STATION_ID = "0a7638aa73949d3c8742f13f56cedff0";
 
     private AppDatabase db;
 
