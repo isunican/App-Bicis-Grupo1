@@ -66,12 +66,6 @@ public class FiltrarPorDistanciaSinEstacionesEnRangoUITest {
         );
     }
 
-    /*
-    @After
-    public void tearDown() {
-        mockLocationManager.tearDown();
-    }
-    */
     private View decorView;
 
 
@@ -89,6 +83,5 @@ public class FiltrarPorDistanciaSinEstacionesEnRangoUITest {
         // 8. Se verifica que no muestran estaciones y se muestra el mensaje de error correspondiente
         onView(withId(R.id.lvStations)).check(matches(withListSize(0)));
         //Se deberia de de comprobar el que salta el Toast correspondiente
-        //onView(withText(R.string.noStationsInRange)).inRoot(RootMatchers.withDecorView(not(decorView))).check(matches(isDisplayed()));
     }
 }

@@ -64,12 +64,6 @@ public class FiltrarPorDistanciaExitoUITest {
         assertNotNull("The application did not receive any GPS update",
                 mockLocationManager.awaitMockedLocation(LOCATION_TIMEOUT_MS));
     }
-/*
-    @After
-    public void tearDown() {
-        mockLocationManager.tearDown();
-    }
-*/
 
     @Test
     public void testPrueba00_FiltradoExito() {
