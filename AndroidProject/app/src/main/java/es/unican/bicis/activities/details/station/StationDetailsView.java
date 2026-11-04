@@ -196,22 +196,12 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
                             final EditText input = new EditText(StationDetailsView.this);
                             builder.setView(input);
 
-                            builder.setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    String textoPersonalizado = input.getText().toString();
-
-                                    // Enviamos el texto personalizado para añadir la incidencia al presenter
-                                    presenter.registrarIncidencia(IncidentType.OTHER, textoPersonalizado);
-                                }
+                            builder.setPositiveButton(getString(R.string.confirm), (dialog, which) -> {
+                                String textoPersonalizado = input.getText().toString();
+                                presenter.registrarIncidencia(IncidentType.OTHER, textoPersonalizado);
                             });
 
-                            builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            });
+                            builder.setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.cancel());
 
                             builder.setOnCancelListener(dialog -> spIncidencias.setSelection(0));
                             builder.show();
