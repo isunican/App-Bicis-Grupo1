@@ -26,6 +26,9 @@ class MainView {
 
 class MainPresenter {
     -load()
+    - processFavoriteSelection(network : Network)
+    - buildSortedNetworkList(networks : List<Network>, favoriteIds : Set<String>) : List<Network>
+    - updateUiElements(network : Network, favoriteIds : Set<String>, sortedNetworks : List<Network>)
 }
 
 class InfoView
@@ -40,16 +43,13 @@ class RedDetailsPresenter {
     -load()
 }
 
-class AppDatabase {
-    + favouriteDAO() : IFavouriteDAO
-    + getDatabase(context : Context) : AppDatabase
-}
-
 class ApiNetworksRepository
 class JsonNetworksRepository
 
 interface IFavouriteDAO {
     + insertarFavorito(favorito : Favourite)
+    + obtenerFavoritos() : List<Favourite> 
+    + obtenerNetworkIdsFavoritos() : List<String> 
 }
 
 interface IMainContract.View {
