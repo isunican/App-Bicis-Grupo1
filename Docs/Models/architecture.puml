@@ -40,6 +40,8 @@ class MainPresenter {
 class InfoView
 
 class StationDetailsView{
+    - configurarUI()
+    - configurarSpinnerYAlertDialog()
 }
 
 class StationDetailsPresenter {
@@ -60,8 +62,8 @@ class JsonNetworksRepository
 
 interface IFavouriteDAO {
     + insertarFavorito(favorito : Favourite)
-    + obtenerFavoritos() : List<Favourite> 
-    + obtenerNetworkIdsFavoritos() : List<String> 
+    + obtenerFavoritos() : List<Favourite>
+    + obtenerNetworkIdsFavoritos() : List<String>
 }
 
 interface IMainContract.View {

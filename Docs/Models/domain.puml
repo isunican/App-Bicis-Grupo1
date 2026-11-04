@@ -51,7 +51,7 @@ enum IncidentType {
     STATION("Estación dañada")
     OTHER("")
     --
-    - descripcion : String
+    - descripcion: String
 }
 
 Network *--> "1" Location : location
