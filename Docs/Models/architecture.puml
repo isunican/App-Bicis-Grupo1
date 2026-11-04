@@ -25,7 +25,7 @@ StationDetailsView ..|> IStationDetailsContract.View
 StationDetailsPresenter ..|> IStationDetailsContract.Presenter
 StationDetailsView --> StationDetailsPresenter : presenter
 StationDetailsPresenter --> StationDetailsView : view
-StationDetailsPresenter --> IIncidentDAO : <<use>>
+StationDetailsPresenter ..> IIncidentDAO : <<use>>
 
 
 class MainView {
@@ -71,6 +71,8 @@ interface IMainContract.View {
     + showNetworks(networks : List<Network>)
     + showLoadCorrect(networks : int)
     + showLoadError()
+    + showRedError()
+    + getContext() : Context
     + showNetworkDetails(network : Network)
     + showInfoActivity()
     + getFavouriteDAO() : IFavouriteDAO
@@ -79,7 +81,7 @@ interface IMainContract.View {
 }
 
 interface IMainContract.Presenter {
-    + init(View view)
+    + init(view : View)
     + onNetworkClicked(network : Network)
     + onMenuInfoClicked()
     + onFavoriteClicked(network : Network)
@@ -89,6 +91,7 @@ interface IRedDetailsContract.View {
     + init()
     + getNetworksRepository() : INetworksRepository
     + showStations(stations : List<Station>)
+    + showNoStations()
     + showLoadCorrect(stations : int)
     + showLoadError()
     + showRedError()
@@ -99,9 +102,9 @@ interface IRedDetailsContract.View {
 }
 
 interface IRedDetailsContract.Presenter {
-    + init(View view)
-    + onStationClicked(Station station)
-    + onFilterClick(distance : String, filter : DistanceFilter)
+    + init(view : View, network : Network)
+    + onStationClicked(station : Station)
+    + onFilterClicked(distance : String, filter : DistanceFilter)
 }
 
 interface INetworksRepository {
@@ -115,7 +118,7 @@ interface NetworksCallback {
 }
 
 interface NetworkDetailsCallback {
-    + onSuccess(network : Networ)
+    + onSuccess(network : Network)
     + onFailure(e : Throwable)
 }
 
@@ -125,30 +128,24 @@ enum DistanceFilter {
 }
 
 interface IStationDetailsContract.Presenter {
-    + init(View view, Station station, AppDatabase db)
-    + registrarIncidencia(IncidentType type, String texto)
+    + init(view : View, station : Station, db : AppDatabase)
+    + registrarIncidencia(type : IncidentType, texto : String)
     + onDestroy()
 }
 
 interface IStationDetailsContract.View {
     + init()
+    + showIncidences(incidences : List<Incident>)
+    + showLoadError()
     + showDatabaseError()
-    + Context getContext(): Context
+    + getContext(): Context
     + showEmptyIssueError()
     + onDestroy()
 }
 
 interface IIncidentDAO {
-    + insertarIncidencia(Incident incidencia) : long
-    + obtenerIncidenciasPorEstacion(String id) : List<Incident>
-}
-
-enum IncidentType {
-    BIKE("Bicicleta defectuosa")
-    STATION("Estación dañada")
-    OTHER("")
-    --
-    - description : String
+    + insertarIncidencia(incidencia : Incident) : long
+    + obtenerIncidenciasPorEstacion(id : String) : List<Incident>
 }
 
 @enduml
