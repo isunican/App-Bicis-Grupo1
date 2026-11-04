@@ -111,9 +111,7 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
         }
         Incident nuevaIncidencia = new Incident(station.getId(), IncidentType.OTHER, textoPersonalizado);
 
-        executorService.execute(new Runnable() {
-            @Override
-            public void run() {
+        executorService.execute(() -> {
                 try {
                     // Intentamos guardar en la base de datos
                     db.incidenciaDao().insertarIncidencia(nuevaIncidencia);
@@ -125,7 +123,7 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
                     }
                 }
             }
-        });
+        );
     }
 
     /**
