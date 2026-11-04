@@ -39,7 +39,7 @@ public class VerIncidenciasEstacionSinIncidenciasUITest {
     @Before
     public void setUp() {
         // Initializes the app database with test data
-        AppDatabase db = DatabaseTestUtils.setInMemoryDatabase();
+        DatabaseTestUtils.setInMemoryDatabase();
 
         // In this case, the database will be empty, so we don't need to insert any data
     }
