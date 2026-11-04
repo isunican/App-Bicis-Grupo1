@@ -24,7 +24,7 @@ import es.unican.bicis.model.IncidentType;
 public class IncidentArrayAdapter extends BaseAdapter {
 
     /** The list of Incidences to render */
-    private final List<Incident> Incidences;
+    private final List<Incident> incidences;
 
     /** Context of the application */
     private final Context context;
@@ -36,18 +36,18 @@ public class IncidentArrayAdapter extends BaseAdapter {
      */
     public IncidentArrayAdapter(@NonNull Context context, @NonNull List<Incident> objects) {
         // we know the parameters are not null because of the @NonNull annotation
-        this.Incidences = objects;
+        this.incidences = objects;
         this.context = context;
     }
 
     @Override
     public int getCount() {
-        return Incidences.size();
+        return incidences.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return Incidences.get(position);
+        return incidences.get(position);
     }
 
     @Override
@@ -69,50 +69,44 @@ public class IncidentArrayAdapter extends BaseAdapter {
         TextView tvAmount = convertView.findViewById(R.id.tvAmount);
 
         // tipo
-        {
-            String type = incidence.getType();
-            if (type == null) {
-                type = context.getString(R.string.loadErrorIncidences);
-            }
-            tvType.setText(type);
+        String type = incidence.getType();
+        if (type == null) {
+            type = context.getString(R.string.loadErrorIncidences);
         }
+        tvType.setText(type);
 
         // amount
-        {
-            int amount = incidence.getAmount();
-            String amountText;
-            if (amount == -1) {
-                amountText = context.getString(R.string.loadErrorIncidences);
-            } else {
-                amountText = Integer.toString(amount);
-            }
-            tvAmount.setText(amountText);
+        int amount = incidence.getAmount();
+        String amountText;
+        if (amount == -1) {
+            amountText = context.getString(R.string.loadErrorIncidences);
+        } else {
+            amountText = Integer.toString(amount);
         }
+        tvAmount.setText(amountText);
 
         // color
-        {
-            IncidentType type = incidence.getTypeId();
-            if (type != null) {
-                int colorTexto = 0;
-                int colorFondo = 0;
-                switch (type) {
-                   case BIKE:
-                       colorTexto = context.getColor(R.color.colorTextoBici);
-                       colorFondo = context.getColor(R.color.colorBici);
-                       break;
-                   case STATION:
-                       colorTexto = context.getColor(R.color.colorTextoEstacion);
-                       colorFondo = context.getColor(R.color.colorEstacion);
-                       break;
-                   case OTHER:
-                       colorTexto = context.getColor(R.color.colorTextoOtros);
-                       colorFondo = context.getColor(R.color.colorOtros);
-                       break;
-               }
-                tvType.setTextColor(colorTexto);
-                tvAmount.setTextColor(colorTexto);
-                convertView.setBackgroundColor(colorFondo);
+        IncidentType typeId = incidence.getTypeId();
+        if (typeId != null) {
+            int colorTexto = 0;
+            int colorFondo = 0;
+            switch (typeId) {
+                case BIKE:
+                    colorTexto = context.getColor(R.color.colorTextoBici);
+                    colorFondo = context.getColor(R.color.colorBici);
+                    break;
+                case STATION:
+                    colorTexto = context.getColor(R.color.colorTextoEstacion);
+                    colorFondo = context.getColor(R.color.colorEstacion);
+                    break;
+                case OTHER:
+                    colorTexto = context.getColor(R.color.colorTextoOtros);
+                    colorFondo = context.getColor(R.color.colorOtros);
+                    break;
             }
+            tvType.setTextColor(colorTexto);
+            tvAmount.setTextColor(colorTexto);
+            convertView.setBackgroundColor(colorFondo);
         }
 
         return convertView;
