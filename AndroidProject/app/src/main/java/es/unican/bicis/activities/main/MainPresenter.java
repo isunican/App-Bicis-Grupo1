@@ -79,6 +79,10 @@ public class MainPresenter implements IMainContract.Presenter {
         executor.execute(() -> processFavoriteSelection(network));
     }
 
+    /**
+     * Procesa la selección de marcar una red como favorita.
+     * @param network la red seleccionada
+     */
     private void processFavoriteSelection(Network network) {
         if (view == null) return;
 
@@ -93,6 +97,14 @@ public class MainPresenter implements IMainContract.Presenter {
         mainHandler.post(() -> updateUiElements(network, favoriteIds, sortedNetworks));
     }
 
+    /**
+     * Construye una nueva lista de redes ordenadas, situando en primer lugar las redes
+     * marcadas como favoritas y a continuación el resto de redes.
+     *
+     * @param networks lista original de redes de bicicletas
+     * @param favoriteIds conjunto de identificadores de las redes favoritas
+     * @return lista de redes reordenada colocando las favoritas al principio
+     */
     private List<Network> buildSortedNetworkList(List<Network> networks, Set<String> favoriteIds) {
         if (networks == null || networks.isEmpty()) {
             return new ArrayList<>();
@@ -115,6 +127,12 @@ public class MainPresenter implements IMainContract.Presenter {
         return favoritas;
     }
 
+    /**
+     * Actualiza los elementos de la interfaz de usuario con los nuevos datos.
+     * @param network red marcada como favorita
+     * @param favoriteIds conjunto de identificadores de las redes favoritas
+     * @param sortedNetworks lista de redes reordenada
+     */
     private void updateUiElements(Network network, Set<String> favoriteIds, List<Network> sortedNetworks) {
         if (view == null) return;
 
