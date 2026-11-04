@@ -152,7 +152,7 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
     /**
      * Private method for configuring the Spinner and Alert Dialog
      */
-    private void configurarSpinnerYAlertDialog(){
+    private void configurarSpinnerYAlertDialog() {
         // CONFIGURAR SPINNER Y ALERT DIALOG
         ImageButton btBotonIncidencia = findViewById(R.id.btBotonIncidencia);
         Spinner spIncidencias = findViewById(R.id.spIncidencias);
