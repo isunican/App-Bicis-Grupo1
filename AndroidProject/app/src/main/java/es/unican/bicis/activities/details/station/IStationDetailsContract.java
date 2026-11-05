@@ -58,7 +58,7 @@ public interface IStationDetailsContract {
 
         /**
          * Initialize the view. Typically this should initialize all the listeners in the view.
-         * Only the Presenter should call this method
+         * Only the Presenter should call this method.
          */
         public void init();
 
