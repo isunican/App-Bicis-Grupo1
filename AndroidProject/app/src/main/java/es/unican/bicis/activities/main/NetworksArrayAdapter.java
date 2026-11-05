@@ -74,8 +74,8 @@ public class NetworksArrayAdapter extends BaseAdapter {
      * Constructs an adapter to handle a list of networks with a favorite listener and favorite network IDs
      * @param context the application context
      * @param objects the list of networks
-     * @param favoriteClickListener the listener for favorite clicks
-     * @param favoriteNetworkIds set of favorite network IDs
+     * @param favoriteClickListener the listener for favorite clicks.
+     * @param favoriteNetworkIds set of favorite network IDs.
      */
     public NetworksArrayAdapter(@NonNull Context context, @NonNull List<Network> objects,
                                 @Nullable OnFavoriteClickListener favoriteClickListener,
