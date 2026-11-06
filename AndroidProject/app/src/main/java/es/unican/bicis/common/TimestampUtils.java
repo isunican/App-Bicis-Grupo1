@@ -12,6 +12,11 @@ import java.util.Locale;
 public class TimestampUtils {
 
     /**
+     * Private constructor to prevent instantiation.
+     */
+    private TimestampUtils() {}
+
+    /**
      * Formats a timestamp for the user display
      * @param rawTimestamp raw timestamp string
      * @return formatted timestamp string

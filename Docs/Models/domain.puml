@@ -16,6 +16,10 @@ class Location {
     - country : Strings
 }
 
+class Favourite {
+    + networkId : String
+}
+
 class NetworksResponse {
 
 }
@@ -32,6 +36,22 @@ class Station {
     - timestamp : String
     - freeBikes : int
     - emptySlots : int
+}
+
+class Incident {
+    + id: int
+    + idStation: String
+    + amount: int
+    + type: String
+    + typeId: IncidentType
+}
+
+enum IncidentType {
+    BIKE("Bicicleta defectuosa")
+    STATION("Estación dañada")
+    OTHER("")
+    --
+    - descripcion: String
 }
 
 Network *--> "1" Location : location

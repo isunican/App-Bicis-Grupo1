@@ -28,5 +28,30 @@
     <string name="km" translatable="false">Km</string>
     <string name="filter_above_kms">Filters at a distance greater than the one entered</string>
     <string name="filter_below_kms">Filters at a distance less than the one entered</string>
+    <string name="more_options">More options</string>
+    <string name="marked_as_favorite">%s marked as favorite</string>
     <string name="id" translatable="false">ID:</string>
+    <string name="Incidences">Incidences:</string>
+    <string name="IncidenciaBicis">Broken bicycle</string>
+    <string name="IncidenciaEstacion">Broken station</string>
+    <string name="IncidenciaOtro">Other problem:</string>
+    <string name="loadErrorIncidences">Failed to load incidences</string>
+    <string name="incidencia">Incident</string>
+    <string name="incidencia_registrada">Incident reported</string>
+    <string name="other_issue_title">Other issue</string>
+    <string name="other_issue_message">Describe the station problem:</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="empty_issue_error">You can\'t let the text field empty</string>
+    <string name="databaseError">An error has ocurred</string>
+
+
+
+    <string-array name="incidencias_options">
+        <item>Select an incidence...</item>
+        <item>Damaged station</item>
+        <item>Defective bike</item>
+        <item>Other issue</item>
+    </string-array>
+    <string name="mark_as_favorite">Mark as favorite</string>
 </resources>

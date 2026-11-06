@@ -12,4 +12,6 @@ Docs/Models/plantuml.jar
 # Archivo generado al abrir Andoid studio
 gradle-daemon-jvm.properties
 
-
+# Words
+.docx
+.tmp
