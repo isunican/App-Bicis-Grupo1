@@ -75,10 +75,10 @@ public class FiltrarPorDistanciaSinEstacionesEnRangoUITest {
         onView(withText("TUeBICI")).perform(click());
         
         // 1 y 2. El técnico introduce 0Km en la aplicación
-        onView(withId(R.id.etKmFilter)).perform(clearText(), typeText("0"), closeSoftKeyboard());
+        onView(withId(R.id.etMinKmFilter)).perform(clearText(), typeText("0"), closeSoftKeyboard());
 
-        // 4 y 5. El técnico selecciona la opción de ver a una distancia inferior
-        onView(withId(R.id.btnFilterLessThanKm)).perform(click());
+        // 4 y 5. El técnico selecciona la opción de filtrar por distancia
+        onView(withId(R.id.btnFilterMoreThanKm)).perform(click());
 
         // 8. Se verifica que no muestran estaciones y se muestra el mensaje de error correspondiente
         onView(withId(R.id.lvStations)).check(matches(withListSize(0)));
