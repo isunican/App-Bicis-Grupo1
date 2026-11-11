@@ -40,6 +40,9 @@
     <string name="cancel">Cancelar</string>
     <string name="empty_issue_error">No puedes dejar el texto vacío</string>
     <string name="databaseError">Ha ocurrido un error</string>
+    <string name="empty_search_error">No puede dejar el texto vacío</string>
+    <string name="emoji_search_error">No puede introducir emoticonos en la cadena</string>
+    <string name="no_networks_found_error">No existen redes que contengan la cadena introducida en su nombre</string>
 
 
     <string-array name="incidencias_options">

@@ -48,6 +48,13 @@ public interface IMainContract {
          */
         public void onFavoriteClicked(Network network);
 
+        /**
+         * The presenter is informed that the user wants to filter networks by name.
+         * Only the View should call this method
+         * @param query search string introduced by the user
+         */
+        public void onFilterClicked(String query);
+
     }
 
     /**
@@ -143,6 +150,24 @@ public interface IMainContract {
          * @param favoriteNetworkIds set of favorite network IDs
          */
         public void updateFavorites(Set<String> favoriteNetworkIds);
+
+        /**
+         * The view is requested to display a notification indicating that the search text is empty.
+         * Only the Presenter should call this method
+         */
+        public void showEmptySearchError();
+
+        /**
+         * The view is requested to display a notification indicating that the search text contains emojis.
+         * Only the Presenter should call this method
+         */
+        public void showEmojiSearchError();
+
+        /**
+         * The view is requested to display a notification indicating that no networks match the search text.
+         * Only the Presenter should call this method
+         */
+        public void showNoNetworksFoundError();
 
     }
 }

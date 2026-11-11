@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -172,6 +173,22 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             Network network = (Network) parent.getItemAtPosition(position);
             presenter.onNetworkClicked(network);
         });
+
+        SearchView searchView = findViewById(R.id.searchView);
+        if (searchView != null) {
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    presenter.onFilterClicked(query);
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    return false;
+                }
+            });
+        }
     }
 
     /**
@@ -277,6 +294,30 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         if (list != null && list.getAdapter() instanceof NetworksArrayAdapter) {
             ((NetworksArrayAdapter) list.getAdapter()).setFavoriteNetworkIds(this.favoriteNetworkIds);
         }
+    }
+
+    /**
+     * @see IMainContract.View#showEmptySearchError()
+     */
+    @Override
+    public void showEmptySearchError() {
+        Toast.makeText(this, R.string.empty_search_error, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @see IMainContract.View#showEmojiSearchError()
+     */
+    @Override
+    public void showEmojiSearchError() {
+        Toast.makeText(this, R.string.emoji_search_error, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @see IMainContract.View#showNoNetworksFoundError()
+     */
+    @Override
+    public void showNoNetworksFoundError() {
+        Toast.makeText(this, R.string.no_networks_found_error, Toast.LENGTH_SHORT).show();
     }
 
     /**
