@@ -27,6 +27,7 @@
         android:elevation="5dp"
         android:layoutDirection="rtl"
         android:textDirection="ltr"
+        android:iconifiedByDefault="false"
         app:layout_constraintBottom_toTopOf="@+id/lvNetworks"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
