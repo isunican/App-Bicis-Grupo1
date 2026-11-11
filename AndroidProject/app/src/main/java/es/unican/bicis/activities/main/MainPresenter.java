@@ -87,31 +87,40 @@ public class MainPresenter implements IMainContract.Presenter {
     public void onFilterClicked(String query) {
         if (view == null) return;
 
+        //En caso de que la cadenas sea nula o vacia la mostramos un error
         if (query == null || query.trim().isEmpty()) {
             view.showEmptySearchError();
             return;
         }
 
+        //Eliminamos los espacios en blanco
         String trimmedQuery = query.trim();
 
+        //Si contiene emoticonos mostramos un error
         if (containsEmoji(trimmedQuery)) {
             view.showEmojiSearchError();
             return;
         }
 
+        //Si no hay redes que poder cargar mostramos error
         if (lastLoadedNetworks == null || lastLoadedNetworks.isEmpty()) {
             view.showNoNetworksFoundError();
             return;
         }
 
+        //Convertimos la cadena a minusculas para comparar
         String lowerQuery = trimmedQuery.toLowerCase();
 
+        //Filtramos las redes entre las que encajen perfectamente y parcialmente
         List<Network> exactMatches = new ArrayList<>();
         List<Network> partialMatches = new ArrayList<>();
 
+        //Recorremos todas las redes y las comparamos
         for (Network net : lastLoadedNetworks) {
+            // Evitamos redes nulas o sin nombre
             if (net == null || net.getName() == null) continue;
 
+            // Comprobamos si el nombre de la red contiene la cadena
             String name = net.getName();
             if (name.equalsIgnoreCase(trimmedQuery)) {
                 exactMatches.add(net);
@@ -120,6 +129,7 @@ public class MainPresenter implements IMainContract.Presenter {
             }
         }
 
+        //Si no hay coincidencias mostramos error
         if (exactMatches.isEmpty() && partialMatches.isEmpty()) {
             view.showNoNetworksFoundError();
             return;
@@ -129,7 +139,7 @@ public class MainPresenter implements IMainContract.Presenter {
         List<Network> filteredNetworks = new ArrayList<>(exactMatches);
         filteredNetworks.addAll(partialMatches);
 
-        // Límite de 20 redes (Prueba 01)
+        // Límite de 20 redes
         if (filteredNetworks.size() > 20) {
             filteredNetworks = new ArrayList<>(filteredNetworks.subList(0, 20));
         }
@@ -154,6 +164,8 @@ public class MainPresenter implements IMainContract.Presenter {
         return false;
     }
 
+
+    //Codigos para comparar si es un emoji
     private boolean isEmojiCodePoint(int codePoint) {
         if ((codePoint >= 0x1F600 && codePoint <= 0x1F64F) || // Emoticons
             (codePoint >= 0x1F300 && codePoint <= 0x1F5FF) || // Misc Symbols and Pictographs
