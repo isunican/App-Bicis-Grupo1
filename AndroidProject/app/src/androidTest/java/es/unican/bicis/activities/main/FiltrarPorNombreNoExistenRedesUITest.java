@@ -11,11 +11,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
-import static org.hamcrest.core.AllOf.allOf;
-import static org.mockito.AdditionalMatchers.not;
 
-import static es.unican.bicis.utils.Matchers.withListSize;
+import static org.hamcrest.core.AllOf.allOf;
 
 import android.widget.EditText;
 
@@ -55,8 +52,8 @@ public class FiltrarPorNombreNoExistenRedesUITest {
         onView(allOf(isDescendantOfA(withId(R.id.searchView)), isAssignableFrom(EditText.class)))
                 .perform(clearText(), typeText("Inexistente"), pressImeActionButton());
         //como no existe se verifica que en primera posicion no esta la red que mas coincida porque ninguna coincide
-        //es decir el nombre de la red no coincide
+        //es decir el nombre de la red no coincide o coincide con otra red
         onData(anything()).inAdapterView(withId(R.id.lvNetworks)).atPosition(0)
-                .onChildView(withId(R.id.tvName)).check(matches(not(withText("Inexistente"))));
+                .onChildView(withId(R.id.tvName)).check(matches(withText("Bicing")));
     }
 }
