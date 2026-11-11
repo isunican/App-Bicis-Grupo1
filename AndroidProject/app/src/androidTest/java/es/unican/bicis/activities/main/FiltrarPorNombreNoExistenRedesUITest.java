@@ -57,6 +57,6 @@ public class FiltrarPorNombreNoExistenRedesUITest {
         //como no existe se verifica que en primera posicion no esta la red que mas coincida porque ninguna coincide
         //es decir el nombre de la red no coincide
         onData(anything()).inAdapterView(withId(R.id.lvNetworks)).atPosition(0)
-                .onChildView(withId(R.id.tvName)).check(not(matches(withText("Inexistente"))));
+                .onChildView(withId(R.id.tvName)).check(matches(not(withText("Inexistente"))));
     }
 }
