@@ -19,18 +19,35 @@ RedDetailsView --> INetworksRepository : repository
 RedDetailsView --> RedDetailsPresenter : presenter
 RedDetailsPresenter --> RedDetailsView : view
 MainView --> IFavouriteDAO : favouriteDAO
-MainView ..> AppDatabase : <<use>>
+
+StationDetailsView ..|> IStationDetailsContract.View
+StationDetailsPresenter ..|> IStationDetailsContract.Presenter
+StationDetailsView --> StationDetailsPresenter : presenter
+StationDetailsPresenter --> StationDetailsView : view
+StationDetailsPresenter ..> IIncidentDAO : <<use>>
+
 
 class MainView {
 }
 
 class MainPresenter {
     -load()
+    - processFavoriteSelection(network : Network)
+    - buildSortedNetworkList(networks : List<Network>, favoriteIds : Set<String>) : List<Network>
+    - updateUiElements(network : Network, favoriteIds : Set<String>, sortedNetworks : List<Network>)
 }
 
 class InfoView
 
-class StationDetailsView
+class StationDetailsView{
+    - configurarUI()
+    - configurarSpinnerYAlertDialog()
+}
+
+class StationDetailsPresenter {
+    -load()
+}
+
 
 class RedDetailsView {
     +onClickFilterMoreThanDistance()
@@ -40,16 +57,13 @@ class RedDetailsPresenter {
     -load()
 }
 
-class AppDatabase {
-    + favouriteDAO() : IFavouriteDAO
-    + getDatabase(context : Context) : AppDatabase
-}
-
 class ApiNetworksRepository
 class JsonNetworksRepository
 
 interface IFavouriteDAO {
     + insertarFavorito(favorito : Favourite)
+    + obtenerFavoritos() : List<Favourite>
+    + obtenerNetworkIdsFavoritos() : List<String>
 }
 
 interface IMainContract.View {
@@ -58,6 +72,8 @@ interface IMainContract.View {
     + showNetworks(networks : List<Network>)
     + showLoadCorrect(networks : int)
     + showLoadError()
+    + showRedError()
+    + getContext() : Context
     + showNetworkDetails(network : Network)
     + showInfoActivity()
     + getFavouriteDAO() : IFavouriteDAO
@@ -66,7 +82,7 @@ interface IMainContract.View {
 }
 
 interface IMainContract.Presenter {
-    + init(View view)
+    + init(view : View)
     + onNetworkClicked(network : Network)
     + onMenuInfoClicked()
     + onFavoriteClicked(network : Network)
@@ -76,6 +92,7 @@ interface IRedDetailsContract.View {
     + init()
     + getNetworksRepository() : INetworksRepository
     + showStations(stations : List<Station>)
+    + showNoStations()
     + showLoadCorrect(stations : int)
     + showLoadError()
     + showRedError()
@@ -86,9 +103,9 @@ interface IRedDetailsContract.View {
 }
 
 interface IRedDetailsContract.Presenter {
-    + init(View view)
-    + onStationClicked(Station station)
-    + onFilterClick(distance : String, filter : DistanceFilter)
+    + init(view : View, network : Network)
+    + onStationClicked(station : Station)
+    + onFilterClicked(distance : String, filter : DistanceFilter)
 }
 
 interface INetworksRepository {
@@ -102,13 +119,34 @@ interface NetworksCallback {
 }
 
 interface NetworkDetailsCallback {
-    + onSuccess(network : Networ)
+    + onSuccess(network : Network)
     + onFailure(e : Throwable)
 }
 
 enum DistanceFilter {
     LESS_THAN
     MORE_THAN
+}
+
+interface IStationDetailsContract.Presenter {
+    + init(view : View, station : Station, db : AppDatabase)
+    + registrarIncidencia(type : IncidentType, texto : String)
+    + onDestroy()
+}
+
+interface IStationDetailsContract.View {
+    + init()
+    + showIncidences(incidences : List<Incident>)
+    + showLoadError()
+    + showDatabaseError()
+    + getContext(): Context
+    + showEmptyIssueError()
+    + onDestroy()
+}
+
+interface IIncidentDAO {
+    + insertarIncidencia(incidencia : Incident) : long
+    + obtenerIncidenciasPorEstacion(id : String) : List<Incident>
 }
 
 @enduml

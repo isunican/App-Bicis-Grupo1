@@ -12,6 +12,9 @@ import org.parceler.Parcel;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Clase que representa una red favorita en la base de datos, almacenando su id.
+ */
 @Entity(tableName = "favoritos")
 @Parcel
 @Getter
@@ -24,6 +27,10 @@ public class Favourite {
     @SerializedName("network_id")
     public String networkId;
 
+    /**
+     * Constructor de la clase Favourite.
+     * @param network La red correspondiente a la red favorita.
+     */
     public Favourite(Network network) {
         if (network != null && network.getId() != null) {
             this.networkId = network.getId();
@@ -32,10 +39,17 @@ public class Favourite {
         }
     }
 
+    /**
+     * Constructor de la clase Favourite.
+     * @param networkId El id de la red correspondiente a la red favorita.
+     */
     public Favourite(@NonNull String networkId) {
         this.networkId = networkId;
     }
 
+    /**
+     * Constructor vacío de la clase Favourite.
+     */
     public Favourite() {
         this.networkId = "";
     }

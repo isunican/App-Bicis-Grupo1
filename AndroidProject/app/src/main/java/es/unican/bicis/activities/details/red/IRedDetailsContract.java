@@ -130,13 +130,5 @@ public interface IRedDetailsContract {
          * Only the Presenter should call this method
          */
         public Context getContext();
-
-        /**
-         * The view is requested to display the detailed view of the given network.
-         * Only the Presenter should call this method
-         * @param network the network
-         */
-        //public void showNetworkDetails(Network network);
-
     }
 }

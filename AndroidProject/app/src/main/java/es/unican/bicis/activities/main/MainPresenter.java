@@ -17,6 +17,7 @@ import es.unican.bicis.model.Network;
 import es.unican.bicis.repository.INetworksRepository;
 import es.unican.bicis.repository.NetworksCallback;
 
+
 /**
  * The presenter of the main activity of the application. It controls {@link MainView}
  */
@@ -26,8 +27,9 @@ public class MainPresenter implements IMainContract.Presenter {
     private IMainContract.View view;
     private List<Network> lastLoadedNetworks;
 
-    private ExecutorService executor = Executors.newSingleThreadExecutor();
-    private Handler mainHandler = new Handler(Looper.getMainLooper());
+    private ExecutorService executor;
+    private Handler mainHandler;
+
 
     /**
      * @see IMainContract.Presenter#init(IMainContract.View)
@@ -37,6 +39,8 @@ public class MainPresenter implements IMainContract.Presenter {
     public void init(IMainContract.View view) {
         this.view = view;
         this.view.init();
+        this.executor = Executors.newSingleThreadExecutor();
+        this.mainHandler = new Handler(Looper.getMainLooper());
         if (Utils.isNetworkAvailable(view.getContext())) {
             load();
         } else {
@@ -67,45 +71,76 @@ public class MainPresenter implements IMainContract.Presenter {
      */
     @Override
     public void onFavoriteClicked(Network network) {
-        if (network != null && network.getId() != null) {
-            executor.execute(() -> {
-                IFavouriteDAO dao = view != null ? view.getFavouriteDAO() : null;
-                if (dao != null) {
-                    dao.insertarFavorito(new Favourite(network));
-                    Set<String> favoriteIds = new HashSet<>(dao.obtenerNetworkIdsFavoritos());
+        // Cláusula de guarda: salimos rápido si los datos son inválidos
+        if (network == null || network.getId() == null) {
+            return;
+        }
 
-                    List<Network> networksToSort = lastLoadedNetworks;
-                    List<Network> sortedNetworks;
-                    if (networksToSort != null) {
-                        List<Network> favoritas = new ArrayList<>();
-                        List<Network> resto = new ArrayList<>();
+        executor.execute(() -> processFavoriteSelection(network));
+    }
 
-                        for (Network net : networksToSort) {
-                            if (net != null && net.getId() != null && favoriteIds.contains(net.getId())) {
-                                favoritas.add(net);
-                            } else if (net != null) {
-                                resto.add(net);
-                            }
-                        }
-                        favoritas.addAll(resto);
-                        sortedNetworks = favoritas;
-                    } else {
-                        sortedNetworks = new ArrayList<>();
-                    }
+    /**
+     * Procesa la selección de marcar una red como favorita.
+     * @param network la red seleccionada
+     */
+    private void processFavoriteSelection(Network network) {
+        if (view == null) return;
 
-                    List<Network> finalNetworks = sortedNetworks;
+        IFavouriteDAO dao = view.getFavouriteDAO();
+        if (dao == null) return;
 
-                    mainHandler.post(() -> {
-                        if (view != null) {
-                            view.showMarkedAsFavorite(network);
-                            view.updateFavorites(favoriteIds);
-                            if (!finalNetworks.isEmpty()) {
-                                view.showNetworks(finalNetworks);
-                            }
-                        }
-                    });
-                }
-            });
+        dao.insertarFavorito(new Favourite(network));
+        Set<String> favoriteIds = new HashSet<>(dao.obtenerNetworkIdsFavoritos());
+
+        List<Network> sortedNetworks = buildSortedNetworkList(lastLoadedNetworks, favoriteIds);
+
+        mainHandler.post(() -> updateUiElements(network, favoriteIds, sortedNetworks));
+    }
+
+    /**
+     * Construye una nueva lista de redes ordenadas, situando en primer lugar las redes
+     * marcadas como favoritas y a continuación el resto de redes.
+     *
+     * @param networks lista original de redes de bicicletas
+     * @param favoriteIds conjunto de identificadores de las redes favoritas
+     * @return lista de redes reordenada colocando las favoritas al principio
+     */
+    private List<Network> buildSortedNetworkList(List<Network> networks, Set<String> favoriteIds) {
+        if (networks == null || networks.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<Network> favoritas = new ArrayList<>();
+        List<Network> resto = new ArrayList<>();
+
+        for (Network net : networks) {
+            if (net == null) continue;
+
+            if (net.getId() != null && favoriteIds.contains(net.getId())) {
+                favoritas.add(net);
+            } else {
+                resto.add(net);
+            }
+        }
+
+        favoritas.addAll(resto);
+        return favoritas;
+    }
+
+    /**
+     * Actualiza los elementos de la interfaz de usuario con los nuevos datos.
+     * @param network red marcada como favorita
+     * @param favoriteIds conjunto de identificadores de las redes favoritas
+     * @param sortedNetworks lista de redes reordenada
+     */
+    private void updateUiElements(Network network, Set<String> favoriteIds, List<Network> sortedNetworks) {
+        if (view == null) return;
+
+        view.showMarkedAsFavorite(network);
+        view.updateFavorites(favoriteIds);
+
+        if (!sortedNetworks.isEmpty()) {
+            view.showNetworks(sortedNetworks);
         }
     }
 

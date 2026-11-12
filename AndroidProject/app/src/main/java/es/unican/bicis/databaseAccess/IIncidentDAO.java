@@ -8,7 +8,6 @@ import androidx.room.Query;
 import es.unican.bicis.model.Incident;
 import java.util.List;
 
-import es.unican.bicis.model.Incident;
 
 /**
  * DAO para acceder a la tabla de incidencias en la base de datos.
@@ -27,7 +26,7 @@ public interface IIncidentDAO {
     /**
      * Obtiene todas las incidencias de una estación.
      * @param id El ID de la estación.
-     * @return Una lista con las incidencias de la estación.
+     * @return Una lista con todas las incidencias de la estación.
      */
     @Query("SELECT " +
             "MIN(id) AS id, " +

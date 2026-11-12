@@ -28,6 +28,11 @@ import android.location.LocationManager;
 public class Utils {
 
     /**
+     * Private constructor to prevent instantiation.
+     */
+    private Utils() {}
+
+    /**
      * Parses a list of bike networks from a json resource file.
      * The json must contain a serialized NetworksResponse object.
      * It uses GSON to parse the json file

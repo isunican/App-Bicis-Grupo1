@@ -33,6 +33,7 @@ import java.util.List;
 import es.unican.bicis.R;
 import es.unican.bicis.common.TimestampUtils;
 import es.unican.bicis.databaseAccess.AppDatabase;
+import es.unican.bicis.model.IncidentType;
 import es.unican.bicis.model.Incident;
 import es.unican.bicis.model.Station;
 
@@ -76,26 +77,7 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
      */
     @Override
     public void init() {
-        // CONFIGURACIÓN DE UI (Toolbar y Notch)
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar bar = getSupportActionBar();
-        assert bar != null;
-        bar.setDisplayHomeAsUpEnabled(true);
-
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        ConstraintLayout mainLayout = findViewById(R.id.main);
-        ViewCompat.setOnApplyWindowInsetsListener(mainLayout, (v, windowInsets) -> {
-            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-            toolbar.setPadding(toolbar.getPaddingLeft(), insets.top, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
-            ViewGroup.LayoutParams params = toolbar.getLayoutParams();
-            int baseHeight = getResources().getDimensionPixelSize(androidx.appcompat.R.dimen.abc_action_bar_default_height_material);
-            params.height = baseHeight + insets.top;
-            toolbar.setLayoutParams(params);
-            v.setPadding(insets.left, 0, insets.right, insets.bottom);
-            return WindowInsetsCompat.CONSUMED;
-        });
-
+        configurarUI();
         //Cargar y mostrar los valores de los datos de la estacion
         TextView tvStationName = findViewById(R.id.tvStName);
         TextView tvLatitude = findViewById(R.id.tvLatDisplay);
@@ -138,6 +120,40 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
             Toast.makeText(this, R.string.loadErrorStation, Toast.LENGTH_LONG).show();
         }
 
+        configurarSpinnerYAlertDialog();
+
+    }
+
+    /**
+     * Private method for configuring the UI
+     */
+    private void configurarUI() {
+        // CONFIGURACIÓN DE UI (Toolbar y Notch)
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar bar = getSupportActionBar();
+        assert bar != null;
+        bar.setDisplayHomeAsUpEnabled(true);
+
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        ConstraintLayout mainLayout = findViewById(R.id.main);
+        ViewCompat.setOnApplyWindowInsetsListener(mainLayout, (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            toolbar.setPadding(toolbar.getPaddingLeft(), insets.top, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
+            ViewGroup.LayoutParams params = toolbar.getLayoutParams();
+            int baseHeight = getResources().getDimensionPixelSize(androidx.appcompat.R.dimen.abc_action_bar_default_height_material);
+            params.height = baseHeight + insets.top;
+            toolbar.setLayoutParams(params);
+            v.setPadding(insets.left, 0, insets.right, insets.bottom);
+            return WindowInsetsCompat.CONSUMED;
+        });
+
+    }
+
+    /**
+     * Private method for configuring the Spinner and Alert Dialog
+     */
+    private void configurarSpinnerYAlertDialog() {
         // CONFIGURAR SPINNER Y ALERT DIALOG
         ImageButton btBotonIncidencia = findViewById(R.id.btBotonIncidencia);
         Spinner spIncidencias = findViewById(R.id.spIncidencias);
@@ -167,12 +183,10 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
                     if (station != null && station.getId() != null) {
 
                         if (position == 1) {
-                            presenter.registrarIncidenciaEstacionRota();
-                            spIncidencias.setSelection(0);
+                            presenter.registrarIncidencia(IncidentType.STATION, null);
 
                         } else if (position == 2) {
-                            presenter.registrarIncidenciaBiciRota();
-                            spIncidencias.setSelection(0);
+                            presenter.registrarIncidencia(IncidentType.BIKE, null);
 
                         } else {
                             AlertDialog.Builder builder = new AlertDialog.Builder(StationDetailsView.this);
@@ -182,42 +196,38 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
                             final EditText input = new EditText(StationDetailsView.this);
                             builder.setView(input);
 
-                            builder.setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    String textoPersonalizado = input.getText().toString();
-
-                                    // Enviamos el texto personalizado para añadir la incidencia al presenter
-                                    presenter.registrarIncidenciaOtro(textoPersonalizado);
-                                    spIncidencias.setSelection(0);
-                                }
+                            builder.setPositiveButton(getString(R.string.confirm), (dialog, which) -> {
+                                String textoPersonalizado = input.getText().toString();
+                                presenter.registrarIncidencia(IncidentType.OTHER, textoPersonalizado);
                             });
 
-                            builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                    spIncidencias.setSelection(0);
-                                }
-                            });
+                            builder.setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.cancel());
 
                             builder.setOnCancelListener(dialog -> spIncidencias.setSelection(0));
                             builder.show();
                         }
+                        spIncidencias.setSelection(0);
                     }
                 }
 
                 @Override
-                public void onNothingSelected(AdapterView<?> parent) {}
+                public void onNothingSelected(AdapterView<?> parent) {
+                    // Sino se selecciona nada no se hace nada
+                }
             });
         }
     }
-
+    /**
+     * @see IStationDetailsContract.View#showLoadError()
+     */
     @Override
     public void showLoadError() {
         Toast.makeText(this, R.string.loadErrorIncidences, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * @see IStationDetailsContract.View#showIncidences(List)
+     */
     @Override
     public void showIncidences(List<Incident> incidents) {
         ListView list = findViewById(R.id.lvIncidences);

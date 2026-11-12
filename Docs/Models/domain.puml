@@ -39,17 +39,19 @@ class Station {
 }
 
 class Incident {
-    - id: int
-    - idStation: String
-    - amount: int
-    - type: String
-    - typeId: IncidentType
+    + id: int
+    + idStation: String
+    + amount: int
+    + type: String
+    + typeId: IncidentType
 }
 
 enum IncidentType {
-    BIKE
-    STATION
-    OTHER
+    BIKE("Bicicleta defectuosa")
+    STATION("Estación dañada")
+    OTHER("")
+    --
+    - descripcion: String
 }
 
 Network *--> "1" Location : location

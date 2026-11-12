@@ -64,7 +64,7 @@ public class NetworksArrayAdapter extends BaseAdapter {
      * Constructs an adapter to handle a list of networks with a favorite listener
      * @param context the application context
      * @param objects the list of networks
-     * @param favoriteClickListener the listener for favorite clicks
+     * @param favoriteClickListener the listener for favorite clicks.
      */
     public NetworksArrayAdapter(@NonNull Context context, @NonNull List<Network> objects, @Nullable OnFavoriteClickListener favoriteClickListener) {
         this(context, objects, favoriteClickListener, null, Collections.emptySet());
@@ -74,8 +74,8 @@ public class NetworksArrayAdapter extends BaseAdapter {
      * Constructs an adapter to handle a list of networks with a favorite listener and favorite network IDs
      * @param context the application context
      * @param objects the list of networks
-     * @param favoriteClickListener the listener for favorite clicks
-     * @param favoriteNetworkIds set of favorite network IDs
+     * @param favoriteClickListener the listener for favorite clicks.
+     * @param favoriteNetworkIds set of favorite network IDs.
      */
     public NetworksArrayAdapter(@NonNull Context context, @NonNull List<Network> objects,
                                 @Nullable OnFavoriteClickListener favoriteClickListener,
@@ -146,56 +146,48 @@ public class NetworksArrayAdapter extends BaseAdapter {
         });
 
         // name
-        {
-            TextView tv = convertView.findViewById(R.id.tvName);
-            if (tv != null) {
-                tv.setText(network.getName());
-            }
+        TextView tvName = convertView.findViewById(R.id.tvName);
+        if (tvName != null) {
+            tvName.setText(network.getName());
         }
 
         // location (city)
-        {
-            TextView tv = convertView.findViewById(R.id.tvCity);
-            if (tv != null) {
-                String city = network.getLocation() != null ? network.getLocation().getCity() : "";
-                tv.setText(city);
-            }
+        TextView tvCity = convertView.findViewById(R.id.tvCity);
+        if (tvCity != null) {
+            String city = network.getLocation() != null ? network.getLocation().getCity() : "";
+            tvCity.setText(city);
         }
 
         // favorite star icon
         boolean isFavorite = network != null && network.getId() != null && favoriteNetworkIds.contains(network.getId());
-        {
-            ImageView ivStar = convertView.findViewById(R.id.imageView);
-            if (ivStar != null) {
-                ivStar.setVisibility(isFavorite ? View.VISIBLE : View.GONE);
-            }
+        ImageView ivStar = convertView.findViewById(R.id.imageView);
+        if (ivStar != null) {
+            ivStar.setVisibility(isFavorite ? View.VISIBLE : View.GONE);
         }
 
         // options button (three points)
-        {
-            ImageButton btPoints = convertView.findViewById(R.id.btPoints);
-            if (btPoints != null) {
-                btPoints.setOnClickListener(v -> {
-                    PopupMenu popup = new PopupMenu(context, v);
-                    popup.getMenuInflater().inflate(R.menu.network_item_menu, popup.getMenu());
+        ImageButton btPoints = convertView.findViewById(R.id.btPoints);
+        if (btPoints != null) {
+            btPoints.setOnClickListener(v -> {
+                PopupMenu popup = new PopupMenu(context, v);
+                popup.getMenuInflater().inflate(R.menu.network_item_menu, popup.getMenu());
 
-                    MenuItem favItem = popup.getMenu().findItem(R.id.action_mark_favorite);
-                    if (favItem != null) {
-                        favItem.setTitle(R.string.mark_as_favorite);
-                    }
+                MenuItem favItem = popup.getMenu().findItem(R.id.action_mark_favorite);
+                if (favItem != null) {
+                    favItem.setTitle(R.string.mark_as_favorite);
+                }
 
-                    popup.setOnMenuItemClickListener(item -> {
-                        if (item.getItemId() == R.id.action_mark_favorite) {
-                            if (favoriteClickListener != null) {
-                                favoriteClickListener.onFavoriteClick(network);
-                            }
-                            return true;
+                popup.setOnMenuItemClickListener(item -> {
+                    if (item.getItemId() == R.id.action_mark_favorite) {
+                        if (favoriteClickListener != null) {
+                            favoriteClickListener.onFavoriteClick(network);
                         }
-                        return false;
-                    });
-                    popup.show();
+                        return true;
+                    }
+                    return false;
                 });
-            }
+                popup.show();
+            });
         }
 
         return convertView;
