@@ -191,30 +191,22 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
         }
 
         // Define buttons and set listeners
-        ImageButton btnFilterMoreThanKm = findViewById(R.id.btnFilterMoreThanKm);
+        ImageButton btnFilterMoreThanKm = findViewById(R.id.FilterKmRange);
 
         if (btnFilterMoreThanKm != null) {
-            btnFilterMoreThanKm.setOnClickListener(v -> onClickFilterMoreThanDistance());
+            btnFilterMoreThanKm.setOnClickListener(v -> onClickFilter());
         }
     }
 
     /**
-     * Called when the user clicks on the button to filter by a distance more
-     * than the one entered
+     * Called when the user clicks on the button to filter between a desired rage
      */
-    public void onClickFilterMoreThanDistance() {
-        String distance = ((TextView) findViewById(R.id.etMinKmFilter)).getText().toString();
-        presenter.onFilterClicked(distance, DistanceFilter.MORE_THAN);
+    public void onClickFilter() {
+        String distanceMin = ((TextView) findViewById(R.id.etMinKmFilter)).getText().toString();
+        String distanceMax = ((TextView) findViewById(R.id.etMaxKmFilter)).getText().toString();
+        //presenter.onFilterClicked(distance, DistanceFilter.MORE_THAN);
     }
 
-    /**
-     * Called when the user clicks on the button to filter by a distance less
-     * than the one entered
-     */
-    public void onClickFilterLessThanDistance() {
-        String distance = ((TextView) findViewById(R.id.etMinKmFilter)).getText().toString();
-        presenter.onFilterClicked(distance, DistanceFilter.LESS_THAN);
-    }
 
     /**
      * @see IRedDetailsContract.View#getNetworksRepository()
