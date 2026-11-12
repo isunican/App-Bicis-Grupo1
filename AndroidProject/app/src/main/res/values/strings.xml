@@ -48,10 +48,19 @@
 
 
     <string-array name="incidencias_options">
-        <item>Select an incidence...</item>
+        <item>Select an incident...</item>
+        <item>Damaged station</item>
+        <item>Defective bike</item>
+        <item>Other issue</item>
+    </string-array>
+    <string-array name="edit_incicents_options">
         <item>Damaged station</item>
         <item>Defective bike</item>
         <item>Other issue</item>
     </string-array>
     <string name="mark_as_favorite">Mark as favorite</string>
+    <string name="newEditDesc">Type the new description...</string>
+    <string name="description">Description</string>
+    <string name="type">Type</string>
+    <string name="editIncident">Edit Incident</string>
 </resources>

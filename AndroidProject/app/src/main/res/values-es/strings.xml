@@ -52,4 +52,8 @@
     <string name="more_options">Opciones</string>
     <string name="mark_as_favorite">Marcar como favorita</string>
     <string name="marked_as_favorite">%s marcada como favorita</string>
+    <string name="newEditDesc">Escribe la nueva descripción...</string>
+    <string name="description">Descripción</string>
+    <string name="type">Tipo</string>
+    <string name="editIncident">Editar Incidencia</string>
 </resources>
