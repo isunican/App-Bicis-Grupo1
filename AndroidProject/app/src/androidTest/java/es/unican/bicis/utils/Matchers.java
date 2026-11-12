@@ -114,4 +114,32 @@ public class Matchers {
             }
         };
     }
+    /**
+     * Matcher personalizado para evaluar la cantidad de elementos en un ListView.
+     * @param sizeMatcher Un matcher de enteros de Hamcrest (ej. lessThan(20), is(15))
+     */
+    public static Matcher<View> withListSize(final Matcher<Integer> sizeMatcher) {
+        return new TypeSafeMatcher<View>() {
+
+            @Override
+            protected boolean matchesSafely(View view) {
+                // Descartamos cualquier vista que no sea un ListView
+                if (!(view instanceof ListView)) {
+                    return false;
+                }
+
+                // Extraemos el tamaño real desde el adaptador
+                int count = ((ListView) view).getCount();
+
+                // Delegamos la evaluación matemática al matcher inyectado
+                return sizeMatcher.matches(count);
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("un ListView cuyo número de elementos sea ");
+                sizeMatcher.describeTo(description);
+            }
+        };
+    }
 }
