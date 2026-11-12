@@ -61,20 +61,38 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
     }
 
     /**
-     * @see IRedDetailsContract.Presenter#onFilterClicked(String, DistanceFilter)
-     * @param distanceText distance introduced by the user
-     * @param filter filter introduced by the user (less than distance or more than distance).
+     * @see IRedDetailsContract.Presenter#onFilterClicked(String, String)
+     * @param distanceMinText minimum distance introduced by the user
+     * @param distanceMaxText maximum distance introduced by the user
      */
     @Override
-    public void onFilterClicked(String distanceText, DistanceFilter filter) {
+    public void onFilterClicked(String distanceMinText, String distanceMaxText) {
 
-        // Checks if distance string contains decimal units, is empty or is a negative number
-        if (distanceText.isEmpty() || distanceText.contains(".") || Integer.parseInt(distanceText) < 0) {
+        double distanceMin = 0.0;
+        double distanceMax = Double.MAX_VALUE;
+
+        try {
+            if (distanceMinText != null && !distanceMinText.trim().isEmpty()) {
+                if (distanceMinText.contains(".")) return;
+                int min = Integer.parseInt(distanceMinText.trim());
+                if (min < 0) return;
+                distanceMin = min;
+            }
+
+            if (distanceMaxText != null && !distanceMaxText.trim().isEmpty()) {
+                if (distanceMaxText.contains(".")) return;
+                int max = Integer.parseInt(distanceMaxText.trim());
+                if (max < 0) return;
+                distanceMax = max;
+            }
+
+            // Checks if the range is valid
+            if (distanceMin > distanceMax) {
+                return;
+            }
+        } catch (NumberFormatException e) {
             return;
         }
-
-        double distance;
-        distance = Double.parseDouble(distanceText);
 
         //Checks if location is enabled
         if (!Utils.isLocationEnabled(view.getContext())) {
@@ -92,12 +110,8 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
             double distanceToStation = LocationUtils.calcularDistanciaA(station.getLatitude(), station.getLongitude());
 
             // Determines to keep the station or not according to the filter
-            boolean keep = (filter == DistanceFilter.LESS_THAN)
-                    ? distanceToStation < distance // if filter is less than
-                    : distanceToStation > distance; // if filter is more than
-
-            if (keep) {
-              filteredStations.add(new StationDistance(station, distanceToStation));
+            if (distanceToStation >= distanceMin && distanceToStation <= distanceMax) {
+                filteredStations.add(new StationDistance(station, distanceToStation));
             }
         }
 

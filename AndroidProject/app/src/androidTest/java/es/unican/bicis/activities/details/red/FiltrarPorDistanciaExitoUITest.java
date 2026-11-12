@@ -71,7 +71,7 @@ public class FiltrarPorDistanciaExitoUITest {
         onView(withText("TUeBICI")).perform(click());
 
         // 1 y 2. El técnico introduce 5Km en la aplicación
-        onView(withId(R.id.etKmFilter)).perform(clearText(), typeText("5"), closeSoftKeyboard());
+        onView(withId(R.id.etMinKmFilter)).perform(clearText(), typeText("5"), closeSoftKeyboard());
 
         // 4 y 5. El técnico selecciona la opción de ver a una distancia superior
         onView(withId(R.id.btnFilterMoreThanKm)).perform(click());
