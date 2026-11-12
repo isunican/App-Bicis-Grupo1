@@ -204,7 +204,7 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
     public void onClickFilter() {
         String distanceMin = ((TextView) findViewById(R.id.etMinKmFilter)).getText().toString();
         String distanceMax = ((TextView) findViewById(R.id.etMaxKmFilter)).getText().toString();
-        //presenter.onFilterClicked(distance, DistanceFilter.MORE_THAN);
+        presenter.onFilterClicked(distanceMin, distanceMax);
     }
 
 
