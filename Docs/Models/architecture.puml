@@ -131,6 +131,7 @@ enum DistanceFilter {
 interface IStationDetailsContract.Presenter {
     + init(view : View, station : Station, db : AppDatabase)
     + registrarIncidencia(type : IncidentType, texto : String)
+    + modificarIncidencia(incident : Incident)
     + onDestroy()
 }
 
@@ -141,11 +142,13 @@ interface IStationDetailsContract.View {
     + showDatabaseError()
     + getContext(): Context
     + showEmptyIssueError()
+    + showEditIncidentDialog(incident : Incident)
     + onDestroy()
 }
 
 interface IIncidentDAO {
     + insertarIncidencia(incidencia : Incident) : long
+    + actualizarIncidencia(incidencia : Incident) : int
     + obtenerIncidenciasPorEstacion(id : String) : List<Incident>
 }
 
