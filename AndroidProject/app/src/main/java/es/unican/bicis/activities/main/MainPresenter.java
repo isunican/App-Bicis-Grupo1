@@ -165,7 +165,11 @@ public class MainPresenter implements IMainContract.Presenter {
     }
 
 
-    //Codigos para comparar si es un emoji
+    /**
+     * Comprueba si es un codigo de emoji u otro simbolo no permitido
+     * @param codePoint codigo del simbolo
+     * @return true si es un simbolo no permitido, false en caso contrario
+     */
     private boolean isEmojiCodePoint(int codePoint) {
         if ((codePoint >= 0x1F600 && codePoint <= 0x1F64F) || // Emoticons
             (codePoint >= 0x1F300 && codePoint <= 0x1F5FF) || // Misc Symbols and Pictographs

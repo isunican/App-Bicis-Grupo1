@@ -222,7 +222,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
     /**
      * @see IMainContract.View#showLoadCorrect(int)
-     * @param networks
+     * @param networks number of networks loaded
      */
     @Override
     public void showLoadCorrect(int networks) {
