@@ -44,6 +44,9 @@
     <string name="cancel">Cancel</string>
     <string name="empty_issue_error">You can\'t let the text field empty</string>
     <string name="databaseError">An error has ocurred</string>
+    <string name="empty_search_error">You cannot leave the text empty</string>
+    <string name="emoji_search_error">You cannot enter emojis in the text</string>
+    <string name="no_networks_found_error">No networks contain the entered string in their name</string>
 
 
 

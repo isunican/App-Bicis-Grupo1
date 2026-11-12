@@ -80,6 +80,113 @@ public class MainPresenter implements IMainContract.Presenter {
     }
 
     /**
+     * @see IMainContract.Presenter#onFilterClicked(String)
+     * @param query search string introduced by the user
+     */
+    @Override
+    public void onFilterClicked(String query) {
+        if (view == null) return;
+
+        //En caso de que la cadenas sea nula o vacia la mostramos un error
+        if (query == null || query.trim().isEmpty()) {
+            view.showEmptySearchError();
+            return;
+        }
+
+        //Eliminamos los espacios en blanco
+        String trimmedQuery = query.trim();
+
+        //Si contiene emoticonos mostramos un error
+        if (containsEmoji(trimmedQuery)) {
+            view.showEmojiSearchError();
+            return;
+        }
+
+        //Si no hay redes que poder cargar mostramos error
+        if (lastLoadedNetworks == null || lastLoadedNetworks.isEmpty()) {
+            view.showNoNetworksFoundError();
+            return;
+        }
+
+        //Convertimos la cadena a minusculas para comparar
+        String lowerQuery = trimmedQuery.toLowerCase();
+
+        //Filtramos las redes entre las que encajen perfectamente y parcialmente
+        List<Network> exactMatches = new ArrayList<>();
+        List<Network> partialMatches = new ArrayList<>();
+
+        //Recorremos todas las redes y las comparamos
+        for (Network net : lastLoadedNetworks) {
+            // Evitamos redes nulas o sin nombre
+            if (net == null || net.getName() == null) continue;
+
+            // Comprobamos si el nombre de la red contiene la cadena
+            String name = net.getName();
+            if (name.equalsIgnoreCase(trimmedQuery)) {
+                exactMatches.add(net);
+            } else if (name.toLowerCase().contains(lowerQuery)) {
+                partialMatches.add(net);
+            }
+        }
+
+        //Si no hay coincidencias mostramos error
+        if (exactMatches.isEmpty() && partialMatches.isEmpty()) {
+            view.showNoNetworksFoundError();
+            return;
+        }
+
+        // Redes con coincidencia exacta en las primeras posiciones
+        List<Network> filteredNetworks = new ArrayList<>(exactMatches);
+        filteredNetworks.addAll(partialMatches);
+
+        // Límite de 20 redes
+        if (filteredNetworks.size() > 20) {
+            filteredNetworks = new ArrayList<>(filteredNetworks.subList(0, 20));
+        }
+
+        view.showNetworks(filteredNetworks);
+    }
+
+    /**
+     * Comprueba si la cadena dada contiene emoticonos.
+     * @param text texto a comprobar
+     * @return true si contiene emoticonos, false en caso contrario
+     */
+    private boolean containsEmoji(String text) {
+        if (text == null) return false;
+        for (int i = 0; i < text.length(); ) {
+            int codePoint = text.codePointAt(i);
+            if (isEmojiCodePoint(codePoint)) {
+                return true;
+            }
+            i += Character.charCount(codePoint);
+        }
+        return false;
+    }
+
+
+    /**
+     * Comprueba si es un codigo de emoji u otro simbolo no permitido
+     * @param codePoint codigo del simbolo
+     * @return true si es un simbolo no permitido, false en caso contrario
+     */
+    private boolean isEmojiCodePoint(int codePoint) {
+        if ((codePoint >= 0x1F600 && codePoint <= 0x1F64F) || // Emoticons
+            (codePoint >= 0x1F300 && codePoint <= 0x1F5FF) || // Misc Symbols and Pictographs
+            (codePoint >= 0x1F680 && codePoint <= 0x1F6FF) || // Transport and Map
+            (codePoint >= 0x1F1E0 && codePoint <= 0x1F1FF) || // Flags
+            (codePoint >= 0x2600 && codePoint <= 0x26FF) ||   // Misc Symbols
+            (codePoint >= 0x2700 && codePoint <= 0x27BF) ||   // Dingbats
+            (codePoint >= 0x1F900 && codePoint <= 0x1F9FF) || // Supplemental Symbols
+            (codePoint >= 0x1FA00 && codePoint <= 0x1FA6F) || // Symbols Extended-A
+            (codePoint >= 0x1FA70 && codePoint <= 0x1FAFF)) { // Symbols Extended-B
+            return true;
+        }
+        int type = Character.getType(codePoint);
+        return type == Character.SURROGATE || type == Character.OTHER_SYMBOL;
+    }
+
+    /**
      * Procesa la selección de marcar una red como favorita.
      * @param network la red seleccionada
      */
