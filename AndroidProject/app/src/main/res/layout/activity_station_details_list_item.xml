@@ -7,6 +7,20 @@
     android:paddingTop="16dp"
     android:paddingBottom="16dp">
 
+    <ImageButton
+        android:id="@+id/btEditarIncidencia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/more_options"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/three_points" />
+
     <TextView
         android:id="@+id/tvType"
         android:layout_width="0dp"
@@ -19,21 +33,23 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toStartOf="@+id/tvAmount"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.478"
         tools:text="Tipo" />
 
     <TextView
         android:id="@+id/tvAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
+        android:layout_marginEnd="20dp"
         android:textColor="@color/colorTextoEstacion"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/tvType"
-        app:layout_constraintTop_toTopOf="@+id/tvType"
+        app:layout_constraintBottom_toBottomOf="@+id/btEditarIncidencia"
+        app:layout_constraintEnd_toStartOf="@+id/btEditarIncidencia"
+        app:layout_constraintTop_toTopOf="@+id/btEditarIncidencia"
         tools:text="0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

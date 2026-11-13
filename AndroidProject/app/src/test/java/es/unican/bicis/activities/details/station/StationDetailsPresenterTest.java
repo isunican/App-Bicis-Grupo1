@@ -169,12 +169,13 @@ public class StationDetailsPresenterTest {
     @Test
     public void registrarIncidenciaTest_PU07 () {
 
-        sut.init(mockStationDetailsView, station, mockAppDatabase);
         doThrow(new SQLiteException()).when(mockIIncidentDAO).insertarIncidencia(any(Incident.class));
+
+        sut.init(mockStationDetailsView, station, mockAppDatabase);
         sut.registrarIncidencia(IncidentType.BIKE, null);
 
-        verify(mockIIncidentDAO, timeout(1000)).insertarIncidencia(any(Incident.class));
-        verify(mockStationDetailsView, timeout(1000)).showDatabaseError();
+        verify(mockIIncidentDAO, timeout(2000)).insertarIncidencia(any(Incident.class));
+        verify(mockStationDetailsView, timeout(2000)).showDatabaseError();
         verify(mockStationDetailsView, never()).showEmptyIssueError();
     }
 

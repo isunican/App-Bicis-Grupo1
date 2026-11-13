@@ -55,8 +55,7 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
     Network network = null;
 
     /**
-     * @see AppCompatActivity#onCreate(Bundle)
-     * @param savedInstanceState
+     * @see androidx.fragment.app.FragmentActivity#onCreate(Bundle)
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +108,7 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
     }
 
     /**
-     * @see AppCompatActivity#onResume()
+     * @see androidx.fragment.app.FragmentActivity#onResume()
      */
     @Override
     protected void onResume() {
@@ -210,7 +209,6 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
 
     /**
      * @see IRedDetailsContract.View#getNetworksRepository()
-     * @return the repository to access the data
      */
     @Override
     public INetworksRepository getNetworksRepository() {
@@ -267,6 +265,9 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
         Toast.makeText(this, R.string.locationError, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * @see IRedDetailsContract.View#showNoStationsInRangeError()
+     */
     @Override
     public void showNoStationsInRangeError() {
         Toast.makeText(this, R.string.noStationsInRange, Toast.LENGTH_SHORT).show();

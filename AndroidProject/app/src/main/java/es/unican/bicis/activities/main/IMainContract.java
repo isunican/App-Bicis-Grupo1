@@ -24,7 +24,7 @@ public interface IMainContract {
         /**
          * Links the presenter with its view.
          * Only the View should call this method
-         * @param view
+         * @param view the view to control
          */
         public void init(View view);
 
@@ -44,7 +44,7 @@ public interface IMainContract {
         /**
          * The presenter is informed that the favorite option for a network has been clicked
          * Only the View should call this method
-         * @param network the network
+         * @param network the network that was clicked for marking as favorite
          */
         public void onFavoriteClicked(Network network);
 
@@ -77,14 +77,14 @@ public interface IMainContract {
          * therefore the Presenter should be unable to instantiate repositories and must rely on
          * the view to create the repository.
          * Only the Presenter should call this method
-         * @return
+         * @return the repository to access the data
          */
         public INetworksRepository getNetworksRepository();
 
         /**
          * Returns the DAO to access favorite networks in Room.
          * Only the Presenter should call this method
-         * @return the IFavouriteDAO
+         * @return the IFavouriteDAO instance
          */
         public IFavouriteDAO getFavouriteDAO();
 
@@ -99,7 +99,7 @@ public interface IMainContract {
          * The view is requested to display a notification indicating  that the networks
          * were loaded correctly.
          * Only the Presenter should call this method
-         * @param networks
+         * @param networks the number of networks loaded
          */
         public void showLoadCorrect(int networks);
 
@@ -119,13 +119,14 @@ public interface IMainContract {
         /**
          * The view is requested to return the context of the application.
          * Only the Presenter should call this method
+         * @return the context of the application
          */
         public Context getContext();
 
         /**
          * The view is requested to display the detailed view of the given network.
          * Only the Presenter should call this method
-         * @param network the network
+         * @param network the network to show the details of
          */
         public void showNetworkDetails(Network network);
 
@@ -139,7 +140,7 @@ public interface IMainContract {
          * The view is requested to display a notification indicating that the network
          * was marked as favorite.
          * Only the Presenter should call this method
-         * @param network the network
+         * @param network the network that was marked as favorite
          */
         public void showMarkedAsFavorite(Network network);
 

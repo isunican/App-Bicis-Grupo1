@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import es.unican.bicis.model.Incident;
 import java.util.List;
@@ -22,6 +23,14 @@ public interface IIncidentDAO {
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertarIncidencia(Incident incidencia);
+
+    /**
+     * Actualiza los datos de una incidencia existente en la base de datos.
+     * @param incidencia La incidencia a actualizar con la misma clave primaria.
+     * @return Número de filas actualizadas.
+     */
+    @Update
+    int actualizarIncidencia(Incident incidencia);
 
     /**
      * Obtiene todas las incidencias de una estación.

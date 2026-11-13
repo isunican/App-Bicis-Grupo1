@@ -39,21 +39,33 @@ public class StationsArrayAdapter extends BaseAdapter {
         this.context = context;
     }
 
+    /**
+     * @see android.widget.Adapter#getCount()
+     */
     @Override
     public int getCount() {
         return stations.size();
     }
 
+    /**
+     * @see android.widget.Adapter#getItem(int)
+     */
     @Override
     public Object getItem(int position) {
         return stations.get(position);
     }
 
+    /**
+     * @see android.widget.Adapter#getItemId(int)
+     */
     @Override
     public long getItemId(int position) {
         return position;
     }
 
+    /**
+     * @see android.widget.Adapter#getView(int, View, ViewGroup)
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

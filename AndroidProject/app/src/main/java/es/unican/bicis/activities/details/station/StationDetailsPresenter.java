@@ -132,4 +132,37 @@ public class StationDetailsPresenter implements IStationDetailsContract.Presente
             executorService.shutdown();
         }
     }
+
+    /**
+     * @see IStationDetailsContract.Presenter#modificarIncidencia(Incident)
+     */
+    @Override
+    public void modificarIncidencia(Incident incident) {
+        if (incident == null) {
+            return;
+        }
+
+        if (incident.getTypeId() == IncidentType.OTHER &&
+                (incident.getType() == null || incident.getType().trim().isEmpty())) {
+            // Llamamos a la vista para que muestre el error si el tipo es other y la descripción esta vacía
+            view.showEmptyIssueError();
+            return;
+        }
+
+        executorService.execute(() -> {
+                try {
+                    // Intentamos modificar la incidencia en la base de datos
+                    db.incidenciaDao().actualizarIncidencia(incident);
+                    load();
+                } catch (Exception e) {
+                    // Si ocurre CUALQUIER error de base de datos, avisamos a la vista para que muestre el error
+                    mainHandler.post(() -> {
+                        if (view != null) {
+                            view.showDatabaseError();
+                        }
+                    });
+                }
+            }
+        );
+    }
 }

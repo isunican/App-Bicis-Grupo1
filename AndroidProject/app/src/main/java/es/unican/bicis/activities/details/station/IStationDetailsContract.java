@@ -48,6 +48,13 @@ public interface IStationDetailsContract {
          * Cleans up resources (like background threads) when the view is destroyed.
          */
         public void onDestroy();
+
+        /**
+         * Modifica una incidencia existente en la base de datos.
+         *
+         * @param incident la incidencia modificada
+         */
+        public void modificarIncidencia(Incident incident);
     }
 
     /**
@@ -106,5 +113,12 @@ public interface IStationDetailsContract {
          * Cleans up resources (like background threads) when the view is destroyed.
          */
         public void onDestroy();
+
+        /**
+         * Muestra el diálogo para editar una incidencia existente.
+         *
+         * @param incident incidencia seleccionada
+         */
+        public void showEditIncidentDialog(Incident incident);
     }
 }
