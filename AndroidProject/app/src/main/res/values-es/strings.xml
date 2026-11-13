@@ -48,7 +48,11 @@
         <item>Bicicleta defectuosa</item>
         <item>Otro problema</item>
     </string-array>
-
+    <string-array name="edit_incicents_options">
+        <item>Estación dañada</item>
+        <item>Bicicleta defectuosa</item>
+        <item>Otro problema</item>
+    </string-array>
     <string name="more_options">Opciones</string>
     <string name="mark_as_favorite">Marcar como favorita</string>
     <string name="marked_as_favorite">%s marcada como favorita</string>
