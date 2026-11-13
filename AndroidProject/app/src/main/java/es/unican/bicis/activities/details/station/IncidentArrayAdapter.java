@@ -11,8 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.jetbrains.annotations.UnknownNullability;
-
 import java.util.List;
 
 import es.unican.bicis.R;
@@ -28,6 +26,7 @@ public class IncidentArrayAdapter extends BaseAdapter {
      * Interface for edit click callbacks
      */
     public interface OnIncidentEditClickListener {
+
         /**
          * Called when the edit button is clicked
          * @param incident the incident
@@ -58,21 +57,33 @@ public class IncidentArrayAdapter extends BaseAdapter {
         this.editClickListener = editClickListener;
     }
 
+    /**
+     * @see android.widget.Adapter#getCount()
+     */
     @Override
     public int getCount() {
         return incidences.size();
     }
 
+    /**
+     * @see android.widget.Adapter#getItem(int)
+     */
     @Override
     public Object getItem(int position) {
         return incidences.get(position);
     }
 
+    /**
+     * @see android.widget.Adapter#getItemId(int)
+     */
     @Override
     public long getItemId(int position) {
         return position;
     }
 
+    /**
+     * @see android.widget.Adapter#getView(int, View, ViewGroup)
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

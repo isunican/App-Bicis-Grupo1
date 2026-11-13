@@ -7,8 +7,8 @@ MainPresenter ..|> IMainContract.Presenter
 MainView --> INetworksRepository : repository
 ApiNetworksRepository ..|> INetworksRepository
 JsonNetworksRepository ..|> INetworksRepository
-MainView --> MainPresenter : presenter
-MainPresenter --> MainView : view
+MainView --> IMainContract.Presenter : presenter
+MainPresenter --> IMainContract.View : view
 MainView ..> InfoView : <<use>>
 MainView ..> RedDetailsView : <<use>>
 RedDetailsView ..> StationDetailsView : <<use>>
@@ -16,14 +16,14 @@ RedDetailsView ..> StationDetailsView : <<use>>
 RedDetailsView ..|> IRedDetailsContract.View
 RedDetailsPresenter ..|> IRedDetailsContract.Presenter
 RedDetailsView --> INetworksRepository : repository
-RedDetailsView --> RedDetailsPresenter : presenter
-RedDetailsPresenter --> RedDetailsView : view
+RedDetailsView --> IRedDetailsContract.Presenter : presenter
+RedDetailsPresenter --> IRedDetailsContract.View : view
 MainView --> IFavouriteDAO : favouriteDAO
 
 StationDetailsView ..|> IStationDetailsContract.View
 StationDetailsPresenter ..|> IStationDetailsContract.Presenter
-StationDetailsView --> StationDetailsPresenter : presenter
-StationDetailsPresenter --> StationDetailsView : view
+StationDetailsView --> IStationDetailsContract.Presenter : presenter
+StationDetailsPresenter --> IStationDetailsContract.View : view
 StationDetailsPresenter ..> IIncidentDAO : <<use>>
 
 
@@ -50,8 +50,8 @@ class StationDetailsPresenter {
 
 
 class RedDetailsView {
-    +onClickFilterMoreThanDistance()
-    +onClickFilterLessThanDistance()
+    -onClickFilterMoreThanDistance()
+    -onClickFilterLessThanDistance()
 }
 class RedDetailsPresenter {
     -load()

@@ -13,7 +13,7 @@ class Network {
 
 class Location {
     - city : String
-    - country : Strings
+    - country : String
 }
 
 class Favourite {
@@ -40,10 +40,9 @@ class Station {
 
 class Incident {
     + id: int
-    + idStation: String
+    + idEstacion: String
     + amount: int
     + type: String
-    + typeId: IncidentType
 }
 
 enum IncidentType {
@@ -58,5 +57,7 @@ Network *--> "1" Location : location
 Network *--> "0..*" Station : stations
 NetworksResponse *--> "*" Network : networks
 NetworkResponse *--> "1" Network : network
+
+Incident --> "1" IncidentType : typeId
 
 @enduml

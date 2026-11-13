@@ -16,6 +16,7 @@ public class LocationUtils {
     private static LocationUtils instance;
 
     private final Context context;
+
     private Location currentLocation;
 
     /**
@@ -40,6 +41,7 @@ public class LocationUtils {
 
     /**
      * Inicializa la clase singleton.
+     * @param context el contexto de la aplicación
      */
     public static void init(Context context) {
         if (instance == null) {
@@ -49,6 +51,7 @@ public class LocationUtils {
 
     /**
      * Obtiene la ubicación actual del dispositivo y la guarda.
+     * @param onLocationReady función a ejecutar cuando se haya obtenido la ubicación
      */
     @SuppressLint("MissingPermission") // Comprobado previamente en la app
     public static void updateLocation(Runnable onLocationReady) {

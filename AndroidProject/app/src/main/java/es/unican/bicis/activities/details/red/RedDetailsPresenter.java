@@ -28,6 +28,11 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
         @Getter
         private final double distance;
 
+        /**
+         * Constructor of the class.
+         * @param station station to save
+         * @param distance distance between current location and the station
+         */
         public StationDistance(Station station, double distance) {
             this.station = station;
             this.distance = distance;
@@ -42,8 +47,6 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
 
     /**
      * @see IRedDetailsContract.Presenter#init(IRedDetailsContract.View, Network)
-     * @param view the view to control
-     * @param network the network of the view
      */
     @Override
     public void init(IRedDetailsContract.View view, Network network) {
@@ -62,8 +65,6 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
 
     /**
      * @see IRedDetailsContract.Presenter#onFilterClicked(String, DistanceFilter)
-     * @param distanceText distance introduced by the user
-     * @param filter filter introduced by the user (less than distance or more than distance).
      */
     @Override
     public void onFilterClicked(String distanceText, DistanceFilter filter) {
@@ -120,7 +121,6 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
 
     /**
      * @see IRedDetailsContract.Presenter#onStationClicked(Station)
-     * @param station the station that has been clicked
      */
     @Override
     public void onStationClicked(Station station) {
@@ -132,13 +132,15 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
      * Si se produce un error al recuperar las estaciones de la red, se invoca a la vista para que
      * muestre un mensaje de error en la carga.
      * Si no hay estaciones, invoca a la vista para que muestre un mensaje de que no hay estaciones.
-     * .
      */
     protected void load() {
         INetworksRepository repository = view.getNetworksRepository();
 
         NetworkDetailsCallback callBack = new NetworkDetailsCallback() {
 
+            /**
+             * @see NetworkDetailsCallback#onSuccess(Network)
+             */
             @Override
             public void onSuccess(Network network) {
                 RedDetailsPresenter.this.network = network;
@@ -150,6 +152,9 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
                 }
             }
 
+            /**
+             * @see NetworkDetailsCallback#onFailure(Throwable)
+             */
             @Override
             public void onFailure(Throwable e) {
                 view.showLoadError();

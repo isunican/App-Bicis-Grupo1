@@ -25,15 +25,18 @@ public class MainPresenter implements IMainContract.Presenter {
 
     /** The view that is controlled by this presenter */
     private IMainContract.View view;
+
+    /** The last networks loaded */
     private List<Network> lastLoadedNetworks;
 
+    /** The executor for used for database access */
     private ExecutorService executor;
-    private Handler mainHandler;
 
+    /** Used to execute code on the main thread */
+    private Handler mainHandler;
 
     /**
      * @see IMainContract.Presenter#init(IMainContract.View)
-     * @param view the view to control
      */
     @Override
     public void init(IMainContract.View view) {
@@ -50,7 +53,6 @@ public class MainPresenter implements IMainContract.Presenter {
 
     /**
      * @see IMainContract.Presenter#onNetworkClicked(Network)
-     * @param network the network that has been clicked
      */
     @Override
     public void onNetworkClicked(Network network) {
@@ -67,7 +69,6 @@ public class MainPresenter implements IMainContract.Presenter {
 
     /**
      * @see IMainContract.Presenter#onFavoriteClicked(Network)
-     * @param network the network that was clicked for marking as favorite
      */
     @Override
     public void onFavoriteClicked(Network network) {
@@ -152,6 +153,9 @@ public class MainPresenter implements IMainContract.Presenter {
 
         NetworksCallback callBack = new NetworksCallback() {
 
+            /**
+             * @see NetworksCallback#onSuccess(List)
+             */
             @Override
             public void onSuccess(List<Network> networks) {
                 lastLoadedNetworks = networks;
@@ -193,6 +197,9 @@ public class MainPresenter implements IMainContract.Presenter {
                 });
             }
 
+            /**
+             * @see NetworksCallback#onFailure(Throwable)
+             */
             @Override
             public void onFailure(Throwable e) {
                 mainHandler.post(() -> {

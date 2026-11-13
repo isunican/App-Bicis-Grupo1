@@ -55,8 +55,7 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
     Network network = null;
 
     /**
-     * @see AppCompatActivity#onCreate(Bundle)
-     * @param savedInstanceState
+     * @see androidx.fragment.app.FragmentActivity#onCreate(Bundle)
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +108,7 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
     }
 
     /**
-     * @see AppCompatActivity#onResume()
+     * @see androidx.fragment.app.FragmentActivity#onResume()
      */
     @Override
     protected void onResume() {
@@ -202,7 +201,7 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
      * Called when the user clicks on the button to filter by a distance more
      * than the one entered
      */
-    public void onClickFilterMoreThanDistance() {
+    private void onClickFilterMoreThanDistance() {
         String distance = ((TextView) findViewById(R.id.etKmFilter)).getText().toString();
         presenter.onFilterClicked(distance, DistanceFilter.MORE_THAN);
     }
@@ -211,14 +210,13 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
      * Called when the user clicks on the button to filter by a distance less
      * than the one entered
      */
-    public void onClickFilterLessThanDistance() {
+    private void onClickFilterLessThanDistance() {
         String distance = ((TextView) findViewById(R.id.etKmFilter)).getText().toString();
         presenter.onFilterClicked(distance, DistanceFilter.LESS_THAN);
     }
 
     /**
      * @see IRedDetailsContract.View#getNetworksRepository()
-     * @return the repository to access the data
      */
     @Override
     public INetworksRepository getNetworksRepository() {
@@ -275,6 +273,9 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
         Toast.makeText(this, R.string.locationError, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * @see IRedDetailsContract.View#showNoStationsInRangeError()
+     */
     @Override
     public void showNoStationsInRangeError() {
         Toast.makeText(this, R.string.noStationsInRange, Toast.LENGTH_SHORT).show();

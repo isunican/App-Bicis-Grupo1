@@ -51,8 +51,7 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
     private Station station = null;
 
     /**
-     * @see AppCompatActivity#onCreate(Bundle)
-     * @param savedInstanceState
+     * @see androidx.fragment.app.FragmentActivity#onCreate(Bundle)
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,6 +169,9 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
             spIncidencias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 private boolean isInitial = true;
 
+                /**
+                 * @see AdapterView.OnItemSelectedListener#onItemSelected(AdapterView, View, int, long)
+                 */
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     if (isInitial) {
@@ -209,6 +211,9 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
                     }
                 }
 
+                /**
+                 * @see AdapterView.OnItemSelectedListener#onNothingSelected(AdapterView)
+                 */
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
                     // Sino se selecciona nada no se hace nada
@@ -216,6 +221,7 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
             });
         }
     }
+
     /**
      * @see IStationDetailsContract.View#showLoadError()
      */
@@ -312,6 +318,10 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
 
         // Mostrar/Ocultar o habilitar la descripción si no es tipo "Otro"
         spEditType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            /**
+             * @see AdapterView.OnItemSelectedListener#onItemSelected(AdapterView, View, int, long)
+             */
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 boolean isOtro = (position == 2);
@@ -321,6 +331,9 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
                 }
             }
 
+            /**
+             * @see AdapterView.OnItemSelectedListener#onNothingSelected(AdapterView)
+             */
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 // Si no se selecciona nada no se hace nada

@@ -63,6 +63,9 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     @Inject
     INetworksRepository repository;
 
+    /**
+     * @see androidx.fragment.app.FragmentActivity#onCreate(Bundle)
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,7 +122,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     }
 
     /**
-     * @see AppCompatActivity#onResume()
+     * @see androidx.fragment.app.FragmentActivity#onResume()
      */
     @Override
     protected void onResume() {
@@ -133,6 +136,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     }
 
     /**
+     * @see android.app.Activity#onCreateOptionsMenu(Menu)
      * This creates the menu that is shown in the action bar (the upper toolbar)
      * @param menu The options menu in which you place your items.
      *
@@ -146,6 +150,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     }
 
     /**
+     * @see android.app.Activity#onOptionsItemSelected(MenuItem)
      * This is called when an item in the action bar menu is selected.
      * @param item The menu item that was selected.
      *
@@ -176,7 +181,6 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
     /**
      * @see IMainContract.View#getNetworksRepository()
-     * @return the repository to access the data
      */
     @Override
     public INetworksRepository getNetworksRepository() {
@@ -185,7 +189,6 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
     /**
      * @see IMainContract.View#getFavouriteDAO()
-     * @return the IFavouriteDAO instance
      */
     @Override
     public IFavouriteDAO getFavouriteDAO() {
@@ -194,7 +197,6 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
     /**
      * @see IMainContract.View#showNetworks(List)
-     * @param networks the list of networks
      */
     @Override
     public void showNetworks(List<Network> networks) {
@@ -205,7 +207,6 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
     /**
      * @see IMainContract.View#showLoadCorrect(int)
-     * @param networks
      */
     @Override
     public void showLoadCorrect(int networks) {
@@ -221,7 +222,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     }
 
     /**
-     * @see IRedDetailsContract.View#showRedError()
+     * @see IMainContract.View#showRedError()
      */
     @Override
     public void showRedError() {
@@ -229,7 +230,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     }
 
     /**
-     * @see IRedDetailsContract.View#getContext()
+     * @see IMainContract.View#getContext()
      */
     @Override
     public Context getContext() {
@@ -238,7 +239,6 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
     /**
      * @see IMainContract.View#showNetworkDetails(Network)
-     * @param network the network
      */
     @Override
     public void showNetworkDetails(Network network) {
@@ -258,7 +258,6 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
     /**
      * @see IMainContract.View#showMarkedAsFavorite(Network)
-     * @param network the network
      */
     @Override
     public void showMarkedAsFavorite(Network network) {
@@ -268,7 +267,6 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
     /**
      * @see IMainContract.View#updateFavorites(Set)
-     * @param favoriteNetworkIds set of favorite network IDs
      */
     @Override
     public void updateFavorites(Set<String> favoriteNetworkIds) {
@@ -280,6 +278,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     }
 
     /**
+     * @see androidx.fragment.app.FragmentActivity#onRequestPermissionsResult(int, String[], int[])
      * Este metodo se ejecuta automáticamente cuando el usuario responde al cuadro de diálogo de permisos
      */
     @Override
