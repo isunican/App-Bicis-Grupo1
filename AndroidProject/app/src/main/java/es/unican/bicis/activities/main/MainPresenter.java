@@ -132,6 +132,8 @@ public class MainPresenter implements IMainContract.Presenter {
         //Si no hay coincidencias mostramos error
         if (exactMatches.isEmpty() && partialMatches.isEmpty()) {
             view.showNoNetworksFoundError();
+            //recargar las redes en caso de que el texto este vacio o sea erroneo, resetea el filtro
+            this.load();
             return;
         }
 
