@@ -201,7 +201,7 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
     /**
      * Called when the user clicks on the button to filter between a desired rage
      */
-    public void onClickFilter() {
+    private void onClickFilter() {
         String distanceMin = ((TextView) findViewById(R.id.etMinKmFilter)).getText().toString();
         String distanceMax = ((TextView) findViewById(R.id.etMaxKmFilter)).getText().toString();
         presenter.onFilterClicked(distanceMin, distanceMax);
