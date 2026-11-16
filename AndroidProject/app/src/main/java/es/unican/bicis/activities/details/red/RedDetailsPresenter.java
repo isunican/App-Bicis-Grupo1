@@ -68,18 +68,22 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
     @Override
     public void onFilterClicked(String distanceMinText, String distanceMaxText) {
 
+        boolean minEmpty = (distanceMinText == null || distanceMinText.trim().isEmpty());
+        boolean maxEmpty = (distanceMaxText == null || distanceMaxText.trim().isEmpty());
+
         double distanceMin = 0.0;
         double distanceMax = Double.MAX_VALUE;
 
+        //Obtains the distance if it is not null or empty
         try {
-            if (distanceMinText != null && !distanceMinText.trim().isEmpty()) {
+            if (!minEmpty) {
                 if (distanceMinText.contains(".")) return;
                 int min = Integer.parseInt(distanceMinText.trim());
                 if (min < 0) return;
                 distanceMin = min;
             }
 
-            if (distanceMaxText != null && !distanceMaxText.trim().isEmpty()) {
+            if (!maxEmpty) {
                 if (distanceMaxText.contains(".")) return;
                 int max = Integer.parseInt(distanceMaxText.trim());
                 if (max < 0) return;
@@ -87,7 +91,7 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
             }
 
             // Checks if the range is valid
-            if (distanceMin > distanceMax) {
+            if (distanceMin >= distanceMax) {
                 return;
             }
         } catch (NumberFormatException e) {
@@ -105,6 +109,10 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
 
         // Obtains stations and applies the filter
         List<Station> stations = network.getStations();
+        if (stations == null) {
+            return;
+        }
+
         List<StationDistance> filteredStations = new ArrayList<>();
         for (Station station : stations) {
             double distanceToStation = LocationUtils.calcularDistanciaA(station.getLatitude(), station.getLongitude());
@@ -125,7 +133,7 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
         }
 
         // Checks if there isn't any station in the list to inform the user
-        if (filteredStations.isEmpty()) {
+        if (filteredStationsSorted.isEmpty()) {
             view.showNoStationsInRangeError();
         }
 
