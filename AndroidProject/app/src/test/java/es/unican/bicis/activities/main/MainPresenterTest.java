@@ -120,6 +120,10 @@ public class MainPresenterTest {
         presenter.init(mockView);
     }
 
+    // ====================================================================
+    // PRUEBAS UNITARIAS: US532430 - Marcar como favorito (PU-01 a PU-04)
+    // ====================================================================
+
     @Test
     public void testPU01_RedValida_DaoValida_RedesCargadas() {
         Network biciMad = mock(Network.class);
@@ -204,6 +208,108 @@ public class MainPresenterTest {
         verify(mockView).showMarkedAsFavorite(redValida);
 
         //se verifica que no se intenta ordenar ni refrescar la lista al no estar disponible networksToSort
+        verify(mockView, never()).showNetworks(anyList());
+    }
+
+    // ====================================================================
+    // PRUEBAS UNITARIAS: US532254 - Filtrar redes por nombre (PU-01 a PU-06)
+    // ====================================================================
+    @Test
+    public void testPU01_FiltroExitoMenosDe20Coincidencias() {
+        Network n1 = mock(Network.class); when(n1.getName()).thenReturn("Bicing");
+        Network n2 = mock(Network.class); when(n2.getName()).thenReturn("BiciMAD");
+        Network n3 = mock(Network.class); when(n3.getName()).thenReturn("Santander");
+
+        cargarRedesSimulada(Arrays.asList(n1, n2, n3));
+
+        org.mockito.Mockito.clearInvocations(mockView);
+
+        presenter.onFilterClicked("Bici");
+
+        ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
+        verify(mockView).showNetworks(captor.capture());
+
+        List<Network> filtered = captor.getValue();
+        assertEquals("Debe devolver exactamente 2 coincidencias", 2, filtered.size());
+        assertEquals("Bicing", filtered.get(0).getName());
+        assertEquals("BiciMAD", filtered.get(1).getName());
+
+        verify(mockView, never()).showNoNetworksFoundError();
+        verify(mockView, never()).showEmptySearchError();
+        verify(mockView, never()).showEmojiSearchError();
+    }
+
+    @Test
+    public void testPU02_FiltroExitoMasDe20YNombreExacto() {
+        List<Network> networks = new java.util.ArrayList<>();
+        for (int i = 1; i <= 25; i++) {
+            Network n = mock(Network.class);
+            when(n.getName()).thenReturn("Santander " + i);
+            networks.add(n);
+        }
+        Network nExact = mock(Network.class);
+        when(nExact.getName()).thenReturn("Santander");
+        networks.add(10, nExact);
+
+        cargarRedesSimulada(networks);
+        org.mockito.Mockito.clearInvocations(mockView);
+
+        presenter.onFilterClicked("Santander");
+
+        ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
+        verify(mockView).showNetworks(captor.capture());
+        List<Network> filtered = captor.getValue();
+
+        assertEquals("El límite de resultados debe truncarse a 20", 20, filtered.size());
+        assertEquals("La coincidencia exacta debe colocarse en la primera posición",
+                "Santander", filtered.get(0).getName());
+    }
+
+    @Test
+    public void testPU03_FiltroSinResultados() {
+        Network n1 = mock(Network.class); when(n1.getName()).thenReturn("Bicing");
+        cargarRedesSimulada(Arrays.asList(n1));
+        org.mockito.Mockito.clearInvocations(mockView);
+
+        presenter.onFilterClicked("Inexistente");
+
+        ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
+        verify(mockView).showNetworks(captor.capture());
+
+        org.junit.Assert.assertTrue("La lista enviada a la vista debe estar vacía", captor.getValue().isEmpty());
+        verify(mockView).showNoNetworksFoundError();
+    }
+
+    @Test
+    public void testPU04_FiltroCadenaVacia() {
+        cargarRedesSimulada(new java.util.ArrayList<>());
+        org.mockito.Mockito.clearInvocations(mockView);
+
+        presenter.onFilterClicked("");
+
+        verify(mockView).showEmptySearchError();
+        verify(mockView, never()).showNetworks(anyList());
+    }
+
+    @Test
+    public void testPU05_FiltroCadenaNula() {
+        cargarRedesSimulada(new java.util.ArrayList<>());
+        org.mockito.Mockito.clearInvocations(mockView);
+
+        presenter.onFilterClicked(null);
+
+        verify(mockView).showEmptySearchError();
+        verify(mockView, never()).showNetworks(anyList());
+    }
+
+    @Test
+    public void testPU06_FiltroConEmoticonos() {
+        cargarRedesSimulada(new java.util.ArrayList<>());
+        org.mockito.Mockito.clearInvocations(mockView);
+
+        presenter.onFilterClicked("TUeBICI\uD83D\uDEB4");
+
+        verify(mockView).showEmojiSearchError();
         verify(mockView, never()).showNetworks(anyList());
     }
 }
