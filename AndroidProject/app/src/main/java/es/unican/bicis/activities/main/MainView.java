@@ -176,6 +176,8 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         SearchView searchView = findViewById(R.id.searchView);
         if (searchView != null) {
+            searchView.setQueryHint("Buscar redes...");
+
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
@@ -185,6 +187,10 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
+                    if (newText == null || newText.trim().isEmpty()) {
+                        presenter.onFilterClicked(newText);
+                        return true;
+                    }
                     return false;
                 }
             });
