@@ -91,6 +91,8 @@ public class MainPresenter implements IMainContract.Presenter {
         //En caso de que la cadenas sea nula o vacia la mostramos un error
         if (query == null || query.trim().isEmpty()) {
             view.showEmptySearchError();
+            //recargar las redes en caso de que el texto este vacio, resetea el filtro
+            this.load();
             return;
         }
 
@@ -106,8 +108,6 @@ public class MainPresenter implements IMainContract.Presenter {
         //Si no hay redes que poder cargar mostramos error
         if (lastLoadedNetworks == null || lastLoadedNetworks.isEmpty()) {
             view.showNoNetworksFoundError();
-            //recargar las redes en caso de que el texto este vacio, resetea el filtro
-            this.load();
             return;
         }
 
