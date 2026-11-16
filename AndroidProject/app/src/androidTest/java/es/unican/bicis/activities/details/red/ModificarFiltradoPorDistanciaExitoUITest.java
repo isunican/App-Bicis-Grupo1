@@ -78,16 +78,16 @@ public class ModificarFiltradoPorDistanciaExitoUITest {
         onView(withId(R.id.FilterKmRange)).perform(click());
 
         //Se verifica que se muestran todas las estaciones que cumplen el requisito
-        onView(withId(R.id.lvStations)).check(matches(withListSize(5)));
+        onView(withId(R.id.lvStations)).check(matches(withListSize(18)));
 
         //Se verifica el orden y que el nombre de la estacion mas cercana y mas lejana correspondan tras el filtrado
         DataInteraction estacion0 = onData(anything()).inAdapterView(withId(R.id.lvStations)).atPosition(0);
-        estacion0.onChildView(withId(R.id.tvName)).check(matches(withText("San Román Corbán (NE)")));
-        DataInteraction estacion5 = onData(anything()).inAdapterView(withId(R.id.lvStations)).atPosition(4);
-        estacion5.onChildView(withId(R.id.tvName)).check(matches(withText("PTCAN 1")));
+        estacion0.onChildView(withId(R.id.tvName)).check(matches(withText("Magdalena")));
+        DataInteraction estacion18 = onData(anything()).inAdapterView(withId(R.id.lvStations)).atPosition(17);
+        estacion18.onChildView(withId(R.id.tvName)).check(matches(withText("PTCAN 1")));
 
         //Comprueba que las distancias van en orden
-        estacion0.onChildView(withId(R.id.tvDistance)).check(matches(withText(startsWith("5"))));
-        estacion5.onChildView(withId(R.id.tvDistance)).check(matches(withText(startsWith("6"))));
+        estacion0.onChildView(withId(R.id.tvDistance)).check(matches(withText(startsWith("2"))));
+        estacion18.onChildView(withId(R.id.tvDistance)).check(matches(withText(startsWith("6"))));
     }
 }
