@@ -307,9 +307,9 @@ public class RedDetailsPresenterTest {
         when(mockNetwork.getStations()).thenReturn(Arrays.asList(estacion3, estacion1, estacion2));
 
         //Mockea el caclulo de la distancia a las estaciones
-        mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(10.0, 10.0)).thenReturn(3f);
-        mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(20.0, 20.0)).thenReturn(4f);
-        mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(30.0, 30.0)).thenReturn(2f);
+        mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(10.0, 10.0)).thenReturn(2f);
+        mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(20.0, 20.0)).thenReturn(3f);
+        mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(30.0, 30.0)).thenReturn(4f);
 
         presenter.onFilterClicked(null, "3");
 
@@ -342,14 +342,134 @@ public class RedDetailsPresenterTest {
         mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(20.0, 20.0)).thenReturn(4f);
         mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(30.0, 30.0)).thenReturn(2f);
 
-        presenter.onFilterClicked("100", "100");
+        presenter.onFilterClicked("100", "200");
 
-        //Obtiene la lista de estaciones filtradas y verifica que sean las correctas
+        //Obtiene la lista de estaciones filtradas y verifica que sea correcto y se muestre el error
         ArgumentCaptor<List<Station>> captor = ArgumentCaptor.forClass(List.class);
         verify(mockView).showStations(captor.capture());
 
         List<Station> filtradas = captor.getValue();
         assertEquals(0, filtradas.size());
         verify(mockView).showNoStationsInRangeError();
+    }
+
+    @Test
+    public void test05_DistanciaNegavitaIntroducida() {
+        //Prepara y mockea la ubicacion
+        prepararEntornoFiltrado();
+        mockedUtils.when(() -> Utils.isLocationEnabled(mockContext)).thenReturn(true);
+
+        //Crea las estaciones
+        Station estacion1 = crearEstacionMock("Estacion 1", 10.0, 10.0);
+        Station estacion2 = crearEstacionMock("Estacion 2", 20.0, 20.0);
+        Station estacion3 = crearEstacionMock("Estacion 3", 30.0, 30.0);
+
+        when(mockNetwork.getStations()).thenReturn(Arrays.asList(estacion3, estacion1, estacion2));
+
+        //Mockea el caclulo de la distancia a las estaciones
+        mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(10.0, 10.0)).thenReturn(3f);
+        mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(20.0, 20.0)).thenReturn(4f);
+        mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(30.0, 30.0)).thenReturn(5f);
+
+        presenter.onFilterClicked("-2", "10");
+
+        //Comprueba que no se realice ninguna accion
+        verify(mockView, never()).showStations(any());
+    }
+
+    @Test
+    public void test06_DistanciaConDecimalesIntroducida() {
+        //Prepara y mockea la ubicacion
+        prepararEntornoFiltrado();
+        mockedUtils.when(() -> Utils.isLocationEnabled(mockContext)).thenReturn(true);
+
+        //Crea las estaciones
+        Station estacion1 = crearEstacionMock("Estacion 1", 10.0, 10.0);
+        Station estacion2 = crearEstacionMock("Estacion 2", 20.0, 20.0);
+        Station estacion3 = crearEstacionMock("Estacion 3", 30.0, 30.0);
+
+        when(mockNetwork.getStations()).thenReturn(Arrays.asList(estacion3, estacion1, estacion2));
+
+        //Mockea el caclulo de la distancia a las estaciones
+        mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(10.0, 10.0)).thenReturn(3f);
+        mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(20.0, 20.0)).thenReturn(4f);
+        mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(30.0, 30.0)).thenReturn(5f);
+
+        presenter.onFilterClicked("4", "7.5");
+
+        //Comprueba que no se realice ninguna accion
+        verify(mockView, never()).showStations(any());
+    }
+
+    @Test
+    public void test07_DistanciasInvertidas() {
+        //Prepara y mockea la ubicacion
+        prepararEntornoFiltrado();
+        mockedUtils.when(() -> Utils.isLocationEnabled(mockContext)).thenReturn(true);
+
+        //Crea las estaciones
+        Station estacion1 = crearEstacionMock("Estacion 1", 10.0, 10.0);
+        Station estacion2 = crearEstacionMock("Estacion 2", 20.0, 20.0);
+        Station estacion3 = crearEstacionMock("Estacion 3", 30.0, 30.0);
+
+        when(mockNetwork.getStations()).thenReturn(Arrays.asList(estacion3, estacion1, estacion2));
+
+        //Mockea el caclulo de la distancia a las estaciones
+        mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(10.0, 10.0)).thenReturn(3f);
+        mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(20.0, 20.0)).thenReturn(4f);
+        mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(30.0, 30.0)).thenReturn(5f);
+
+        presenter.onFilterClicked("15", "6");
+
+        //Comprueba que no se realice ninguna accion
+        verify(mockView, never()).showStations(any());
+    }
+
+    @Test
+    public void test08_DistanciasIguales() {
+        //Prepara y mockea la ubicacion
+        prepararEntornoFiltrado();
+        mockedUtils.when(() -> Utils.isLocationEnabled(mockContext)).thenReturn(true);
+
+        //Crea las estaciones
+        Station estacion1 = crearEstacionMock("Estacion 1", 10.0, 10.0);
+        Station estacion2 = crearEstacionMock("Estacion 2", 20.0, 20.0);
+        Station estacion3 = crearEstacionMock("Estacion 3", 30.0, 30.0);
+
+        when(mockNetwork.getStations()).thenReturn(Arrays.asList(estacion3, estacion1, estacion2));
+
+        //Mockea el caclulo de la distancia a las estaciones
+        mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(10.0, 10.0)).thenReturn(3f);
+        mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(20.0, 20.0)).thenReturn(4f);
+        mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(30.0, 30.0)).thenReturn(5f);
+
+        presenter.onFilterClicked("3", "3");
+
+        //Comprueba que no se realice ninguna accion
+        verify(mockView, never()).showStations(any());
+    }
+
+    @Test
+    public void test09_GeolocalizacionNoDisponible() {
+        //Prepara y mockea la ubicacion
+        prepararEntornoFiltrado();
+        mockedUtils.when(() -> Utils.isLocationEnabled(mockContext)).thenReturn(false);
+
+        //Crea las estaciones
+        Station estacion1 = crearEstacionMock("Estacion 1", 10.0, 10.0);
+        Station estacion2 = crearEstacionMock("Estacion 2", 20.0, 20.0);
+        Station estacion3 = crearEstacionMock("Estacion 3", 30.0, 30.0);
+
+        when(mockNetwork.getStations()).thenReturn(Arrays.asList(estacion3, estacion1, estacion2));
+
+        //Mockea el caclulo de la distancia a las estaciones
+        mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(10.0, 10.0)).thenReturn(3f);
+        mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(20.0, 20.0)).thenReturn(4f);
+        mockedLocationUtils.when(() -> LocationUtils.calcularDistanciaA(30.0, 30.0)).thenReturn(5f);
+
+        presenter.onFilterClicked("6", "7");
+
+        //Comprueba que se notifique el error de geolocalizacion
+        verify(mockView).showLocationError();
     }
 }
