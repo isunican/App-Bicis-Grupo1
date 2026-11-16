@@ -1,6 +1,5 @@
 package es.unican.bicis.activities.main;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.pressImeActionButton;
@@ -9,11 +8,10 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.Matchers.anything;
 
 import static org.hamcrest.core.AllOf.allOf;
+
+import static es.unican.bicis.utils.Matchers.isAdapterViewEmpty;
 
 import android.widget.EditText;
 
@@ -52,9 +50,7 @@ public class FiltrarPorNombreNoExistenRedesUITest {
         //buscar la barra de busqueda y buscar su campo de texto, introducir texto y pulsar la lupa
         onView(allOf(isDescendantOfA(withId(R.id.searchView)), isAssignableFrom(EditText.class)))
                 .perform(clearText(), typeText("Inexistente"), pressImeActionButton());
-        //como no existe se verifica que en primera posicion no esta la red que mas coincida porque ninguna coincide
-        //es decir el nombre de la red no coincide o coincide con otra red
-            onData(anything()).inAdapterView(withId(R.id.lvNetworks)).atPosition(0)
-                    .onChildView(withId(R.id.tvName)).check(matches(not(withText("Inexistente"))));
+        //verificar que este vacia la lista de redes
+        onView(withId(R.id.lvNetworks)).check(matches(isAdapterViewEmpty()));
     }
 }

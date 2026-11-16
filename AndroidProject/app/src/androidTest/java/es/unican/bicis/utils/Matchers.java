@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -139,6 +140,34 @@ public class Matchers {
             public void describeTo(Description description) {
                 description.appendText("un ListView cuyo número de elementos sea ");
                 sizeMatcher.describeTo(description);
+            }
+        };
+    }
+
+    /**
+     * Matcher que verifica si un AdapterView (como ListView o Spinner) está vacío.
+     */
+    public static Matcher<View> isAdapterViewEmpty() {
+        return new TypeSafeMatcher<View>() {
+
+            @Override
+            public void describeTo(Description description) {
+                // Mensaje que mostrará Espresso si el test falla
+                description.appendText("un AdapterView sin datos en su Adapter (count == 0)");
+            }
+
+            @Override
+            protected boolean matchesSafely(View view) {
+                // 1. Verificamos que la vista sea realmente un AdapterView
+                if (!(view instanceof AdapterView)) {
+                    return false;
+                }
+
+                // 2. Extraemos el adapter
+                Adapter adapter = ((AdapterView<?>) view).getAdapter();
+
+                // 3. Está vacío si no hay adapter, o si el adapter tiene 0 elementos
+                return adapter == null || adapter.getCount() == 0;
             }
         };
     }
