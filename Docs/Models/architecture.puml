@@ -35,6 +35,8 @@ class MainPresenter {
     - processFavoriteSelection(network : Network)
     - buildSortedNetworkList(networks : List<Network>, favoriteIds : Set<String>) : List<Network>
     - updateUiElements(network : Network, favoriteIds : Set<String>, sortedNetworks : List<Network>)
+    - containsEmoji(text : String) : boolean
+    - isEmojiCodePoint(codePoint : int) : boolean
 }
 
 class InfoView
@@ -79,6 +81,9 @@ interface IMainContract.View {
     + getFavouriteDAO() : IFavouriteDAO
     + showMarkedAsFavorite(network : Network)
     + updateFavorites(favoriteNetworkIds : Set<String>)
+    + showEmptySearchError()
+    + showEmojiSearchError()
+    + showNoNetworksFoundError()
 }
 
 interface IMainContract.Presenter {
@@ -86,6 +91,7 @@ interface IMainContract.Presenter {
     + onNetworkClicked(network : Network)
     + onMenuInfoClicked()
     + onFavoriteClicked(network : Network)
+    + onFilterClicked(query: String)
 }
 
 interface IRedDetailsContract.View {
