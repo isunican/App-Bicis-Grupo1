@@ -57,4 +57,5 @@
         <item>Other issue</item>
     </string-array>
     <string name="mark_as_favorite">Mark as favorite</string>
+    <string name="filterNetworkByNameHint">Search networks...</string>
 </resources>
