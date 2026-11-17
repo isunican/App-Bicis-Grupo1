@@ -40,10 +40,10 @@ public interface IRedDetailsContract {
         /**
          * The presenter is informed that the user wants to filter the stations by distance.
          *
-         * @param distanceMin minimum distance introduced by the user
-         * @param distanceMax maximum distance introduced by the user
+         * @param distanceMinText minimum distance introduced by the user
+         * @param distanceMaxText maximum distance introduced by the user
          */
-        public void onFilterClicked(String distanceMin, String distanceMax);
+        public void onFilterClicked(String distanceMinText, String distanceMaxText);
     }
 
 
