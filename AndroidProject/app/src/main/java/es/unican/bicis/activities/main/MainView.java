@@ -181,15 +181,22 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         SearchView searchView = findViewById(R.id.searchView);
         if (searchView != null) {
-            searchView.setQueryHint("Buscar redes...");
+            searchView.setQueryHint(getString(R.string.filterNetworkByNameHint));
 
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+                /**
+                 * @see SearchView.OnQueryTextListener#onQueryTextSubmit(String)
+                 */
                 @Override
                 public boolean onQueryTextSubmit(String query) {
                     presenter.onFilterClicked(query);
                     return true;
                 }
 
+                /**
+                 * @see SearchView.OnQueryTextListener#onQueryTextChange(String)
+                 */
                 @Override
                 public boolean onQueryTextChange(String newText) {
                     if (newText == null || newText.trim().isEmpty()) {

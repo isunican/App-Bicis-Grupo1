@@ -82,7 +82,6 @@ public class MainPresenter implements IMainContract.Presenter {
 
     /**
      * @see IMainContract.Presenter#onFilterClicked(String)
-     * @param query search string introduced by the user
      */
     @Override
     public void onFilterClicked(String query) {
@@ -167,7 +166,6 @@ public class MainPresenter implements IMainContract.Presenter {
         }
         return false;
     }
-
 
     /**
      * Comprueba si es un codigo de emoji u otro simbolo no permitido
