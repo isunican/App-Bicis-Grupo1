@@ -65,8 +65,6 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
 
     /**
      * @see IRedDetailsContract.Presenter#onFilterClicked(String, String)
-     * @param distanceMinText minimum distance introduced by the user
-     * @param distanceMaxText maximum distance introduced by the user
      */
     @Override
     public void onFilterClicked(String distanceMinText, String distanceMaxText) {

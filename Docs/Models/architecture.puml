@@ -52,8 +52,7 @@ class StationDetailsPresenter {
 
 
 class RedDetailsView {
-    -onClickFilterMoreThanDistance()
-    -onClickFilterLessThanDistance()
+    -onClickFilter()
 }
 class RedDetailsPresenter {
     -load()
@@ -111,7 +110,7 @@ interface IRedDetailsContract.View {
 interface IRedDetailsContract.Presenter {
     + init(view : View, network : Network)
     + onStationClicked(station : Station)
-    + onFilterClicked(distance : String, filter : DistanceFilter)
+    + onFilterClicked(distanceMinText : String, distanceMaxText : String)
 }
 
 interface INetworksRepository {
