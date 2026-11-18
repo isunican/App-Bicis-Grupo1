@@ -59,6 +59,5 @@ NetworksResponse *--> "*" Network : networks
 NetworkResponse *--> "1" Network : network
 
 Incident --> "1" IncidentType : typeId
-Incident "*" --> "1" Station : idEstacion
 
 @enduml
