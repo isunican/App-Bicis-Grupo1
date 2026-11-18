@@ -88,9 +88,14 @@ public class MainPresenter implements IMainContract.Presenter {
         if (view == null) return;
 
         //En caso de que la cadenas sea nula o vacia la mostramos un error
-        if (query == null || query.trim().isEmpty()) {
+        if (query == null) {
             view.showEmptySearchError();
             //recargar las redes en caso de que el texto este vacio, resetea el filtro
+            this.load();
+            return;
+        }
+        //la search como tal nunca va vacia o nula, pero mantengo el mensaje de error en lo nulo
+        if (query.trim().isEmpty()) {
             this.load();
             return;
         }
