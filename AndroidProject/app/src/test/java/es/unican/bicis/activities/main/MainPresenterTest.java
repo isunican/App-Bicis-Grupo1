@@ -286,7 +286,6 @@ public class MainPresenterTest {
         org.mockito.Mockito.clearInvocations(mockView);
 
         presenter.onFilterClicked("");
-
         verify(mockView).showNetworks(anyList());
     }
 
