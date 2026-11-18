@@ -128,11 +128,6 @@ interface NetworkDetailsCallback {
     + onFailure(e : Throwable)
 }
 
-enum DistanceFilter {
-    LESS_THAN
-    MORE_THAN
-}
-
 interface IStationDetailsContract.Presenter {
     + init(view : View, station : Station, db : AppDatabase)
     + registrarIncidencia(type : IncidentType, texto : String)
