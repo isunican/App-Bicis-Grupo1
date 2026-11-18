@@ -451,7 +451,7 @@ public class RedDetailsPresenterTest {
 
     @Test
     public void test09_GeolocalizacionNoDisponible() {
-        //Prepara y mockea la ubicacion
+        //Mockea la ubicacion
         prepararEntornoFiltrado();
         mockedUtils.when(() -> Utils.isLocationEnabled(mockContext)).thenReturn(false);
 
