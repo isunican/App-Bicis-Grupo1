@@ -40,10 +40,10 @@ public interface IRedDetailsContract {
         /**
          * The presenter is informed that the user wants to filter the stations by distance.
          *
-         * @param distance distance introduced by the user
-         * @param filter filter introduced by the user (less than distance or more than distance).
+         * @param distanceMinText minimum distance introduced by the user
+         * @param distanceMaxText maximum distance introduced by the user
          */
-        public void onFilterClicked(String distance, DistanceFilter filter);
+        public void onFilterClicked(String distanceMinText, String distanceMaxText);
     }
 
 
@@ -67,7 +67,7 @@ public interface IRedDetailsContract {
          * therefore the Presenter should be unable to instantiate repositories and must rely on
          * the view to create the repository.
          * Only the Presenter should call this method
-         * @return
+         * @return the repository to access the data
          */
         public INetworksRepository getNetworksRepository();
 
@@ -88,7 +88,7 @@ public interface IRedDetailsContract {
          * The view is requested to display a notification indicating  that the stations
          * were loaded correctly.
          * Only the Presenter should call this method
-         * @param stations
+         * @param stations number of stations loaded
          */
         public void showLoadCorrect(int stations);
 
@@ -128,6 +128,7 @@ public interface IRedDetailsContract {
         /**
          * The view is requested to return the context of the application.
          * Only the Presenter should call this method
+         * @return the context of the application
          */
         public Context getContext();
     }

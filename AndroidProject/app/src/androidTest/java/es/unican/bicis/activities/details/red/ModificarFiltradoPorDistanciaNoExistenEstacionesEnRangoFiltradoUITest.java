@@ -1,5 +1,6 @@
 package es.unican.bicis.activities.details.red;
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -8,15 +9,16 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.Matchers.anything;
 import static org.junit.Assert.assertNotNull;
 
 import static es.unican.bicis.utils.Matchers.withListSize;
 
 import android.Manifest;
 import android.content.Context;
-import android.view.View;
 
+import androidx.test.espresso.DataInteraction;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
@@ -33,7 +35,7 @@ import es.unican.bicis.activities.main.MainView;
 import es.unican.bicis.utils.MockLocationManager;
 
 @HiltAndroidTest
-public class FiltrarPorDistanciaSinEstacionesEnRangoUITest {
+public class ModificarFiltradoPorDistanciaNoExistenEstacionesEnRangoFiltradoUITest {
 
     // Coordinates of the TUeBICI network in Santander (see res/raw/networks.json). */
     private static final double SANTANDER_LATITUDE = 43.471281;
@@ -61,27 +63,21 @@ public class FiltrarPorDistanciaSinEstacionesEnRangoUITest {
         mockLocationManager.setLocation(SANTANDER_LATITUDE, SANTANDER_LONGITUDE);
         assertNotNull("The application did not receive any GPS update",
                 mockLocationManager.awaitMockedLocation(LOCATION_TIMEOUT_MS));
-        activityRule.getScenario().onActivity(
-                activity -> decorView = activity.getWindow().getDecorView()
-        );
     }
 
-    private View decorView;
-
-
     @Test
-    public void testPrueba01_SinEstacionesEnRango() {
+    public void testPrueba03_NoExistenEstacionesEnRangoFiltrado() {
         // Abrimos los detalles de la red TUeBICI desde la pantalla principal
         onView(withText("TUeBICI")).perform(click());
-        
-        // 1 y 2. El técnico introduce 0Km en la aplicación
-        onView(withId(R.id.etKmFilter)).perform(clearText(), typeText("0"), closeSoftKeyboard());
 
-        // 4 y 5. El técnico selecciona la opción de ver a una distancia inferior
-        onView(withId(R.id.btnFilterLessThanKm)).perform(click());
+        //El técnico introduce 2Km y 10Km en la aplicación
+        onView(withId(R.id.etMinKmFilter)).perform(clearText(), typeText("100"), closeSoftKeyboard());
 
-        // 8. Se verifica que no muestran estaciones y se muestra el mensaje de error correspondiente
+        //El técnico selecciona el botón de filtrar
+        onView(withId(R.id.FilterKmRange)).perform(click());
+
+        //Se verifica que no se muestran estaciones
         onView(withId(R.id.lvStations)).check(matches(withListSize(0)));
-        //Se deberia de de comprobar el que salta el Toast correspondiente
+
     }
 }

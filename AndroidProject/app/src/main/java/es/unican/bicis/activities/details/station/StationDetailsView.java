@@ -1,7 +1,6 @@
 package es.unican.bicis.activities.details.station;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
@@ -52,8 +51,7 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
     private Station station = null;
 
     /**
-     * @see AppCompatActivity#onCreate(Bundle)
-     * @param savedInstanceState
+     * @see androidx.fragment.app.FragmentActivity#onCreate(Bundle)
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,6 +169,9 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
             spIncidencias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 private boolean isInitial = true;
 
+                /**
+                 * @see AdapterView.OnItemSelectedListener#onItemSelected(AdapterView, View, int, long)
+                 */
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     if (isInitial) {
@@ -210,6 +211,9 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
                     }
                 }
 
+                /**
+                 * @see AdapterView.OnItemSelectedListener#onNothingSelected(AdapterView)
+                 */
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
                     // Sino se selecciona nada no se hace nada
@@ -217,6 +221,7 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
             });
         }
     }
+
     /**
      * @see IStationDetailsContract.View#showLoadError()
      */
@@ -231,7 +236,7 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
     @Override
     public void showIncidences(List<Incident> incidents) {
         ListView list = findViewById(R.id.lvIncidences);
-        IncidentArrayAdapter adapter = new IncidentArrayAdapter(this, incidents);
+        IncidentArrayAdapter adapter = new IncidentArrayAdapter(this, incidents, this::showEditIncidentDialog);
         list.setAdapter(adapter);
     }
 
@@ -268,5 +273,109 @@ public class StationDetailsView extends AppCompatActivity implements IStationDet
         if (presenter != null) {
             presenter.onDestroy();
         }
+    }
+
+    /**
+     * @see IStationDetailsContract.View#showEditIncidentDialog(Incident)
+     */
+    @Override
+    public void showEditIncidentDialog(Incident incident) {
+        if (incident == null) {
+            return;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // Inflar el layout personalizado
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit_incident, null);
+        builder.setView(dialogView);
+
+        Spinner spEditType = dialogView.findViewById(R.id.spEditType);
+        EditText etEditDescription = dialogView.findViewById(R.id.etEditDescription);
+
+        // Cargar los items del spinner
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.edit_incicents_options, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spEditType.setAdapter(adapter);
+
+        // Seleccionar el tipo actual de la incidencia
+        IncidentType typeId = incident.getTypeId();
+        switch (typeId) {
+            case STATION:
+                spEditType.setSelection(0);
+                break;
+            case BIKE:
+                spEditType.setSelection(1);
+                break;
+            case OTHER:
+                spEditType.setSelection(2);
+                break;
+        }
+
+        // Rellenar el texto de la descripción
+        etEditDescription.setText(incident.getType());
+
+        // Mostrar/Ocultar o habilitar la descripción si no es tipo "Otro"
+        spEditType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            /**
+             * @see AdapterView.OnItemSelectedListener#onItemSelected(AdapterView, View, int, long)
+             */
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                boolean isOtro = (position == 2);
+                etEditDescription.setEnabled(isOtro);
+                if (!isOtro) {
+                    etEditDescription.setText("");
+                }
+            }
+
+            /**
+             * @see AdapterView.OnItemSelectedListener#onNothingSelected(AdapterView)
+             */
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Si no se selecciona nada no se hace nada
+            }
+        });
+
+        // Botón Confirmar
+        builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
+            int selectedPosition = spEditType.getSelectedItemPosition();
+            IncidentType nuevoTipo = null;
+            String nuevaDescripcion = null;
+
+            switch (selectedPosition) {
+                case 0:
+                    nuevoTipo = IncidentType.STATION;
+                    nuevaDescripcion = IncidentType.STATION.getDescripcion();
+                    break;
+                case 1:
+                    nuevoTipo = IncidentType.BIKE;
+                    nuevaDescripcion = IncidentType.BIKE.getDescripcion();
+                    break;
+                case 2:
+                    nuevoTipo = IncidentType.OTHER;
+                    nuevaDescripcion = etEditDescription.getText().toString().trim();
+                    if (nuevaDescripcion.isEmpty()) {
+                        // Mostrar error si el tipo es other y la descripción esta vacía
+                        showEmptyIssueError();
+                        return;
+                    }
+                    break;
+            }
+
+            // Actualizar la instancia de la incidencia y notificar al Presenter
+            incident.setTypeId(nuevoTipo);
+            incident.setType(nuevaDescripcion);
+
+            presenter.modificarIncidencia(incident);
+        });
+
+        // Botón Cancelar
+        builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
+
+        builder.show();
     }
 }

@@ -35,7 +35,7 @@ import es.unican.bicis.activities.main.MainView;
 import es.unican.bicis.utils.MockLocationManager;
 
 @HiltAndroidTest
-public class FiltrarPorDistanciaExitoUITest {
+public class ModificarFiltradoPorDistanciaExitoUITest {
 
     // Coordinates of the TUeBICI network in Santander (see res/raw/networks.json). */
     private static final double SANTANDER_LATITUDE = 43.471281;
@@ -66,28 +66,28 @@ public class FiltrarPorDistanciaExitoUITest {
     }
 
     @Test
-    public void testPrueba00_FiltradoExito() {
+    public void testPrueba00_ÉxitoConRangoDefinido() {
         // Abrimos los detalles de la red TUeBICI desde la pantalla principal
         onView(withText("TUeBICI")).perform(click());
 
-        // 1 y 2. El técnico introduce 5Km en la aplicación
-        onView(withId(R.id.etKmFilter)).perform(clearText(), typeText("5"), closeSoftKeyboard());
+        //El técnico introduce 2Km y 10Km en la aplicación
+        onView(withId(R.id.etMinKmFilter)).perform(clearText(), typeText("2"), closeSoftKeyboard());
+        onView(withId(R.id.etMaxKmFilter)).perform(clearText(), typeText("10"), closeSoftKeyboard());
 
-        // 4 y 5. El técnico selecciona la opción de ver a una distancia superior
-        onView(withId(R.id.btnFilterMoreThanKm)).perform(click());
+        //El técnico selecciona el botón de filtrar
+        onView(withId(R.id.FilterKmRange)).perform(click());
 
-        // 8. Se verifica que se muestran todas las estaciones que cumplen el requisito
-        // (Ajusta el número y los textos inferiores según la ubicación fija de tu emulador/LocationUtils)
-        onView(withId(R.id.lvStations)).check(matches(withListSize(5)));
+        //Se verifica que se muestran todas las estaciones que cumplen el requisito
+        onView(withId(R.id.lvStations)).check(matches(withListSize(18)));
 
-        // 7, 9 y 10. Se verifica el orden y que el nombre de la estacion mas cercana y mas lejana correspondan tras el filtrado
+        //Se verifica el orden y que el nombre de la estacion mas cercana y mas lejana correspondan tras el filtrado
         DataInteraction estacion0 = onData(anything()).inAdapterView(withId(R.id.lvStations)).atPosition(0);
-        estacion0.onChildView(withId(R.id.tvName)).check(matches(withText("San Román Corbán (NE)")));
-        DataInteraction estacion5 = onData(anything()).inAdapterView(withId(R.id.lvStations)).atPosition(4);
-        estacion5.onChildView(withId(R.id.tvName)).check(matches(withText("PTCAN 1")));
+        estacion0.onChildView(withId(R.id.tvName)).check(matches(withText("Magdalena")));
+        DataInteraction estacion18 = onData(anything()).inAdapterView(withId(R.id.lvStations)).atPosition(17);
+        estacion18.onChildView(withId(R.id.tvName)).check(matches(withText("PTCAN 1")));
 
         //Comprueba que las distancias van en orden
-        estacion0.onChildView(withId(R.id.tvDistance)).check(matches(withText(startsWith("5"))));
-        estacion5.onChildView(withId(R.id.tvDistance)).check(matches(withText(startsWith("6"))));
+        estacion0.onChildView(withId(R.id.tvDistance)).check(matches(withText(startsWith("2"))));
+        estacion18.onChildView(withId(R.id.tvDistance)).check(matches(withText(startsWith("6"))));
     }
 }

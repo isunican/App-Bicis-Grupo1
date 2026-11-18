@@ -30,6 +30,10 @@ public class ApiNetworksRepository implements INetworksRepository {
     public void requestNetworks(NetworksCallback cb) {
         Call<NetworksResponse> call = CityBikesService.api.networks();
         call.enqueue(new Callback<NetworksResponse>() {
+
+            /**
+             * @see Callback#onResponse(Call, Response)
+             */
             @Override
             public void onResponse(@Nonnull Call<NetworksResponse> call, @Nonnull Response<NetworksResponse> response) {
                 NetworksResponse body = response.body();
@@ -40,6 +44,9 @@ public class ApiNetworksRepository implements INetworksRepository {
                 }
             }
 
+            /**
+             * @see Callback#onFailure(Call, Throwable)
+             */
             @Override
             public void onFailure(@Nonnull Call<NetworksResponse> call, @Nonnull Throwable t) {
                 cb.onFailure(t);
@@ -57,6 +64,10 @@ public class ApiNetworksRepository implements INetworksRepository {
     public void requestNetwork(NetworkDetailsCallback cb, String networkId) {
         Call<NetworkResponse> call = CityBikesService.api.network(networkId);
         call.enqueue(new Callback<NetworkResponse>() {
+
+            /**
+             * @see Callback#onResponse(Call, Response)
+             */
             @Override
             public void onResponse(@Nonnull Call<NetworkResponse> call, @Nonnull Response<NetworkResponse> response) {
                 NetworkResponse body = response.body();
@@ -67,6 +78,9 @@ public class ApiNetworksRepository implements INetworksRepository {
                 }
             }
 
+            /**
+             * @see Callback#onFailure(Call, Throwable)
+             */
             @Override
             public void onFailure(@Nonnull Call<NetworkResponse> call, @Nonnull Throwable t) {
                 cb.onFailure(t);

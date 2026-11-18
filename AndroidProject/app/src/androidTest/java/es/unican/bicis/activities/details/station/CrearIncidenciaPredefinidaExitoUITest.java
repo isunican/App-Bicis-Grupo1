@@ -77,7 +77,7 @@ public class CrearIncidenciaPredefinidaExitoUITest {
         onView(withId(R.id.btBotonIncidencia)).perform(click());
 
         String[] expectedSpOptions = new String[4];
-        expectedSpOptions[0] = "Select an incidence...";
+        expectedSpOptions[0] = "Select an incident...";
         expectedSpOptions[1] = "Damaged station";
         expectedSpOptions[2] = "Defective bike";
         expectedSpOptions[3] = "Other issue";

@@ -55,8 +55,7 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
     Network network = null;
 
     /**
-     * @see AppCompatActivity#onCreate(Bundle)
-     * @param savedInstanceState
+     * @see androidx.fragment.app.FragmentActivity#onCreate(Bundle)
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +108,7 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
     }
 
     /**
-     * @see AppCompatActivity#onResume()
+     * @see androidx.fragment.app.FragmentActivity#onResume()
      */
     @Override
     protected void onResume() {
@@ -191,34 +190,24 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
         }
 
         // Define buttons and set listeners
-        ImageButton btnFilterMoreThanKm = findViewById(R.id.btnFilterMoreThanKm);
-        ImageButton btnFilterLessThanKm = findViewById(R.id.btnFilterLessThanKm);
+        ImageButton btnFilterMoreThanKm = findViewById(R.id.FilterKmRange);
 
-        btnFilterMoreThanKm.setOnClickListener(v -> onClickFilterMoreThanDistance());
-        btnFilterLessThanKm.setOnClickListener(v -> onClickFilterLessThanDistance());
+        if (btnFilterMoreThanKm != null) {
+            btnFilterMoreThanKm.setOnClickListener(v -> onClickFilter());
+        }
     }
 
     /**
-     * Called when the user clicks on the button to filter by a distance more
-     * than the one entered
+     * Called when the user clicks on the button to filter between a desired rage.
      */
-    public void onClickFilterMoreThanDistance() {
-        String distance = ((TextView) findViewById(R.id.etKmFilter)).getText().toString();
-        presenter.onFilterClicked(distance, DistanceFilter.MORE_THAN);
-    }
-
-    /**
-     * Called when the user clicks on the button to filter by a distance less
-     * than the one entered
-     */
-    public void onClickFilterLessThanDistance() {
-        String distance = ((TextView) findViewById(R.id.etKmFilter)).getText().toString();
-        presenter.onFilterClicked(distance, DistanceFilter.LESS_THAN);
+    private void onClickFilter() {
+        String distanceMin = ((TextView) findViewById(R.id.etMinKmFilter)).getText().toString();
+        String distanceMax = ((TextView) findViewById(R.id.etMaxKmFilter)).getText().toString();
+        presenter.onFilterClicked(distanceMin, distanceMax);
     }
 
     /**
      * @see IRedDetailsContract.View#getNetworksRepository()
-     * @return the repository to access the data
      */
     @Override
     public INetworksRepository getNetworksRepository() {
@@ -275,6 +264,9 @@ public class RedDetailsView extends AppCompatActivity implements IRedDetailsCont
         Toast.makeText(this, R.string.locationError, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * @see IRedDetailsContract.View#showNoStationsInRangeError()
+     */
     @Override
     public void showNoStationsInRangeError() {
         Toast.makeText(this, R.string.noStationsInRange, Toast.LENGTH_SHORT).show();

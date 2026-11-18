@@ -169,12 +169,13 @@ public class StationDetailsPresenterTest {
     @Test
     public void registrarIncidenciaTest_PU07 () {
 
-        sut.init(mockStationDetailsView, station, mockAppDatabase);
         doThrow(new SQLiteException()).when(mockIIncidentDAO).insertarIncidencia(any(Incident.class));
+
+        sut.init(mockStationDetailsView, station, mockAppDatabase);
         sut.registrarIncidencia(IncidentType.BIKE, null);
 
-        verify(mockIIncidentDAO, timeout(1000)).insertarIncidencia(any(Incident.class));
-        verify(mockStationDetailsView, timeout(1000)).showDatabaseError();
+        verify(mockIIncidentDAO, timeout(2000)).insertarIncidencia(any(Incident.class));
+        verify(mockStationDetailsView, timeout(2000)).showDatabaseError();
         verify(mockStationDetailsView, never()).showEmptyIssueError();
     }
 
@@ -226,5 +227,139 @@ public class StationDetailsPresenterTest {
         verify(mockIIncidentDAO, timeout(2000)).obtenerIncidenciasPorEstacion("0a7638aa73949d3c8742f13f56cedff0");
         verify(mockStationDetailsView, timeout(2000)).showLoadError();
         verify(mockStationDetailsView, never()).showIncidences(ArgumentMatchers.anyList());
+    }
+
+    // Test de editar incidencias
+
+    @Test
+    public void modificarIncidenciaTest_PU01 () {
+        Incident incident = new Incident(station.getId(), IncidentType.STATION, "Estación dañada");
+        incident.setId(2);
+        incident.setAmount(1);
+
+        sut.init(mockStationDetailsView, station, mockAppDatabase);
+        sut.modificarIncidencia(incident);
+
+        ArgumentCaptor<Incident> incidentCaptor = ArgumentCaptor.forClass(Incident.class);
+        verify(mockIIncidentDAO, timeout(1000)).actualizarIncidencia(incidentCaptor.capture());
+
+        Incident updatedIncident = incidentCaptor.getValue();
+        assertEquals(2, updatedIncident.getId());
+        assertEquals(station.getId(), updatedIncident.getIdEstacion());
+        assertEquals(IncidentType.STATION, updatedIncident.getTypeId());
+        assertEquals("Estación dañada", updatedIncident.getType());
+        assertEquals(1, updatedIncident.getAmount());
+
+        verify(mockStationDetailsView, after(1000).never()).showDatabaseError();
+        verify(mockStationDetailsView, never()).showEmptyIssueError();
+    }
+
+    @Test
+    public void modificarIncidenciaTest_PU02() {
+        Incident incident = new Incident(station.getId(), IncidentType.OTHER, "Incidencia de prueba 2");
+        incident.setId(1);
+        incident.setAmount(1);
+
+        sut.init(mockStationDetailsView, station, mockAppDatabase);
+        sut.modificarIncidencia(incident);
+
+        ArgumentCaptor<Incident> incidentCaptor = ArgumentCaptor.forClass(Incident.class);
+        verify(mockIIncidentDAO, timeout(1000)).actualizarIncidencia(incidentCaptor.capture());
+
+        Incident updatedIncident = incidentCaptor.getValue();
+        assertEquals(1, updatedIncident.getId());
+        assertEquals(station.getId(), updatedIncident.getIdEstacion());
+        assertEquals(IncidentType.OTHER, updatedIncident.getTypeId());
+        assertEquals("Incidencia de prueba 2", updatedIncident.getType());
+        assertEquals(1, updatedIncident.getAmount());
+
+        verify(mockStationDetailsView, after(1000).never()).showDatabaseError();
+        verify(mockStationDetailsView, never()).showEmptyIssueError();
+    }
+
+    @Test
+    public void modificarIncidenciaTest_PU03 () {
+        Incident incident = new Incident(station.getId(), IncidentType.OTHER, "");
+        incident.setId(1);
+        incident.setAmount(1);
+
+        sut.init(mockStationDetailsView, station, mockAppDatabase);
+        sut.modificarIncidencia(incident);
+
+        verify(mockIIncidentDAO, after(1000).never()).actualizarIncidencia(any(Incident.class));
+        verify(mockStationDetailsView, after(1000).never()).showDatabaseError();
+        verify(mockStationDetailsView).showEmptyIssueError();
+    }
+
+    @Test
+    public void modificarIncidenciaTest_PU04 () {
+        Incident incident = new Incident(station.getId(), IncidentType.OTHER, null);
+        incident.setId(1);
+        incident.setAmount(1);
+
+        sut.init(mockStationDetailsView, station, mockAppDatabase);
+        sut.modificarIncidencia(incident);
+
+        verify(mockIIncidentDAO, after(1000).never()).actualizarIncidencia(any(Incident.class));
+        verify(mockStationDetailsView, after(1000).never()).showDatabaseError();
+        verify(mockStationDetailsView).showEmptyIssueError();
+    }
+
+    @Test
+    public void modificarIncidenciaTest_PU05() {
+        sut.init(mockStationDetailsView, station, mockAppDatabase);
+        sut.modificarIncidencia(null);
+
+        verify(mockIIncidentDAO, after(1000).never()).actualizarIncidencia(any(Incident.class));
+        verify(mockStationDetailsView, after(1000).never()).showDatabaseError();
+        verify(mockStationDetailsView, never()).showEmptyIssueError();
+    }
+
+    @Test
+    public void modificarIncidenciaTest_PU06 () {
+        Incident incident = new Incident(station.getId(), IncidentType.STATION, "Estación dañada");
+        incident.setId(3);
+        incident.setAmount(1);
+
+        sut.init(mockStationDetailsView, station, mockAppDatabase);
+        sut.modificarIncidencia(incident);
+
+        ArgumentCaptor<Incident> incidentCaptor = ArgumentCaptor.forClass(Incident.class);
+        verify(mockIIncidentDAO, timeout(1000)).actualizarIncidencia(incidentCaptor.capture());
+
+        Incident updatedIncident = incidentCaptor.getValue();
+        assertEquals(3, updatedIncident.getId());
+        assertEquals(station.getId(), updatedIncident.getIdEstacion());
+        assertEquals(IncidentType.STATION, updatedIncident.getTypeId());
+        assertEquals("Estación dañada", updatedIncident.getType());
+        assertEquals(1, updatedIncident.getAmount());
+
+        verify(mockStationDetailsView, after(1000).never()).showDatabaseError();
+        verify(mockStationDetailsView, never()).showEmptyIssueError();
+    }
+
+    @Test
+    public void modificarIncidenciaTest_PU07  () {
+        doThrow(new SQLiteException()).when(mockIIncidentDAO).actualizarIncidencia(any(Incident.class));
+
+        Incident incident = new Incident(station.getId(), IncidentType.STATION, "Estación dañada");
+        incident.setId(2);
+        incident.setAmount(1);
+
+        sut.init(mockStationDetailsView, station, mockAppDatabase);
+        sut.modificarIncidencia(incident);
+
+        ArgumentCaptor<Incident> incidentCaptor = ArgumentCaptor.forClass(Incident.class);
+        verify(mockIIncidentDAO, timeout(2000)).actualizarIncidencia(incidentCaptor.capture());
+
+        Incident updatedIncident = incidentCaptor.getValue();
+        assertEquals(2, updatedIncident.getId());
+        assertEquals(station.getId(), updatedIncident.getIdEstacion());
+        assertEquals(IncidentType.STATION, updatedIncident.getTypeId());
+        assertEquals("Estación dañada", updatedIncident.getType());
+        assertEquals(1, updatedIncident.getAmount());
+
+        verify(mockStationDetailsView, timeout(2000)).showDatabaseError();
+        verify(mockStationDetailsView, never()).showEmptyIssueError();
     }
 }

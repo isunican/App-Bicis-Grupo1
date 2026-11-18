@@ -26,8 +26,12 @@
     <string name="noStations">There are no stations for the Network</string>
     <string name="noStationsInRange">There are no stations in the specified range</string>
     <string name="km" translatable="false">Km</string>
+    <string name="range_separator" translatable="false">-</string>
+    <string name="min_km">Min</string>
+    <string name="max_km">Max</string>
     <string name="filter_above_kms">Filters at a distance greater than the one entered</string>
     <string name="filter_below_kms">Filters at a distance less than the one entered</string>
+    <string name="filter_range_kms">Filters at a distance between the two values entered</string>
     <string name="more_options">More options</string>
     <string name="marked_as_favorite">%s marked as favorite</string>
     <string name="id" translatable="false">ID:</string>
@@ -44,14 +48,27 @@
     <string name="cancel">Cancel</string>
     <string name="empty_issue_error">You can\'t let the text field empty</string>
     <string name="databaseError">An error has ocurred</string>
+    <string name="empty_search_error">You cannot leave the text empty</string>
+    <string name="emoji_search_error">You cannot enter emojis in the text</string>
+    <string name="no_networks_found_error">No networks contain the entered string in their name</string>
 
 
 
     <string-array name="incidencias_options">
-        <item>Select an incidence...</item>
+        <item>Select an incident...</item>
+        <item>Damaged station</item>
+        <item>Defective bike</item>
+        <item>Other issue</item>
+    </string-array>
+    <string-array name="edit_incicents_options">
         <item>Damaged station</item>
         <item>Defective bike</item>
         <item>Other issue</item>
     </string-array>
     <string name="mark_as_favorite">Mark as favorite</string>
+    <string name="newEditDesc">Type the new description...</string>
+    <string name="description">Description</string>
+    <string name="type">Type</string>
+    <string name="editIncident">Edit Incident</string>
+    <string name="filterNetworkByNameHint">Search networks...</string>
 </resources>

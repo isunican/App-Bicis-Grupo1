@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -111,6 +112,62 @@ public class Matchers {
             @Override
             public void describeTo(final Description description) {
                 description.appendText("El Spinner debería tener " + expectedSize + " elementos");
+            }
+        };
+    }
+    /**
+     * Matcher personalizado para evaluar la cantidad de elementos en un ListView.
+     * @param sizeMatcher Un matcher de enteros de Hamcrest (ej. lessThan(20), is(15))
+     */
+    public static Matcher<View> withListSize(final Matcher<Integer> sizeMatcher) {
+        return new TypeSafeMatcher<View>() {
+
+            @Override
+            protected boolean matchesSafely(View view) {
+                // Descartamos cualquier vista que no sea un ListView
+                if (!(view instanceof ListView)) {
+                    return false;
+                }
+
+                // Extraemos el tamaño real desde el adaptador
+                int count = ((ListView) view).getCount();
+
+                // Delegamos la evaluación matemática al matcher inyectado
+                return sizeMatcher.matches(count);
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("un ListView cuyo número de elementos sea ");
+                sizeMatcher.describeTo(description);
+            }
+        };
+    }
+
+    /**
+     * Matcher que verifica si un AdapterView (como ListView o Spinner) está vacío.
+     */
+    public static Matcher<View> isAdapterViewEmpty() {
+        return new TypeSafeMatcher<View>() {
+
+            @Override
+            public void describeTo(Description description) {
+                // Mensaje que mostrará Espresso si el test falla
+                description.appendText("un AdapterView sin datos en su Adapter (count == 0)");
+            }
+
+            @Override
+            protected boolean matchesSafely(View view) {
+                // 1. Verificamos que la vista sea realmente un AdapterView
+                if (!(view instanceof AdapterView)) {
+                    return false;
+                }
+
+                // 2. Extraemos el adapter
+                Adapter adapter = ((AdapterView<?>) view).getAdapter();
+
+                // 3. Está vacío si no hay adapter, o si el adapter tiene 0 elementos
+                return adapter == null || adapter.getCount() == 0;
             }
         };
     }

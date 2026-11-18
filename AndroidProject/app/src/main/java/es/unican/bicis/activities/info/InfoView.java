@@ -19,6 +19,9 @@ import es.unican.bicis.R;
  */
 public class InfoView extends AppCompatActivity {
 
+    /**
+     * @see androidx.fragment.app.FragmentActivity#onCreate(Bundle)
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

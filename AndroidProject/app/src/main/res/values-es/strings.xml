@@ -25,8 +25,11 @@
     <string name="timestamp">Última actualización:</string>
     <string name="loadErrorStation">Ha habido un error cargando la estación</string>
     <string name="noStationsInRange">No hay estaciones en el rango deseado</string>
+    <string name="min_km">Mín</string>
+    <string name="max_km">Máx</string>
     <string name="filter_above_kms">Filtra a distancia mayor a la introducida</string>
     <string name="filter_below_kms">Filtra a distancia menor a la introducida</string>
+    <string name="filter_range_kms">Filtra las estaciones en el rango de distancia entre los dos valores</string>
     <string name="Incidences">Incidencias:</string>
     <string name="IncidenciaBicis">Bicicleta estropeada</string>
     <string name="IncidenciaEstacion">Estación estropeada</string>
@@ -40,6 +43,9 @@
     <string name="cancel">Cancelar</string>
     <string name="empty_issue_error">No puedes dejar el texto vacío</string>
     <string name="databaseError">Ha ocurrido un error</string>
+    <string name="empty_search_error">No puede dejar el texto vacío</string>
+    <string name="emoji_search_error">No puede introducir emoticonos en la cadena</string>
+    <string name="no_networks_found_error">No existen redes que contengan la cadena introducida en su nombre</string>
 
 
     <string-array name="incidencias_options">
@@ -48,8 +54,17 @@
         <item>Bicicleta defectuosa</item>
         <item>Otro problema</item>
     </string-array>
-
+    <string-array name="edit_incicents_options">
+        <item>Estación dañada</item>
+        <item>Bicicleta defectuosa</item>
+        <item>Otro problema</item>
+    </string-array>
     <string name="more_options">Opciones</string>
     <string name="mark_as_favorite">Marcar como favorita</string>
     <string name="marked_as_favorite">%s marcada como favorita</string>
+    <string name="newEditDesc">Escribe la nueva descripción...</string>
+    <string name="description">Descripción</string>
+    <string name="type">Tipo</string>
+    <string name="editIncident">Editar Incidencia</string>
+    <string name="filterNetworkByNameHint">Buscar redes...</string>
 </resources>

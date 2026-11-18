@@ -13,7 +13,7 @@ class Network {
 
 class Location {
     - city : String
-    - country : Strings
+    - country : String
 }
 
 class Favourite {
@@ -31,19 +31,18 @@ class NetworkResponse {
 class Station {
     - id : String
     - name : String
-    - latitude : double
-    - longitude : double
+    - latitude : Double
+    - longitude : Double
     - timestamp : String
-    - freeBikes : int
-    - emptySlots : int
+    - freeBikes : Integer
+    - emptySlots : Integer
 }
 
 class Incident {
-    + id: int
-    + idStation: String
-    + amount: int
-    + type: String
-    + typeId: IncidentType
+    + id : int
+    + idEstacion : String
+    + type : String
+    + amount : int
 }
 
 enum IncidentType {
@@ -51,12 +50,14 @@ enum IncidentType {
     STATION("Estación dañada")
     OTHER("")
     --
-    - descripcion: String
+    - descripcion : String
 }
 
 Network *--> "1" Location : location
 Network *--> "0..*" Station : stations
 NetworksResponse *--> "*" Network : networks
 NetworkResponse *--> "1" Network : network
+
+Incident --> "1" IncidentType : typeId
 
 @enduml

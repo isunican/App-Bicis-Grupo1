@@ -28,11 +28,21 @@ public class NetworksArrayAdapter extends BaseAdapter {
 
     /** Interface for favorite click callbacks */
     public interface OnFavoriteClickListener {
+
+        /**
+         * Called when the favorite button is clicked on a network
+         * @param network the network that was clicked
+         */
         void onFavoriteClick(Network network);
     }
 
     /** Interface for network item click callbacks */
     public interface OnNetworkClickListener {
+
+        /**
+         * Called when a network item is clicked
+         * @param network the network that was clicked
+         */
         void onNetworkClick(Network network);
     }
 
@@ -111,21 +121,33 @@ public class NetworksArrayAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    /**
+     * @see android.widget.Adapter#getCount()
+     */
     @Override
     public int getCount() {
         return networks.size();
     }
 
+    /**
+     * @see android.widget.Adapter#getItem(int)
+     */
     @Override
     public Object getItem(int position) {
         return networks.get(position);
     }
 
+    /**
+     * @see android.widget.Adapter#getItemId(int)
+     */
     @Override
     public long getItemId(int position) {
         return position;
     }
 
+    /**
+     * @see android.widget.Adapter#getView(int, View, ViewGroup)
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

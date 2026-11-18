@@ -28,6 +28,11 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
         @Getter
         private final double distance;
 
+        /**
+         * Constructor of the class.
+         * @param station station to save
+         * @param distance distance between current location and the station
+         */
         public StationDistance(Station station, double distance) {
             this.station = station;
             this.distance = distance;
@@ -42,8 +47,6 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
 
     /**
      * @see IRedDetailsContract.Presenter#init(IRedDetailsContract.View, Network)
-     * @param view the view to control
-     * @param network the network of the view
      */
     @Override
     public void init(IRedDetailsContract.View view, Network network) {
@@ -61,20 +64,40 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
     }
 
     /**
-     * @see IRedDetailsContract.Presenter#onFilterClicked(String, DistanceFilter)
-     * @param distanceText distance introduced by the user
-     * @param filter filter introduced by the user (less than distance or more than distance).
+     * @see IRedDetailsContract.Presenter#onFilterClicked(String, String)
      */
     @Override
-    public void onFilterClicked(String distanceText, DistanceFilter filter) {
+    public void onFilterClicked(String distanceMinText, String distanceMaxText) {
 
-        // Checks if distance string contains decimal units, is empty or is a negative number
-        if (distanceText.isEmpty() || distanceText.contains(".") || Integer.parseInt(distanceText) < 0) {
+        boolean minEmpty = (distanceMinText == null || distanceMinText.trim().isEmpty());
+        boolean maxEmpty = (distanceMaxText == null || distanceMaxText.trim().isEmpty());
+
+        double distanceMin = 0.0;
+        double distanceMax = Double.MAX_VALUE;
+
+        //Obtains the distance if it is not null or empty
+        try {
+            if (!minEmpty) {
+                if (distanceMinText.contains(".")) return;
+                int min = Integer.parseInt(distanceMinText.trim());
+                if (min < 0) return;
+                distanceMin = min;
+            }
+
+            if (!maxEmpty) {
+                if (distanceMaxText.contains(".")) return;
+                int max = Integer.parseInt(distanceMaxText.trim());
+                if (max < 0) return;
+                distanceMax = max;
+            }
+
+            // Checks if the range is valid
+            if (distanceMin >= distanceMax) {
+                return;
+            }
+        } catch (NumberFormatException e) {
             return;
         }
-
-        double distance;
-        distance = Double.parseDouble(distanceText);
 
         //Checks if location is enabled
         if (!Utils.isLocationEnabled(view.getContext())) {
@@ -87,17 +110,17 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
 
         // Obtains stations and applies the filter
         List<Station> stations = network.getStations();
+        if (stations == null) {
+            return;
+        }
+
         List<StationDistance> filteredStations = new ArrayList<>();
         for (Station station : stations) {
             double distanceToStation = LocationUtils.calcularDistanciaA(station.getLatitude(), station.getLongitude());
 
             // Determines to keep the station or not according to the filter
-            boolean keep = (filter == DistanceFilter.LESS_THAN)
-                    ? distanceToStation < distance // if filter is less than
-                    : distanceToStation > distance; // if filter is more than
-
-            if (keep) {
-              filteredStations.add(new StationDistance(station, distanceToStation));
+            if (distanceToStation >= distanceMin && distanceToStation <= distanceMax) {
+                filteredStations.add(new StationDistance(station, distanceToStation));
             }
         }
 
@@ -111,7 +134,7 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
         }
 
         // Checks if there isn't any station in the list to inform the user
-        if (filteredStations.isEmpty()) {
+        if (filteredStationsSorted.isEmpty()) {
             view.showNoStationsInRangeError();
         }
 
@@ -120,7 +143,6 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
 
     /**
      * @see IRedDetailsContract.Presenter#onStationClicked(Station)
-     * @param station the station that has been clicked
      */
     @Override
     public void onStationClicked(Station station) {
@@ -132,13 +154,15 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
      * Si se produce un error al recuperar las estaciones de la red, se invoca a la vista para que
      * muestre un mensaje de error en la carga.
      * Si no hay estaciones, invoca a la vista para que muestre un mensaje de que no hay estaciones.
-     * .
      */
     protected void load() {
         INetworksRepository repository = view.getNetworksRepository();
 
         NetworkDetailsCallback callBack = new NetworkDetailsCallback() {
 
+            /**
+             * @see NetworkDetailsCallback#onSuccess(Network)
+             */
             @Override
             public void onSuccess(Network network) {
                 RedDetailsPresenter.this.network = network;
@@ -150,6 +174,9 @@ public class RedDetailsPresenter implements IRedDetailsContract.Presenter {
                 }
             }
 
+            /**
+             * @see NetworkDetailsCallback#onFailure(Throwable)
+             */
             @Override
             public void onFailure(Throwable e) {
                 view.showLoadError();

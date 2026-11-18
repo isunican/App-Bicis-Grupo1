@@ -15,9 +15,16 @@ import es.unican.bicis.model.Favourite;
 @Database(entities = {Favourite.class, Incident.class}, version = 2, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
-    // DAO para los redes favoritas
+    /**
+     * Obtiene el DAO para las redes favoritas.
+     * @return El DAO para las redes favoritas.
+     */
     public abstract IFavouriteDAO favouriteDAO();
-    // DAO para las incidencias
+
+    /**
+     * Obtiene el DAO para las incidencias.
+     * @return El DAO para las incidencias.
+     */
     public abstract IIncidentDAO incidenciaDao();
 
     // Variable volátil para el patrón Singleton

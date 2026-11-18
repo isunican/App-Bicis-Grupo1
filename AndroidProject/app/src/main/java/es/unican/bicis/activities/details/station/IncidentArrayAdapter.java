@@ -5,12 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.List;
 
@@ -23,38 +22,68 @@ import es.unican.bicis.model.IncidentType;
  */
 public class IncidentArrayAdapter extends BaseAdapter {
 
+    /**
+     * Interface for edit click callbacks
+     */
+    public interface OnIncidentEditClickListener {
+
+        /**
+         * Called when the edit button is clicked
+         * @param incident the incident
+         */
+        void onEditClick(Incident incident);
+    }
+
     /** The list of Incidences to render */
     private final List<Incident> incidences;
 
     /** Context of the application */
     private final Context context;
 
+    /** Listener for edit button clicks */
+    private final OnIncidentEditClickListener editClickListener;
+
     /**
      * Constructs an adapter to handle a list of incidences
      * @param context the application context
      * @param objects the list of incidences
+     * @param editClickListener the listener for edit clicks
      */
-    public IncidentArrayAdapter(@NonNull Context context, @NonNull List<Incident> objects) {
+    public IncidentArrayAdapter(@NonNull Context context, @NonNull List<Incident> objects,
+                                @NonNull OnIncidentEditClickListener editClickListener) {
         // we know the parameters are not null because of the @NonNull annotation
         this.incidences = objects;
         this.context = context;
+        this.editClickListener = editClickListener;
     }
 
+    /**
+     * @see android.widget.Adapter#getCount()
+     */
     @Override
     public int getCount() {
         return incidences.size();
     }
 
+    /**
+     * @see android.widget.Adapter#getItem(int)
+     */
     @Override
     public Object getItem(int position) {
         return incidences.get(position);
     }
 
+    /**
+     * @see android.widget.Adapter#getItemId(int)
+     */
     @Override
     public long getItemId(int position) {
         return position;
     }
 
+    /**
+     * @see android.widget.Adapter#getView(int, View, ViewGroup)
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -67,6 +96,13 @@ public class IncidentArrayAdapter extends BaseAdapter {
 
         TextView tvType = convertView.findViewById(R.id.tvType);
         TextView tvAmount = convertView.findViewById(R.id.tvAmount);
+
+        ImageButton btnEdit = convertView.findViewById(R.id.btEditarIncidencia);
+        if (btnEdit != null) {
+            btnEdit.setOnClickListener(v -> {
+                editClickListener.onEditClick(incidence);
+            });
+        }
 
         // tipo
         String type = incidence.getType();
