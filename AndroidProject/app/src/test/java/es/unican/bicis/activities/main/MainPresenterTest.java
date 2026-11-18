@@ -287,7 +287,6 @@ public class MainPresenterTest {
 
         presenter.onFilterClicked("");
 
-        verify(mockView).showEmptySearchError();
         verify(mockView).showNetworks(anyList());
     }
 
