@@ -51,6 +51,10 @@ public interface IStationDetailsContract {
 
         /**
          * Modifica una incidencia existente en la base de datos.
+         * Si la incidencia es null, no hace nada.
+         * Si el tipo es OTHER y la descripción está vacía o es null, notifica a la
+         * vista para que muestre un error.
+         * Si ocurre un error de base de datos, notifica a la vista para que muestre un error.
          *
          * @param incident la incidencia modificada
          */
